@@ -21,7 +21,7 @@ public class Expert extends User {
     private ExpertStatus status;
     @Lob
     private byte[] photo;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<SubService> subServiceList = new ArrayList<>();
     @OneToMany(cascade = CascadeType.MERGE)
     private List<Review> reviewList = new ArrayList<>();
