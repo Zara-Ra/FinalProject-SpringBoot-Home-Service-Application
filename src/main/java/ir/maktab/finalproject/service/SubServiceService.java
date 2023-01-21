@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -40,5 +41,9 @@ public class SubServiceService {
 
     public List<SubService> findAllByBaseService(BaseService baseService) {
         return subServiceRepository.findAllByBaseService(baseService);
+    }
+
+    public Optional<SubService> findBySubName(String subName) {
+        return subServiceRepository.findBySubName(subName);
     }
 }

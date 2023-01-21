@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -33,7 +35,7 @@ public class ExpertService {
             throw new PhotoValidationException("Unable To Read Photo File");
         }
         expert.setStatus(ExpertStatus.NEW);
-        expert.setCredit(new Credit(null, 0));
+        expert.setCredit(Credit.builder().amount(0).build());
         expert.setAverageScore(0);
         expertRepository.save(expert);
     }
@@ -67,8 +69,7 @@ public class ExpertService {
         if (expert.getSubServiceList().stream().anyMatch(s -> s.equals(subService)))
             throw new SubServiceException("Sub-Service Already Assigned To Expert ");
 
-        List<SubService> allSubService = subServiceService.findAllByBaseService(subService.getBaseService());
-        allSubService.stream().filter(s -> s.equals(subService)).findAny()
+        subServiceService.findBySubName(subService.getSubName())
                 .orElseThrow(() -> new SubServiceException("Invalid Sub-Service"));
 
         expert.getSubServiceList().add(subService);
