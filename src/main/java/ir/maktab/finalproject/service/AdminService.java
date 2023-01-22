@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 public class AdminService {
     private final AdminRepository adminRepository;
 
-    public void assignAdmin() {
+    public Admin assignAdmin() {
         Admin admin = new Admin();
         admin.setEmail("admin@admin.com");
         admin.setPassword("12345678");
-        adminRepository.save(admin);
+        return adminRepository.save(admin);
     }
 }

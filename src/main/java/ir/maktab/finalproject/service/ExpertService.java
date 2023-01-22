@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -58,7 +57,7 @@ public class ExpertService {
     }
 
     public List<Expert> findAllExpertByStatus(ExpertStatus status) {
-        return expertRepository.findAllByExpertStatus(status);
+        return expertRepository.findAllByStatus(status);
     }
 
     public void setExpertStatus(Expert expert, ExpertStatus status) {

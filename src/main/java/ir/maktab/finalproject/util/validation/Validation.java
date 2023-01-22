@@ -1,7 +1,7 @@
 package ir.maktab.finalproject.util.validation;
 
-import ir.maktab.util.exception.PhotoValidationException;
-import ir.maktab.util.exception.ValidationException;
+import ir.maktab.finalproject.util.exception.PhotoValidationException;
+import ir.maktab.finalproject.util.exception.ValidationException;
 import lombok.experimental.UtilityClass;
 
 import java.io.*;
