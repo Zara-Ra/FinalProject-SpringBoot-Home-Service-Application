@@ -32,7 +32,7 @@ public class CustomerOrder {
     @Column(nullable = false)
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date preferredDate;
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Address address;
     @Enumerated(value = EnumType.STRING)
     private OrderStatus status;

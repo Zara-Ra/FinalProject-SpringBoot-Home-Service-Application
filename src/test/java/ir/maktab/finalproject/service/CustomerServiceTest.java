@@ -28,6 +28,12 @@ public class CustomerServiceTest {
     @Order(1)
     @Test
     void validSignUpTest(){
-        customerService.signUp(customer);
+        Customer newCustomer = customerService.signUp(customer);
+        assertAll(
+                () -> assertEquals("customer@email.com", newCustomer.getEmail()),
+                () -> assertEquals("customer", newCustomer.getPassword()),
+                () -> assertEquals("Customer Name", newCustomer.getFirstName()),
+                () -> assertEquals("Customer Lastname", newCustomer.getLastName())
+        );
     }
 }

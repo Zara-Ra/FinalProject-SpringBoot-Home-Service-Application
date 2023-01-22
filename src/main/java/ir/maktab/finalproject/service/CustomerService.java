@@ -21,10 +21,10 @@ import java.util.Date;
 public class CustomerService {
     private final CustomerRepository customerRepository;
 
-    public void signUp(Customer customer) {
+    public Customer signUp(Customer customer) {
         validateNewCustomer(customer);
         customer.setCredit(Credit.builder().amount(0).build());
-        customerRepository.save(customer);
+        return customerRepository.save(customer);
     }
 
     public Customer signIn(String email, String password) {
