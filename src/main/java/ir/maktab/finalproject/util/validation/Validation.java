@@ -14,12 +14,12 @@ public class Validation {
     private static final int PHOTO_SIZE = 300;
 
     private TriConsumer validate = (s, r, m) -> {
-        if (s.equals("") || !s.matches(r))
+        if (s == null || s.equals("") || !s.matches(r))
             throw new ValidationException(m);
     };
 
     public void validateName(String name) {
-        validate.accept(name, "^[a-zA-Z ]{2,}", "Invalid Name(Only Alphabetic Characters Accepted)");
+        validate.accept(name, "^[a-zA-Z ]{2,}", "Invalid Name Only Alphabetic Characters Accepted");
     }
 
     public void validateEmail(String email) {

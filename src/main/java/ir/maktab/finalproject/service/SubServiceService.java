@@ -19,9 +19,9 @@ import java.util.Optional;
 public class SubServiceService {
     private final SubServiceRepository subServiceRepository;
 
-    public void addSubService(SubService subService) {
+    public SubService addSubService(SubService subService) {
         try {
-            subServiceRepository.save(subService);
+            return subServiceRepository.save(subService);
         } catch (PersistenceException e) {
             throw new UniqueViolationException("Base/Sub-Service Already Exists");
         }

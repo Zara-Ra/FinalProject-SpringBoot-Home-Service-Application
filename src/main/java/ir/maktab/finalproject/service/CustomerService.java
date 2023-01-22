@@ -36,12 +36,12 @@ public class CustomerService {
         return foundCustomer;
     }
 
-    public void changePassword(Customer customer, String oldPassword, String newPassword) {
+    public Customer changePassword(Customer customer, String oldPassword, String newPassword) {
         if (!customer.getPassword().equals(oldPassword))
             throw new PasswordException("Entered Password Doesn't Match");
         Validation.validatePassword(newPassword);
         customer.setPassword(newPassword);
-        customerRepository.save(customer);
+        return customerRepository.save(customer);
     }
 
     public void requestOrder(Customer customer, CustomerOrder customerOrder) {

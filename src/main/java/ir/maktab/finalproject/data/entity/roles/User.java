@@ -23,6 +23,7 @@ public abstract class User extends Account {
     protected String firstName;
     @Column(nullable = false)
     protected String lastName;
+    @EqualsAndHashCode.Exclude
     @Temporal(value = TemporalType.DATE)
     @CreationTimestamp
     protected Date registerDate;
