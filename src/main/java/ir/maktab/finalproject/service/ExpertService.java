@@ -1,6 +1,7 @@
 package ir.maktab.finalproject.service;
 
 import ir.maktab.finalproject.data.entity.Credit;
+import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
@@ -57,8 +58,12 @@ public class ExpertService {
     }
 
     public Expert changePassword(Expert expert, String oldPassword, String newPassword) {
-        if (!expert.getPassword().equals(oldPassword))
+        Expert findExpert = expertRepository.findByEmail(expert.getEmail())
+                .orElseThrow(() -> new UserNotFoundException("No Username Registerd With This Email"));
+
+        if (!findExpert.getPassword().equals(oldPassword))
             throw new PasswordException("Entered Password Doesn't Match");
+
         Validation.validatePassword(newPassword);
         expert.setPassword(newPassword);
         return expertRepository.save(expert);

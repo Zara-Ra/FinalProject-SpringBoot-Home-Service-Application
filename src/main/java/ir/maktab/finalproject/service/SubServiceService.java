@@ -3,6 +3,8 @@ package ir.maktab.finalproject.service;
 import ir.maktab.finalproject.data.entity.services.BaseService;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.repository.SubServiceRepository;
+import ir.maktab.finalproject.service.exception.BaseServiceException;
+import ir.maktab.finalproject.service.exception.SubServiceException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +29,19 @@ public class SubServiceService {
     }
 
     public void deleteSubService(SubService subService) {
-        subServiceRepository.delete(subService);
+        Optional<SubService> foundSubService = subServiceRepository.findBySubName(subService.getSubName());
+        if(foundSubService.isEmpty())
+            throw new SubServiceException("Sub Service Not Found");
+
+        subServiceRepository.delete(foundSubService.get());
     }
 
     public SubService editSubService(SubService subService) {
+        Optional<SubService> foundSubService = subServiceRepository.findBySubName(subService.getSubName());
+        if(foundSubService.isEmpty())
+            throw new SubServiceException("Sub Service Not Found");
+        foundSubService.get().setBasePrice(subService.getBasePrice());
+        foundSubService.get().setDescription(subService.getDescription());
         return subServiceRepository.save(subService);
     }
 

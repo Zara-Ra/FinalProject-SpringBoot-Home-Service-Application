@@ -16,6 +16,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -37,14 +38,20 @@ public class CustomerService {
         validateAccount(email, password);
         Customer foundCustomer = customerRepository.findByEmail(email).orElseThrow(() ->
                 new UserNotFoundException("No User Registered With This Email"));
+
         if (!foundCustomer.getPassword().equals(password))
             throw new UserNotFoundException("Incorrect Password");
+
         return foundCustomer;
     }
 
     public Customer changePassword(Customer customer, String oldPassword, String newPassword) {
-        if (!customer.getPassword().equals(oldPassword))
+        Customer findCustomer = customerRepository.findByEmail(customer.getEmail())
+                .orElseThrow(() -> new UserNotFoundException("No Username Registerd With This Email"));
+
+        if (!findCustomer.getPassword().equals(oldPassword))
             throw new PasswordException("Entered Password Doesn't Match");
+
         Validation.validatePassword(newPassword);
         customer.setPassword(newPassword);
         return customerRepository.save(customer);
