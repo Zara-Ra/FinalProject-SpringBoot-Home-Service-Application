@@ -49,7 +49,7 @@ public class Validation {
             throw new PhotoValidationException("Photo Corrupted ");
         }
         if (!mimeType.equals("image/jpeg"))
-            throw new PhotoValidationException("Invalid Photo Format, Only 'jpeg' Accepted");
+            throw new PhotoValidationException("Invalid Photo Type Only 'jpeg' Accepted");
     }
 
     /*public void validatePhoto(byte[] photo) {

@@ -42,7 +42,7 @@ public class CustomerServiceTest {
                 .customerOrderList(new ArrayList<>()).build();
 
         subService = SubService.builder()
-                .subName("SubService Test")
+                .subName("SubService For Customer Test")
                 .basePrice(100).build();
 
 
@@ -56,10 +56,10 @@ public class CustomerServiceTest {
     void signUpTest() {
         Customer newCustomer = customerService.signUp(customer);
         assertAll(
-                () -> assertEquals("customer@email.com", newCustomer.getEmail()),
-                () -> assertEquals("customer", newCustomer.getPassword()),
-                () -> assertEquals("Customer Name", newCustomer.getFirstName()),
-                () -> assertEquals("Customer Lastname", newCustomer.getLastName())
+                () -> assertEquals(customer.getEmail(), newCustomer.getEmail()),
+                () -> assertEquals(customer.getPassword(), newCustomer.getPassword()),
+                () -> assertEquals(customer.getFirstName(), newCustomer.getFirstName()),
+                () -> assertEquals(customer.getLastName(), newCustomer.getLastName())
         );
     }
 
@@ -67,7 +67,7 @@ public class CustomerServiceTest {
     @ParameterizedTest
     @CsvSource(value = {
             "customer@email.com,12345678,Customer,Customer,Already Registered With This Email",
-            ",12345678,Customer,Customer,Invalid Email",
+            "NIL,12345678,Customer,Customer,Invalid Email",
             "email.email.com,12345678,Customer,Customer,Invalid Email",
             "email@email.com,NIL,Customer,Customer,Invalid Password should be 8 characters including alphanumeric values",
             "email@email.com,123456,Customer,Customer,Invalid Password should be 8 characters including alphanumeric values",

@@ -8,6 +8,7 @@ import ir.maktab.finalproject.service.exception.UpdatableViolationException;
 import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class SubServiceService {
     public void editSubService(SubService subService) {
         try {
             subServiceRepository.save(subService);
-        } catch (PersistenceException e) {
+        } catch (DataIntegrityViolationException e) {
             throw new UpdatableViolationException("Can't Edit Sub-Service Name");
         }
     }

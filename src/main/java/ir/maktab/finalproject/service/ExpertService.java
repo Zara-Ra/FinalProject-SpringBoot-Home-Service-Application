@@ -29,18 +29,18 @@ public class ExpertService {
 
     private final SubServiceService subServiceService;
 
-    public void signUp(Expert expert, String photoPath) {
-        validateNewExpert(expert, photoPath);
+    public Expert signUp(Expert expert, String photoPath) {
         try {
+            validateNewExpert(expert, photoPath);
             expert.setPhoto(convertFileToBytes(photoPath));
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             throw new PhotoValidationException("Unable To Read Photo File");
         }
         expert.setStatus(ExpertStatus.NEW);
         expert.setCredit(Credit.builder().amount(0).build());
         expert.setAverageScore(0);
         try{
-        expertRepository.save(expert);
+            return expertRepository.save(expert);
         } catch (DataIntegrityViolationException e){
             throw new UniqueViolationException("Already Registered With This Email");
         }
@@ -49,44 +49,44 @@ public class ExpertService {
     public Expert signIn(String email, String password) {
         validateAccount(email, password);
         Expert foundExpert = expertRepository.findByEmail(email).orElseThrow(() ->
-                new UserNotFoundException("Not Registered With This Email"));
+                new UserNotFoundException("No User Registered With This Email"));
         if (!foundExpert.getPassword().equals(password))
             throw new UserNotFoundException("Incorrect Password");
         return foundExpert;
     }
 
-    public void changePassword(Expert expert, String oldPassword, String newPassword) {
+    public Expert changePassword(Expert expert, String oldPassword, String newPassword) {
         if (!expert.getPassword().equals(oldPassword))
             throw new PasswordException("Entered Password Doesn't Match");
         Validation.validatePassword(newPassword);
         expert.setPassword(newPassword);
-        expertRepository.save(expert);
+        return expertRepository.save(expert);
     }
 
     public List<Expert> findAllExpertByStatus(ExpertStatus status) {
         return expertRepository.findAllByStatus(status);
     }
 
-    public void setExpertStatus(Expert expert, ExpertStatus status) {
+    public Expert setExpertStatus(Expert expert, ExpertStatus status) {
         expert.setStatus(status);
-        expertRepository.save(expert);
+        return expertRepository.save(expert);
     }
-    public void addSubServiceToExpert(SubService subService, Expert expert) {
+    public Expert addSubServiceToExpert(SubService subService, Expert expert) {
         if (expert.getSubServiceList().stream().anyMatch(s -> s.equals(subService)))
-            throw new SubServiceException("Sub-Service Already Assigned To Expert ");
+            throw new SubServiceException("Sub-Service Already Assigned To Expert");
 
         subServiceService.findBySubName(subService.getSubName())
-                .orElseThrow(() -> new SubServiceException("Invalid Sub-Service"));
+                .orElseThrow(() -> new SubServiceException("Sub-Service Unavailable"));
 
         expert.getSubServiceList().add(subService);
-        expertRepository.save(expert);
+        return expertRepository.save(expert);
     }
 
-    public void deleteSubServiceFromExpert(SubService subService, Expert expert) {
+    public Expert deleteSubServiceFromExpert(SubService subService, Expert expert) {
         if (expert.getSubServiceList().stream().noneMatch(s -> s.equals(subService)))
-            throw new SubServiceException("Expert Doesn't Have This Sub-Service ");
+            throw new SubServiceException("Expert Doesn't Have This Sub-Service");
         expert.getSubServiceList().remove(subService);
-        expertRepository.save(expert);
+        return expertRepository.save(expert);
     }
 
     private void validateNewExpert(Expert expert, String photoPath) {

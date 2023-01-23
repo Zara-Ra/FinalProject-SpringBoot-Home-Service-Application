@@ -6,6 +6,7 @@ import ir.maktab.finalproject.service.exception.UniqueViolationException;
 import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class BaseServiceService {
     public void addBaseService(BaseService baseService) {
         try {
             baseServiceRepository.save(baseService);
-        } catch (PersistenceException e) {
+        } catch (DataIntegrityViolationException e) {
             throw new UniqueViolationException("Base Service Already Exists");
         }
     }
