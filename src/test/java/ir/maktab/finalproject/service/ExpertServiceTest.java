@@ -12,7 +12,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,15 +29,13 @@ public class ExpertServiceTest {
     @Autowired
     private ExpertService expertService;
 
-    @Autowired
+    /*@Autowired
     private SubServiceService subServiceService;
-
+*/
     private static Expert expert;
     private static String photoPath = "images/valid.jpg";
 
     private static SubService subService;
-
-    private static BaseService baseService;
 
     @BeforeAll
     static void beforeAll() {
@@ -43,11 +46,21 @@ public class ExpertServiceTest {
                 .lastName("Expert Lastname")
                 .subServiceList(new ArrayList<>()).build();
 
-        baseService = BaseService.builder().baseName("BaseService3").build();
+        BaseService baseService = BaseService.builder().id(3).baseName("BaseService3").build();
 
         subService = SubService.builder()
-                .subName("SubService For Expert Test")
+                .id(3)
+                .subName("SubService3")
                 .basePrice(100).build();
+    }
+
+    @BeforeAll
+    static void setup(@Autowired DataSource dataSource) {
+        try (Connection connection = dataSource.getConnection()) {
+            ScriptUtils.executeSqlScript(connection, new ClassPathResource("ExpertServiceData.sql"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Order(1)
@@ -143,7 +156,6 @@ public class ExpertServiceTest {
     @Order(9)
     @Test
     void addSubServiceToExpertTest() {
-        subServiceService.addSubService(subService);
         Expert changedExpert = expertService.addSubServiceToExpert(subService, expert);
         assertEquals(expert.getSubServiceList().size(), changedExpert.getSubServiceList().size());
     }

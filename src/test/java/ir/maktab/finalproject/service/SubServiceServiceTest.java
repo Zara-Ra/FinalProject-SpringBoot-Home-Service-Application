@@ -6,7 +6,12 @@ import ir.maktab.finalproject.service.exception.UniqueViolationException;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,10 +27,19 @@ public class SubServiceServiceTest {
 
     @BeforeAll
     static void beforeAll() {
-        baseService = BaseService.builder().baseName("BaseService1").build();
+        baseService = BaseService.builder().id(4).baseName("BaseService4").build();
         subService = SubService.builder()
-                .subName("SubServiceService Test")
+                .subName("SubService4")
                 .baseService(baseService).build();
+    }
+
+    @BeforeAll
+    static void setup(@Autowired DataSource dataSource) {
+        try (Connection connection = dataSource.getConnection()) {
+            ScriptUtils.executeSqlScript(connection, new ClassPathResource("SubServiceData.sql"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Order(1)
@@ -38,7 +52,7 @@ public class SubServiceServiceTest {
     @Order(2)
     @Test
     void invalidAddSubServiceViolateUniqueTest() {
-        SubService duplicateSubService = SubService.builder().subName("SubServiceService Test").build();
+        SubService duplicateSubService = SubService.builder().subName("SubService4").build();
         UniqueViolationException exception = assertThrows(UniqueViolationException.class
                 , () -> subServiceService.addSubService(duplicateSubService));
         assertEquals("Base/Sub-Service Already Exists", exception.getMessage());
@@ -53,7 +67,7 @@ public class SubServiceServiceTest {
     @Order(5)
     @Test
     void findBySubNameTest() {
-        Optional<SubService> subServiceAvailable = subServiceService.findBySubName("SubServiceService Test");
+        Optional<SubService> subServiceAvailable = subServiceService.findBySubName("SubService4");
         Optional<SubService> subServiceUnavailable = subServiceService.findBySubName("Test");
 
         assertAll(

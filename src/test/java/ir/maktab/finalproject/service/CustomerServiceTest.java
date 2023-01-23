@@ -13,7 +13,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -24,15 +29,14 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CustomerServiceTest {
     @Autowired
     private CustomerService customerService;
-    @Autowired
-    private SubServiceService subServiceService;
+
     private static Customer customer;
+
     private static SubService subService;
 
-    private static BaseService baseService;
     private static Date afterNow;
-    private static Date beforeNow;
 
+    private static Date beforeNow;
 
     @BeforeAll
     static void beforeAll() {
@@ -43,16 +47,25 @@ public class CustomerServiceTest {
                 .lastName("Customer Lastname")
                 .customerOrderList(new ArrayList<>()).build();
 
-        baseService = BaseService.builder().baseName("BaseService2").build();
+        BaseService baseService = BaseService.builder().id(2).baseName("BaseService2").build();
 
         subService = SubService.builder()
-                .subName("SubService For Customer Test")
+                .id(2)
+                .subName("SubService2")
                 .basePrice(100)
                 .baseService(baseService).build();
 
         long now = System.currentTimeMillis();
         afterNow = new Date(now + 900000);
         beforeNow = new Date(now - 900000);
+    }
+    @BeforeAll
+    static void setup(@Autowired DataSource dataSource) {
+        try (Connection connection = dataSource.getConnection()) {
+            ScriptUtils.executeSqlScript(connection, new ClassPathResource("CustomerServiceData.sql"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Order(1)
@@ -128,7 +141,6 @@ public class CustomerServiceTest {
     @Order(7)
     @Test
     void requestOrderTest() {
-        subServiceService.addSubService(subService);
         CustomerOrder order = CustomerOrder.builder()
                 .customer(customer)
                 .subService(subService)

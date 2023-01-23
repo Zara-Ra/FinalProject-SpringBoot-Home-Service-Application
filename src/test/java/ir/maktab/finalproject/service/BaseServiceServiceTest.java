@@ -18,7 +18,7 @@ public class BaseServiceServiceTest {
 
     @BeforeAll
     static void beforeAll() {
-        baseService = BaseService.builder().baseName("BaseService Test").build();
+        baseService = BaseService.builder().baseName("BaseService1").build();
     }
 
     @Order(1)
@@ -31,7 +31,7 @@ public class BaseServiceServiceTest {
     @Order(2)
     @Test
     void invalidAddBaseServiceViolateUniqueTest() {
-        BaseService duplicateBaseService = BaseService.builder().baseName("BaseService Test").build();
+        BaseService duplicateBaseService = BaseService.builder().baseName("BaseService1").build();
         UniqueViolationException exception = assertThrows(UniqueViolationException.class
                 , () -> baseServiceService.addBaseService(duplicateBaseService));
         assertEquals("Base Service Already Exists", exception.getMessage());
