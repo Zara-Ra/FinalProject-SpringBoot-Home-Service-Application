@@ -40,21 +40,22 @@ public class BaseServiceServiceTest {
 
     @Order(4)
     @Test
-    void findAllBaseServiceTest(){
-        assertEquals(1,baseServiceService.findAllBaseService().size());
+    void findAllBaseServiceTest() {
+        assertEquals(1, baseServiceService.findAllBaseService().size());
     }
+
     @Order(5)
     @Test
-    void deleteBaseServiceTest(){
+    void deleteBaseServiceTest() {
         baseServiceService.deleteBaseService(baseService);
-        assertEquals(0,baseServiceService.findAllBaseService().size());
+        assertEquals(0, baseServiceService.findAllBaseService().size());
     }
 
     @Order(6)
     @Test
-    void deleteUnavailableBaseServiceTest(){
+    void deleteUnavailableBaseServiceTest() {
         BaseService duplicateBaseService = BaseService.builder().baseName("BaseService Test").build();
         baseServiceService.deleteBaseService(duplicateBaseService);
-        assertEquals(0,baseServiceService.findAllBaseService().size());
+        assertEquals(0, baseServiceService.findAllBaseService().size());
     }
 }

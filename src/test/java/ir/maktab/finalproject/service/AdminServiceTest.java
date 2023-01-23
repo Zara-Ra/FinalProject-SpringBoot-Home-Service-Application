@@ -22,7 +22,7 @@ public class AdminServiceTest {
     void assignAdminTest() {
         Admin admin = adminService.assignAdmin();
         assertAll(
-                ()-> assertEquals(1,admin.getId()),
+                () -> assertEquals(1, admin.getId()),
                 () -> assertEquals("admin@admin.com", admin.getEmail()),
                 () -> assertEquals("12345678", admin.getPassword())
         );

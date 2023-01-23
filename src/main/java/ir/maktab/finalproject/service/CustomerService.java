@@ -10,10 +10,8 @@ import ir.maktab.finalproject.service.exception.PasswordException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
 import ir.maktab.finalproject.service.exception.UserNotFoundException;
 import ir.maktab.finalproject.util.validation.Validation;
-import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +28,7 @@ public class CustomerService {
         customer.setCredit(Credit.builder().amount(0).build());
         try {
             return customerRepository.save(customer);
-        } catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new UniqueViolationException("Already Registered With This Email");
         }
     }

@@ -4,8 +4,6 @@ import ir.maktab.finalproject.data.entity.services.BaseService;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.repository.SubServiceRepository;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
-import ir.maktab.finalproject.service.exception.UpdatableViolationException;
-import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -23,7 +21,7 @@ public class SubServiceService {
     public SubService addSubService(SubService subService) {
         try {
             return subServiceRepository.save(subService);
-        } catch (PersistenceException e) {
+        } catch (DataIntegrityViolationException e) {
             throw new UniqueViolationException("Base/Sub-Service Already Exists");
         }
     }
@@ -33,11 +31,7 @@ public class SubServiceService {
     }
 
     public SubService editSubService(SubService subService) {
-        try {
-            return subServiceRepository.save(subService);
-        } catch (DataIntegrityViolationException e) {
-            throw new UpdatableViolationException("Can't Edit Sub-Service Name");
-        }
+        return subServiceRepository.save(subService);
     }
 
     public List<SubService> findAllByBaseService(BaseService baseService) {

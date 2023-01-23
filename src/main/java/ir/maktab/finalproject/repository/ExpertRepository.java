@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ExpertRepository extends JpaRepository<Expert,Integer> {
+public interface ExpertRepository extends JpaRepository<Expert, Integer> {
     Optional<Expert> findByEmail(String email);
 
     List<Expert> findAllByStatus(ExpertStatus status);

@@ -10,7 +10,6 @@ import ir.maktab.finalproject.util.exception.ValidationException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -138,31 +137,33 @@ public class CustomerServiceTest {
                 () -> assertEquals(1, customer.getCustomerOrderList().size()),
                 () -> assertEquals(OrderStatus.WAITING_FOR_EXPERT_OFFER, customer.getCustomerOrderList().get(0).getStatus()));
     }
+
     @Test
     @Order(8)
-    void invalidPriceForRequestOrderTest(){
+    void invalidPriceForRequestOrderTest() {
         CustomerOrder order = CustomerOrder.builder()
                 .customer(customer)
                 .subService(subService)
                 .price(50)
                 .description("Invalid price")
                 .preferredDate(afterNow).build();
-        OrderRequirementException exception  = assertThrows(OrderRequirementException.class
-                ,()->customerService.requestOrder(customer,order));
-        assertEquals("Price Of Order Should Be Greater Than Base Price Of The Sub-Service:( "+
-                order.getSubService().getSubName() + " "+order.getSubService().getBasePrice() +" )",exception.getMessage());
+        OrderRequirementException exception = assertThrows(OrderRequirementException.class
+                , () -> customerService.requestOrder(customer, order));
+        assertEquals("Price Of Order Should Be Greater Than Base Price Of The Sub-Service:( " +
+                order.getSubService().getSubName() + " " + order.getSubService().getBasePrice() + " )", exception.getMessage());
     }
+
     @Order(9)
     @Test
-    void invalidPreferredDateForRequestOrderTest(){
+    void invalidPreferredDateForRequestOrderTest() {
         CustomerOrder order = CustomerOrder.builder()
                 .customer(customer)
                 .subService(subService)
                 .price(200)
                 .description("Invalid preferred date")
                 .preferredDate(beforeNow).build();
-        OrderRequirementException exception  = assertThrows(OrderRequirementException.class
-                ,()->customerService.requestOrder(customer,order));
-        assertEquals("The Preferred Date Should Be After Now",exception.getMessage());
+        OrderRequirementException exception = assertThrows(OrderRequirementException.class
+                , () -> customerService.requestOrder(customer, order));
+        assertEquals("The Preferred Date Should Be After Now", exception.getMessage());
     }
 }

@@ -25,7 +25,7 @@ public class Expert extends User {
     @Lob
     private byte[] photo;
 
-    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<SubService> subServiceList = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.MERGE)

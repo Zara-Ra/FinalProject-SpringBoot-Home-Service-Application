@@ -173,7 +173,7 @@ public class ExpertServiceTest {
     @Test
     void invalidDeleteSubServiceFromExpertWhenSubServiceInExpertNotExits() {
         SubServiceException exception = assertThrows(SubServiceException.class
-                ,()->expertService.deleteSubServiceFromExpert(subService,expert));
-        assertEquals("Expert Doesn't Have This Sub-Service",exception.getMessage());
+                , () -> expertService.deleteSubServiceFromExpert(subService, expert));
+        assertEquals("Expert Doesn't Have This Sub-Service", exception.getMessage());
     }
 }

@@ -14,7 +14,7 @@ public class SubService {
     @EqualsAndHashCode.Exclude
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private BaseService baseService;
 
     @Column(unique = true, updatable = false, nullable = false)

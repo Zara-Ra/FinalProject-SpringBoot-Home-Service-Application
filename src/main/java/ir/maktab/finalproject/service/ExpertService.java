@@ -25,7 +25,7 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class ExpertService {
-    private  final ExpertRepository expertRepository;
+    private final ExpertRepository expertRepository;
 
     private final SubServiceService subServiceService;
 
@@ -39,9 +39,9 @@ public class ExpertService {
         expert.setStatus(ExpertStatus.NEW);
         expert.setCredit(Credit.builder().amount(0).build());
         expert.setAverageScore(0);
-        try{
+        try {
             return expertRepository.save(expert);
-        } catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new UniqueViolationException("Already Registered With This Email");
         }
     }
@@ -71,6 +71,7 @@ public class ExpertService {
         expert.setStatus(status);
         return expertRepository.save(expert);
     }
+
     public Expert addSubServiceToExpert(SubService subService, Expert expert) {
         if (expert.getSubServiceList().stream().anyMatch(s -> s.equals(subService)))
             throw new SubServiceException("Sub-Service Already Assigned To Expert");
