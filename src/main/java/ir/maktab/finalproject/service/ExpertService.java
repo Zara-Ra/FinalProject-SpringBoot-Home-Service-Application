@@ -33,8 +33,9 @@ public class ExpertService {
         try {
             validateNewExpert(expert, photoPath);
             expert.setPhoto(convertFileToBytes(photoPath));
-        } catch (IOException | NullPointerException e) {
-            throw new PhotoValidationException("Unable To Read Photo File");
+        }
+        catch (IOException | NullPointerException e){
+            throw new PhotoValidationException("Photo Not Found");
         }
         expert.setStatus(ExpertStatus.NEW);
         expert.setCredit(Credit.builder().amount(0).build());
@@ -90,7 +91,7 @@ public class ExpertService {
         return expertRepository.save(expert);
     }
 
-    private void validateNewExpert(Expert expert, String photoPath) {
+    private void validateNewExpert(Expert expert, String photoPath) throws IOException {
         Validation.validateName(expert.getFirstName());
         Validation.validateName(expert.getLastName());
         validateAccount(expert.getEmail(), expert.getPassword());

@@ -22,7 +22,7 @@ public class SubServiceServiceTest {
 
     @BeforeAll
     static void beforeAll() {
-        baseService = BaseService.builder().baseName("BaseService for SubService Test").build();
+        baseService = BaseService.builder().baseName("BaseService1").build();
         subService = SubService.builder()
                 .subName("SubServiceService Test")
                 .baseService(baseService).build();

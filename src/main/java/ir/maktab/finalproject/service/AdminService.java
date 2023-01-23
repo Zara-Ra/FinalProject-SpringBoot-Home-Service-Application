@@ -4,6 +4,7 @@ import ir.maktab.finalproject.data.entity.roles.Admin;
 import ir.maktab.finalproject.repository.AdminRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,11 +12,15 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class AdminService {
     private final AdminRepository adminRepository;
+    @Value(value = "${admin.email}")
+    private String email;
 
+    @Value(value = "${admin.password}")
+    private String password;
     public Admin assignAdmin() {
         Admin admin = new Admin();
-        admin.setEmail("admin@admin.com");
-        admin.setPassword("12345678");
+        admin.setEmail(email);
+        admin.setPassword(password);
         return adminRepository.save(admin);
     }
 }

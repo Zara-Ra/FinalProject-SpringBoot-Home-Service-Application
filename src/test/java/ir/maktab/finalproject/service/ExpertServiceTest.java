@@ -1,6 +1,7 @@
 package ir.maktab.finalproject.service;
 
 import ir.maktab.finalproject.data.entity.roles.Expert;
+import ir.maktab.finalproject.data.entity.services.BaseService;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
 import ir.maktab.finalproject.service.exception.PasswordException;
@@ -31,6 +32,8 @@ public class ExpertServiceTest {
 
     private static SubService subService;
 
+    private static BaseService baseService;
+
     @BeforeAll
     static void beforeAll() {
         expert = Expert.builder()
@@ -40,10 +43,11 @@ public class ExpertServiceTest {
                 .lastName("Expert Lastname")
                 .subServiceList(new ArrayList<>()).build();
 
+        baseService = BaseService.builder().baseName("BaseService3").build();
+
         subService = SubService.builder()
                 .subName("SubService For Expert Test")
                 .basePrice(100).build();
-
     }
 
     @Order(1)
@@ -71,10 +75,11 @@ public class ExpertServiceTest {
             "email@email.com,12345678,Expert123,Expert,images/valid.jpg,Invalid Name Only Alphabetic Characters Accepted",
             "email@email.com,12345678,Expert,NIL,images/valid.jpg,Invalid Name Only Alphabetic Characters Accepted",
             "email@email.com,12345678,Expert,Expert123,images/valid.jpg,Invalid Name Only Alphabetic Characters Accepted",
-            "email@email.com,12345678,Expert,Expert,NIL,Unable To Read Photo File",
+            "email@email.com,12345678,Expert,Expert,NIL,Photo Not Found",
             "email@email.com,12345678,Expert,Expert,images/notFound.jpg,Photo Not Found",
             "email@email.com,12345678,Expert,Expert,images/invalidSize.jpg,Photo Size Should Be Less Than 300 KiloBytes",
             "email@email.com,12345678,Expert,Expert,images/invalidType.gif,Invalid Photo Type Only 'jpeg' Accepted",
+            "email@email.com,12345678,Expert,Expert,images/invalidMIME.jpg,Photo Not Found"
     }, nullValues = "NIL")
     void invalidSignUpTest(String email, String password, String firstName, String lastName, String path, String exceptionMsg) {
         Expert invalidExpert = Expert.builder()

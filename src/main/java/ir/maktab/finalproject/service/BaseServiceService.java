@@ -9,6 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -31,4 +32,6 @@ public class BaseServiceService {
     public List<BaseService> findAllBaseService() {
         return baseServiceRepository.findAll();
     }
+
+    public Optional<BaseService> findByBaseName(String baseName){ return baseServiceRepository.findByBaseName(baseName);}
 }

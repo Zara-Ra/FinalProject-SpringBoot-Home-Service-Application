@@ -31,7 +31,7 @@ public class Validation {
                 "alphanumeric values");
     }
 
-    public void validatePhoto(String photoPath) {
+    public void validatePhoto(String photoPath) throws IOException {
         File file = new File(photoPath);
         int length = (int) file.length() / ONE_KILOBYTE;
         if (length > PHOTO_SIZE)
@@ -43,11 +43,7 @@ public class Validation {
             throw new PhotoValidationException("Photo Not Found");
         }
         String mimeType;
-        try {
-            mimeType = URLConnection.guessContentTypeFromStream(is);
-        } catch (IOException e) {
-            throw new PhotoValidationException("Photo Corrupted ");
-        }
+        mimeType = URLConnection.guessContentTypeFromStream(is);
         if (!mimeType.equals("image/jpeg"))
             throw new PhotoValidationException("Invalid Photo Type Only 'jpeg' Accepted");
     }

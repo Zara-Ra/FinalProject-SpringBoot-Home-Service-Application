@@ -2,6 +2,7 @@ package ir.maktab.finalproject.service;
 
 import ir.maktab.finalproject.data.entity.CustomerOrder;
 import ir.maktab.finalproject.data.entity.roles.Customer;
+import ir.maktab.finalproject.data.entity.services.BaseService;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.OrderStatus;
 import ir.maktab.finalproject.service.exception.OrderRequirementException;
@@ -27,6 +28,8 @@ public class CustomerServiceTest {
     private SubServiceService subServiceService;
     private static Customer customer;
     private static SubService subService;
+
+    private static BaseService baseService;
     private static Date afterNow;
     private static Date beforeNow;
 
@@ -40,10 +43,12 @@ public class CustomerServiceTest {
                 .lastName("Customer Lastname")
                 .customerOrderList(new ArrayList<>()).build();
 
+        baseService = BaseService.builder().baseName("BaseService2").build();
+
         subService = SubService.builder()
                 .subName("SubService For Customer Test")
-                .basePrice(100).build();
-
+                .basePrice(100)
+                .baseService(baseService).build();
 
         long now = System.currentTimeMillis();
         afterNow = new Date(now + 900000);
