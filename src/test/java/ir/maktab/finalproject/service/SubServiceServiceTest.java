@@ -2,6 +2,7 @@ package ir.maktab.finalproject.service;
 
 import ir.maktab.finalproject.data.entity.services.BaseService;
 import ir.maktab.finalproject.data.entity.services.SubService;
+import ir.maktab.finalproject.service.exception.SubServiceException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,12 +88,26 @@ public class SubServiceServiceTest {
                 () -> assertEquals("New Description", editSubService.getDescription())
         );
     }
+    @Order(7)
+    @Test
+    void invalidEditSubServiceTest(){
+        SubService unavailableSubService = SubService.builder().subName("Unavailable").build();
+        assertThrows(SubServiceException.class,()->subServiceService.editSubService(unavailableSubService));
+    }
 
     @Order(8)
     @Test
     void deleteSubServiceTest() {
         subServiceService.deleteSubService(subService);
         assertEquals(0, subServiceService.findAllByBaseService(baseService).size());
+    }
+
+    @Order(9)
+    @Test
+    void invalidDeleteSubServiceTest(){
+        SubService unavailableSubService = SubService.builder().subName("Unavailable").build();
+        SubServiceException exception = assertThrows(SubServiceException.class,()->subServiceService.editSubService(unavailableSubService));
+        assertEquals("Sub Service Not Found",exception.getMessage());
     }
 
 }

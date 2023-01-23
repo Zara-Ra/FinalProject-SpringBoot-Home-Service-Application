@@ -32,7 +32,6 @@ public class SubServiceService {
         Optional<SubService> foundSubService = subServiceRepository.findBySubName(subService.getSubName());
         if(foundSubService.isEmpty())
             throw new SubServiceException("Sub Service Not Found");
-
         subServiceRepository.delete(foundSubService.get());
     }
 
