@@ -2,6 +2,7 @@ package ir.maktab.finalproject.service;
 
 import ir.maktab.finalproject.data.entity.services.BaseService;
 import ir.maktab.finalproject.repository.BaseServiceRepository;
+import ir.maktab.finalproject.service.exception.BaseServiceException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,10 @@ public class BaseServiceService {
     }
 
     public void deleteBaseService(BaseService baseService) {
-        baseServiceRepository.delete(baseService);
+        Optional<BaseService> foundBaseService = baseServiceRepository.findByBaseName(baseService.getBaseName());
+        if(foundBaseService.isEmpty())
+            throw new BaseServiceException("Base Service Not Found");
+        baseServiceRepository.delete(foundBaseService.get());
     }
 
     public List<BaseService> findAllBaseService() {

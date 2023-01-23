@@ -1,6 +1,7 @@
 package ir.maktab.finalproject.service;
 
 import ir.maktab.finalproject.data.entity.services.BaseService;
+import ir.maktab.finalproject.service.exception.BaseServiceException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class BaseServiceServiceTest {
     @Order(4)
     @Test
     void findAllBaseServiceTest() {
-        assertTrue(baseServiceService.findAllBaseService().stream().anyMatch(b->b.equals(baseService)));
+        assertTrue(baseServiceService.findAllBaseService().stream().anyMatch(b -> b.equals(baseService)));
     }
 
     @Order(5)
@@ -50,11 +51,11 @@ public class BaseServiceServiceTest {
         assertTrue(baseServiceService.findByBaseName(baseService.getBaseName()).isEmpty());
     }
 
-   /* @Order(6)
+    @Order(6)
     @Test
     void deleteUnavailableBaseServiceTest() {
-        BaseService duplicateBaseService = BaseService.builder().baseName("BaseService Test").build();
-        baseServiceService.deleteBaseService(duplicateBaseService);
-        assertTrue(baseServiceService.findAllBaseService());
-    }*/
+        BaseService deleteBaseService = BaseService.builder().baseName("UnavailableBaseService").build();
+        BaseServiceException exception = assertThrows(BaseServiceException.class,()->baseServiceService.deleteBaseService(deleteBaseService));
+        assertEquals("Base Service Not Found",exception.getMessage());
+    }
 }
