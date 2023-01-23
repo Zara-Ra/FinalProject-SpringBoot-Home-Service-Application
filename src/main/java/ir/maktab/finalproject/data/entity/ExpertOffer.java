@@ -20,15 +20,21 @@ public class ExpertOffer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Exclude
     Integer id;
+
     @OneToOne
     Expert expert;
+
     @ManyToOne
     CustomerOrder customerOrder;
+
     @Temporal(value = TemporalType.DATE)
     @CreationTimestamp
     private Date registerDate;
+
     private double price;
+
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date preferredDate;
+
     private Duration duration;
 }

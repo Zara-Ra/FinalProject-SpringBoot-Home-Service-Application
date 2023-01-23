@@ -19,23 +19,32 @@ public class CustomerOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Exclude
     private Integer id;
+
     @ManyToOne
     private Customer customer;
+
     @OneToOne
     private SubService subService;
+
     @Column(nullable = false)
     private double price;
+
     @Column(nullable = false)
     private String description;
+
     @Column(nullable = false)
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date preferredDate;
+
     @OneToOne(cascade = CascadeType.PERSIST)
     private Address address;
+
     @Enumerated(value = EnumType.STRING)
     private OrderStatus status;
+
     @OneToOne
     private Expert expert;
+
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date doneDate;
 }

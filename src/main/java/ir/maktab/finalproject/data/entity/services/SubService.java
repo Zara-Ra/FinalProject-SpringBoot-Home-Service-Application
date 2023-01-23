@@ -13,10 +13,14 @@ public class SubService {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Exclude
     private Integer id;
+
     @ManyToOne
     private BaseService baseService;
+
     @Column(unique = true, updatable = false, nullable = false)
     private String subName;
+
     private double basePrice;
+
     private String description;
 }

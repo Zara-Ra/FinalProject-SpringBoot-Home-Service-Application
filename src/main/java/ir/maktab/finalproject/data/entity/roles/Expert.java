@@ -21,12 +21,16 @@ import java.util.Objects;
 public class Expert extends User {
     @Enumerated(value = EnumType.STRING)
     private ExpertStatus status;
+
     @Lob
     private byte[] photo;
+
     @ManyToMany(cascade = CascadeType.ALL)
     private List<SubService> subServiceList = new ArrayList<>();
+
     @OneToMany(cascade = CascadeType.MERGE)
     private List<Review> reviewList = new ArrayList<>();
+
     private double averageScore;
 
     public Expert(String email, String password, String firstName, String lastName) {

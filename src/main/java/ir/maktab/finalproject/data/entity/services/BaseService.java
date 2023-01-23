@@ -15,6 +15,7 @@ public class BaseService {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Exclude
     private Integer id;
+
     @Column(unique = true, nullable = false)
     private String baseName;
 }

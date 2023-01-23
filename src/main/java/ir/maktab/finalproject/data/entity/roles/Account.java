@@ -14,8 +14,10 @@ public abstract class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Exclude
     protected Integer id;
+
     @Column(unique = true, nullable = false, updatable = false)
     protected String email;
+
     @Column(length = 8, nullable = false)
     protected String password;
 

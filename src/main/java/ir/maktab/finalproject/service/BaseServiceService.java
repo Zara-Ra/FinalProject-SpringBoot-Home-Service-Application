@@ -22,6 +22,7 @@ public class BaseServiceService {
             throw new UniqueViolationException("Base Service Already Exists");
         }
     }
+
     public void deleteBaseService(BaseService baseService) {
         baseServiceRepository.delete(baseService);
     }

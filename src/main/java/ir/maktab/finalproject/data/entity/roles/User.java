@@ -21,12 +21,15 @@ import java.util.Date;
 public abstract class User extends Account {
     @Column(nullable = false)
     protected String firstName;
+
     @Column(nullable = false)
     protected String lastName;
+
     @EqualsAndHashCode.Exclude
     @Temporal(value = TemporalType.DATE)
     @CreationTimestamp
     protected Date registerDate;
+
     @EqualsAndHashCode.Exclude
     @OneToOne(cascade = CascadeType.PERSIST)
     protected Credit credit;

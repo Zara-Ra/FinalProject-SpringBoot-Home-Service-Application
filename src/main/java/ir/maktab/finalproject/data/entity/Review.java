@@ -15,7 +15,9 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Exclude
     private Integer id;
+
     @Column(nullable = false)
     private int score;
+
     private String comment;
 }
