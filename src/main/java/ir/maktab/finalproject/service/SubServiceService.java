@@ -32,9 +32,9 @@ public class SubServiceService {
         subServiceRepository.delete(subService);
     }
 
-    public void editSubService(SubService subService) {
+    public SubService editSubService(SubService subService) {
         try {
-            subServiceRepository.save(subService);
+            return subServiceRepository.save(subService);
         } catch (DataIntegrityViolationException e) {
             throw new UpdatableViolationException("Can't Edit Sub-Service Name");
         }

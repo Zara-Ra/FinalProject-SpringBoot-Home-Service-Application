@@ -17,7 +17,6 @@ public class AdminServiceTest {
     @Autowired
     private AdminService adminService;
 
-
     @Order(1)
     @Test
     void assignAdminTest() {

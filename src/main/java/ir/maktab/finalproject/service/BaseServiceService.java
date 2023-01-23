@@ -16,9 +16,9 @@ import java.util.List;
 public class BaseServiceService {
     private final BaseServiceRepository baseServiceRepository;
 
-    public void addBaseService(BaseService baseService) {
+    public BaseService addBaseService(BaseService baseService) {
         try {
-            baseServiceRepository.save(baseService);
+            return baseServiceRepository.save(baseService);
         } catch (DataIntegrityViolationException e) {
             throw new UniqueViolationException("Base Service Already Exists");
         }
