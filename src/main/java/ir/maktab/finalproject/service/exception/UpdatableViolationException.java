@@ -1,6 +1,8 @@
 package ir.maktab.finalproject.service.exception;
 
-public class UpdatableViolationException extends RuntimeException {
+import ir.maktab.finalproject.util.exception.ValidationException;
+
+public class UpdatableViolationException extends ValidationException {
     public UpdatableViolationException(String message) {
         super(message);
     }

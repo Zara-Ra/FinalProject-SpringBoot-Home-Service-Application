@@ -7,10 +7,14 @@ import ir.maktab.finalproject.data.enums.OrderStatus;
 import ir.maktab.finalproject.repository.CustomerRepository;
 import ir.maktab.finalproject.service.exception.OrderRequirementException;
 import ir.maktab.finalproject.service.exception.PasswordException;
+import ir.maktab.finalproject.service.exception.UniqueViolationException;
 import ir.maktab.finalproject.service.exception.UserNotFoundException;
 import ir.maktab.finalproject.util.validation.Validation;
+import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -24,7 +28,11 @@ public class CustomerService {
     public Customer signUp(Customer customer) {
         validateNewCustomer(customer);
         customer.setCredit(Credit.builder().amount(0).build());
-        return customerRepository.save(customer);
+        try {
+            return customerRepository.save(customer);
+        } catch (DataIntegrityViolationException e){
+            throw new UniqueViolationException("Already Registered With This Email");
+        }
     }
 
     public Customer signIn(String email, String password) {

@@ -1,6 +1,8 @@
 package ir.maktab.finalproject.service.exception;
 
-public class UniqueViolationException extends RuntimeException {
+import ir.maktab.finalproject.util.exception.ValidationException;
+
+public class UniqueViolationException extends ValidationException {
     public UniqueViolationException(String message) {
         super(message);
     }

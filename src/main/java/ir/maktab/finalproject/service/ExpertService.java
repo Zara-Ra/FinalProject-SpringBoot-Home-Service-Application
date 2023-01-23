@@ -7,11 +7,13 @@ import ir.maktab.finalproject.data.enums.ExpertStatus;
 import ir.maktab.finalproject.repository.ExpertRepository;
 import ir.maktab.finalproject.service.exception.PasswordException;
 import ir.maktab.finalproject.service.exception.SubServiceException;
+import ir.maktab.finalproject.service.exception.UniqueViolationException;
 import ir.maktab.finalproject.service.exception.UserNotFoundException;
 import ir.maktab.finalproject.util.exception.PhotoValidationException;
 import ir.maktab.finalproject.util.validation.Validation;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -36,7 +38,11 @@ public class ExpertService {
         expert.setStatus(ExpertStatus.NEW);
         expert.setCredit(Credit.builder().amount(0).build());
         expert.setAverageScore(0);
+        try{
         expertRepository.save(expert);
+        } catch (DataIntegrityViolationException e){
+            throw new UniqueViolationException("Already Registered With This Email");
+        }
     }
 
     public Expert signIn(String email, String password) {

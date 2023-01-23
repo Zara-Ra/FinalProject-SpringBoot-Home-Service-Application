@@ -65,7 +65,9 @@ public class CustomerServiceTest {
 
     @Order(2)
     @ParameterizedTest
-    @CsvSource({"null,12345678,Customer,Customer,Invalid Email",
+    @CsvSource({
+            "customer@email.com,12345678,Customer,Customer,Already Registered With This Email",
+            "null,12345678,Customer,Customer,Invalid Email",
             "email.email.com,12345678,Customer,Customer,Invalid Email",
             "email@email.com,null,Customer,Customer,Invalid Password should be 8 characters including alphanumeric values",
             "email@email.com,123456,Customer,Customer,Invalid Password should be 8 characters including alphanumeric values",
