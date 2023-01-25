@@ -1,6 +1,7 @@
 package ir.maktab.finalproject.data.entity;
 
 import ir.maktab.finalproject.data.entity.roles.Expert;
+import ir.maktab.finalproject.data.entity.services.SubService;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +28,9 @@ public class ExpertOffer {
     @ManyToOne
     CustomerOrder customerOrder;
 
+    @ManyToOne
+    SubService subService;
+
     @Temporal(value = TemporalType.DATE)
     @CreationTimestamp
     private Date registerDate;
@@ -36,5 +40,6 @@ public class ExpertOffer {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date preferredDate;
 
+    @Column(nullable = false)
     private Duration duration;
 }

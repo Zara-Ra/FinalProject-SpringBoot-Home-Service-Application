@@ -20,7 +20,7 @@ public class CustomerOrder {
     @EqualsAndHashCode.Exclude
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Customer customer;
 
     @OneToOne

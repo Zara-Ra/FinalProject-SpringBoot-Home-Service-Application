@@ -2,10 +2,11 @@ package ir.maktab.finalproject.service;
 
 import ir.maktab.finalproject.data.entity.roles.Admin;
 import ir.maktab.finalproject.repository.AdminRepository;
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor

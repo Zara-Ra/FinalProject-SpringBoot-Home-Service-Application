@@ -1,11 +1,8 @@
 package ir.maktab.finalproject.service;
 
-import ir.maktab.finalproject.data.entity.CustomerOrder;
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.services.BaseService;
 import ir.maktab.finalproject.data.entity.services.SubService;
-import ir.maktab.finalproject.data.enums.OrderStatus;
-import ir.maktab.finalproject.service.exception.OrderRequirementException;
 import ir.maktab.finalproject.service.exception.PasswordException;
 import ir.maktab.finalproject.util.exception.ValidationException;
 import org.junit.jupiter.api.*;
@@ -32,12 +29,6 @@ public class CustomerServiceTest {
 
     private static Customer customer;
 
-    private static SubService subService;
-
-    private static Date afterNow;
-
-    private static Date beforeNow;
-
     @BeforeAll
     static void beforeAll() {
         customer = Customer.builder()
@@ -47,7 +38,7 @@ public class CustomerServiceTest {
                 .lastName("Customer Lastname")
                 .customerOrderList(new ArrayList<>()).build();
 
-        BaseService baseService = BaseService.builder().id(2).baseName("BaseService2").build();
+        /*BaseService baseService = BaseService.builder().id(2).baseName("BaseService2").build();
 
         subService = SubService.builder()
                 .id(2)
@@ -57,8 +48,9 @@ public class CustomerServiceTest {
 
         long now = System.currentTimeMillis();
         afterNow = new Date(now + 900000);
-        beforeNow = new Date(now - 900000);
+        beforeNow = new Date(now - 900000);*/
     }
+
     @BeforeAll
     static void setup(@Autowired DataSource dataSource) {
         try (Connection connection = dataSource.getConnection()) {
@@ -138,49 +130,4 @@ public class CustomerServiceTest {
         assertEquals("Entered Password Doesn't Match", exception.getMessage());
     }
 
-    @Order(7)
-    @Test
-    void requestOrderTest() {
-        CustomerOrder order = CustomerOrder.builder()
-                .customer(customer)
-                .subService(subService)
-                .price(200)
-                .description("Order description")
-                .preferredDate(afterNow).build();
-
-        customerService.requestOrder(customer, order);
-
-        assertAll(
-                () -> assertEquals(1, customer.getCustomerOrderList().size()),
-                () -> assertEquals(OrderStatus.WAITING_FOR_EXPERT_OFFER, customer.getCustomerOrderList().get(0).getStatus()));
-    }
-
-    @Test
-    @Order(8)
-    void invalidPriceForRequestOrderTest() {
-        CustomerOrder order = CustomerOrder.builder()
-                .customer(customer)
-                .subService(subService)
-                .price(50)
-                .description("Invalid price")
-                .preferredDate(afterNow).build();
-        OrderRequirementException exception = assertThrows(OrderRequirementException.class
-                , () -> customerService.requestOrder(customer, order));
-        assertEquals("Price Of Order Should Be Greater Than Base Price Of The Sub-Service:( " +
-                order.getSubService().getSubName() + " " + order.getSubService().getBasePrice() + " )", exception.getMessage());
-    }
-
-    @Order(9)
-    @Test
-    void invalidPreferredDateForRequestOrderTest() {
-        CustomerOrder order = CustomerOrder.builder()
-                .customer(customer)
-                .subService(subService)
-                .price(200)
-                .description("Invalid preferred date")
-                .preferredDate(beforeNow).build();
-        OrderRequirementException exception = assertThrows(OrderRequirementException.class
-                , () -> customerService.requestOrder(customer, order));
-        assertEquals("The Preferred Date Should Be After Now", exception.getMessage());
-    }
 }

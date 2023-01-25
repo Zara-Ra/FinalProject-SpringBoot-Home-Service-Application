@@ -96,6 +96,8 @@ public class ExpertService {
         return expertRepository.save(expert);
     }
 
+
+
     private void validateNewExpert(Expert expert, String photoPath) throws IOException {
         Validation.validateName(expert.getFirstName());
         Validation.validateName(expert.getLastName());
