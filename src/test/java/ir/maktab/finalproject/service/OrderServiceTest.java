@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class OrderServiceTest {
 
     @Autowired
-    private OrderService orderService;
+    private CustomerOrderService customerOrderService;
 
     private static SubService subService;
     private static Customer customer;
@@ -77,7 +77,7 @@ public class OrderServiceTest {
                 .description("Order description")
                 .preferredDate(afterNow).build();
 
-        orderService.requestOrder(customer, order);
+        customerOrderService.requestOrder(customer, order);
 
         assertAll(
                 () -> assertEquals(1, customer.getCustomerOrderList().size()),
@@ -94,7 +94,7 @@ public class OrderServiceTest {
                 .description("Invalid price")
                 .preferredDate(afterNow).build();
         OrderRequirementException exception = assertThrows(OrderRequirementException.class
-                , () -> orderService.requestOrder(customer, order));
+                , () -> customerOrderService.requestOrder(customer, order));
         assertEquals("Price Of Order Should Be Greater Than Base Price Of The Sub-Service:( " +
                 order.getSubService().getSubName() + " " + order.getSubService().getBasePrice() + " )", exception.getMessage());
     }
@@ -109,7 +109,7 @@ public class OrderServiceTest {
                 .description("Invalid preferred date")
                 .preferredDate(beforeNow).build();
         OrderRequirementException exception = assertThrows(OrderRequirementException.class
-                , () -> orderService.requestOrder(customer, order));
+                , () -> customerOrderService.requestOrder(customer, order));
         assertEquals("The Preferred Date Should Be After Now", exception.getMessage());
     }
 }

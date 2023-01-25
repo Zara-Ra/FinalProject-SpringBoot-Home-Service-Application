@@ -3,7 +3,6 @@ package ir.maktab.finalproject.service;
 import ir.maktab.finalproject.data.entity.CustomerOrder;
 import ir.maktab.finalproject.data.entity.ExpertOffer;
 import ir.maktab.finalproject.data.enums.OrderStatus;
-import ir.maktab.finalproject.repository.CustomerRepository;
 import ir.maktab.finalproject.repository.ExpertOfferRepository;
 import ir.maktab.finalproject.service.exception.OfferRequirementException;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +15,9 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class OfferService {
+public class ExpertOfferService {
     private final ExpertOfferRepository expertOfferRepository;
-    private final OrderService customerOrderService;
+    private final CustomerOrderService customerOrderService;
 
     public ExpertOffer submitOffer(ExpertOffer expertOffer){
         if(expertOffer.getSubService().getBasePrice() < expertOffer.getPrice())
@@ -37,7 +36,20 @@ public class OfferService {
         return expertOfferRepository.save(expertOffer);
     }
 
-    public List<ExpertOffer> findAllExpertOffer(CustomerOrder customerOrder){
-        return expertOfferRepository.findAllByCustomerOrderOrderByPrice(customerOrder);
+    public List<ExpertOffer> findAllExpertOfferFor(CustomerOrder customerOrder){
+        return expertOfferRepository.findAllByCustomerOrderOrderByPriceAsc(customerOrder);//todo maybe incorrect name OrderBy
+        //todo use Sort or OrderBy ??
+    }
+
+    public List<ExpertOffer> sortByPrice(List<ExpertOffer> expertOfferList){
+        return null;
+    }
+
+    public List<ExpertOffer> sortByExpertAverageScore(List<ExpertOffer> expertOfferList){
+        return null;
+    }
+
+    public void update(ExpertOffer expertOffer) {
+        expertOfferRepository.save(expertOffer);
     }
 }

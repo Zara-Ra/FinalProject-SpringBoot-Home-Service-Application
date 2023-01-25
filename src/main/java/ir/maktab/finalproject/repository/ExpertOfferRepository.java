@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface ExpertOfferRepository extends JpaRepository<ExpertOffer, Integer> {
-    List<ExpertOffer> findAllByCustomerOrderOrderByPrice(CustomerOrder customerOrder);
+    List<ExpertOffer> findAllByCustomerOrderOrderByPriceAsc(CustomerOrder customerOrder);
 }

@@ -42,9 +42,10 @@ public class CustomerOrder {
     @Enumerated(value = EnumType.STRING)
     private OrderStatus status;
 
-    @OneToOne
+    @ManyToOne
     private Expert expert;
 
     @Temporal(value = TemporalType.TIMESTAMP)
+    //@UpdatableTimestamp
     private Date doneDate;
 }

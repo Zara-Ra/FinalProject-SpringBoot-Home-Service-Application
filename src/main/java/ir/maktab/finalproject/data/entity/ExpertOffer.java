@@ -22,7 +22,7 @@ public class ExpertOffer {
     @EqualsAndHashCode.Exclude
     Integer id;
 
-    @OneToOne
+    @ManyToOne
     Expert expert;
 
     @ManyToOne
@@ -42,4 +42,6 @@ public class ExpertOffer {
 
     @Column(nullable = false)
     private Duration duration;
+
+    Boolean isChosen;
 }
