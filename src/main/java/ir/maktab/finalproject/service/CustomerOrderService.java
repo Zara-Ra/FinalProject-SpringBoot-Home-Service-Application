@@ -20,9 +20,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomerOrderService {
     private final CustomerOrderRepository customerOrderRepository;
-    private final ExpertOfferService expertOfferService;
+    //private final ExpertOfferService expertOfferService;
 
-    public void requestOrder(Customer customer, CustomerOrder customerOrder) {
+    public CustomerOrder requestOrder(Customer customer, CustomerOrder customerOrder) {
         if (customerOrder.getPrice() < customerOrder.getSubService().getBasePrice())
             throw new OrderRequirementException("Price Of Order Should Be Greater Than Base Price Of The Sub-Service:( "
                     + customerOrder.getSubService().getSubName() + " " + customerOrder.getSubService().getBasePrice() + " )");
@@ -32,7 +32,7 @@ public class CustomerOrderService {
 
         customerOrder.setStatus(OrderStatus.WAITING_FOR_EXPERT_OFFER);
         customer.getCustomerOrderList().add(customerOrder);
-        customerOrderRepository.save(customerOrder);
+        return customerOrderRepository.save(customerOrder);
     }
     public List<CustomerOrder> findAllBySubServiceAndStatus(SubService subService) {
         return customerOrderRepository.findAllBySubServiceAndStatus(subService, OrderStatus.WAITING_FOR_EXPERT_SELECTION
@@ -44,11 +44,12 @@ public class CustomerOrderService {
     }
 
     public void chooseOffer(CustomerOrder customerOrder, ExpertOffer expertOffer){
-        expertOffer.setIsChosen(true);
-        expertOfferService.update(expertOffer);
+        //expertOffer.setIsChosen(true);
+        //expertOfferService.update(expertOffer);
 
         customerOrder.setStatus(OrderStatus.WAITING_FOR_EXPERT_ARRIVAL);
-        customerOrder.setExpert(expertOffer.getExpert());
+        //customerOrder.setExpert(expertOffer.getExpert());
+        customerOrder.setAcceptedExpertOffer(expertOffer);
         customerOrderRepository.save(customerOrder);
     }
 
@@ -63,7 +64,7 @@ public class CustomerOrderService {
         customerOrder.setStatus(OrderStatus.DONE);
         customerOrderRepository.save(customerOrder);
 
-        //calculate duration(next phase) we will need ExpertOffer here
+        //todo calculate duration(next phase) we will need ExpertOffer here
         // should also add two extra Date fields in CustomerOrder to calculate the actual Duration and compare it with the experts claim
     }
 

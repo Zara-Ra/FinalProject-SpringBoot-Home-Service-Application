@@ -20,7 +20,7 @@ public class ExpertOfferService {
     private final CustomerOrderService customerOrderService;
 
     public ExpertOffer submitOffer(ExpertOffer expertOffer){
-        if(expertOffer.getSubService().getBasePrice() < expertOffer.getPrice())
+        if(expertOffer.getPrice() < expertOffer.getSubService().getBasePrice())
             throw new OfferRequirementException("Price Of Offer Should Be Greater Than Base Price Of The Sub-Service"
                     + expertOffer.getSubService().getSubName()+ " " + expertOffer.getSubService().getBasePrice() );
         if(expertOffer.getPreferredDate().before(new Date())

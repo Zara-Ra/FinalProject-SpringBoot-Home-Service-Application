@@ -19,11 +19,10 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest
-public class OrderServiceTest {
+public class CustomerOrderServiceTest {
 
     @Autowired
     private CustomerOrderService customerOrderService;
@@ -67,7 +66,7 @@ public class OrderServiceTest {
         }
     }
 
-    @Order(7)
+    @Order(1)
     @Test
     void requestOrderTest() {
         CustomerOrder order = CustomerOrder.builder()
@@ -77,15 +76,17 @@ public class OrderServiceTest {
                 .description("Order description")
                 .preferredDate(afterNow).build();
 
-        customerOrderService.requestOrder(customer, order);
+        CustomerOrder savedOrder = customerOrderService.requestOrder(customer, order);
 
         assertAll(
                 () -> assertEquals(1, customer.getCustomerOrderList().size()),
-                () -> assertEquals(OrderStatus.WAITING_FOR_EXPERT_OFFER, customer.getCustomerOrderList().get(0).getStatus()));
+                () -> assertEquals(OrderStatus.WAITING_FOR_EXPERT_OFFER, customer.getCustomerOrderList().get(0).getStatus()),
+                () -> assertEquals(order, savedOrder)
+        );
     }
 
     @Test
-    @Order(8)
+    @Order(2)
     void invalidPriceForRequestOrderTest() {
         CustomerOrder order = CustomerOrder.builder()
                 .customer(customer)
@@ -99,7 +100,7 @@ public class OrderServiceTest {
                 order.getSubService().getSubName() + " " + order.getSubService().getBasePrice() + " )", exception.getMessage());
     }
 
-    @Order(9)
+    @Order(3)
     @Test
     void invalidPreferredDateForRequestOrderTest() {
         CustomerOrder order = CustomerOrder.builder()
@@ -112,4 +113,6 @@ public class OrderServiceTest {
                 , () -> customerOrderService.requestOrder(customer, order));
         assertEquals("The Preferred Date Should Be After Now", exception.getMessage());
     }
+
+
 }

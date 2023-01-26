@@ -42,10 +42,12 @@ public class CustomerOrder {
     @Enumerated(value = EnumType.STRING)
     private OrderStatus status;
 
-    @ManyToOne
+    /*@ManyToOne
     private Expert expert;
+*/
+    @OneToOne(cascade = CascadeType.MERGE)
+    private ExpertOffer acceptedExpertOffer;
 
     @Temporal(value = TemporalType.TIMESTAMP)
-    //@UpdatableTimestamp
     private Date doneDate;
 }

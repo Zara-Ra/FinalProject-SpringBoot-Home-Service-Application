@@ -3,10 +3,7 @@ package ir.maktab.finalproject.data.entity;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Duration;
@@ -15,6 +12,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 public class ExpertOffer {
     @Id
@@ -25,7 +23,7 @@ public class ExpertOffer {
     @ManyToOne
     Expert expert;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     CustomerOrder customerOrder;
 
     @ManyToOne
@@ -43,5 +41,5 @@ public class ExpertOffer {
     @Column(nullable = false)
     private Duration duration;
 
-    Boolean isChosen;
+    //Boolean isChosen;
 }
