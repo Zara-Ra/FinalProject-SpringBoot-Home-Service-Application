@@ -2,10 +2,9 @@ package ir.maktab.finalproject.service.impl;
 
 import ir.maktab.finalproject.data.entity.services.BaseService;
 import ir.maktab.finalproject.repository.BaseServiceRepository;
-import ir.maktab.finalproject.service.ServiceService;
+import ir.maktab.finalproject.service.IService;
 import ir.maktab.finalproject.service.exception.BaseServiceException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +12,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
-public class BaseServiceService implements ServiceService<BaseService> {
+public class BaseServiceService implements IService<BaseService> {
     private final BaseServiceRepository baseServiceRepository;
+
+    public BaseServiceService(BaseServiceRepository baseServiceRepository) {
+        this.baseServiceRepository = baseServiceRepository;
+    }
 
     @Override
     public BaseService add(BaseService baseService) {

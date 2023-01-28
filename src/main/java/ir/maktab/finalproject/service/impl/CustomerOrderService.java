@@ -9,8 +9,6 @@ import ir.maktab.finalproject.repository.CustomerOrderRepository;
 import ir.maktab.finalproject.service.exception.NotExitsException;
 import ir.maktab.finalproject.service.exception.OfferRequirementException;
 import ir.maktab.finalproject.service.exception.OrderRequirementException;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -18,9 +16,12 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class CustomerOrderService {
     private final CustomerOrderRepository customerOrderRepository;
+
+    public CustomerOrderService(CustomerOrderRepository customerOrderRepository) {
+        this.customerOrderRepository = customerOrderRepository;
+    }
 
     public CustomerOrder requestOrder(Customer customer, CustomerOrder customerOrder) {
         if (customerOrder.getPrice() < customerOrder.getSubService().getBasePrice())

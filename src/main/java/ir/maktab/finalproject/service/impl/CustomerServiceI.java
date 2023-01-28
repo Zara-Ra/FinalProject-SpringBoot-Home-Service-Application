@@ -3,20 +3,22 @@ package ir.maktab.finalproject.service.impl;
 import ir.maktab.finalproject.data.entity.Credit;
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.repository.CustomerRepository;
-import ir.maktab.finalproject.service.RolesService;
+import ir.maktab.finalproject.service.IRolesService;
 import ir.maktab.finalproject.service.exception.PasswordException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
 import ir.maktab.finalproject.service.exception.UserNotFoundException;
 import ir.maktab.finalproject.util.validation.Validation;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
-public class CustomerService implements RolesService<Customer> {
+public class CustomerServiceI implements IRolesService<Customer> {
     private final CustomerRepository customerRepository;
+
+    public CustomerServiceI(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
+    }
+
     @Override
     public Customer signUp(Customer customer) {
             validateNewCustomer(customer);

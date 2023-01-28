@@ -5,7 +5,7 @@ import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
 import ir.maktab.finalproject.service.exception.PasswordException;
 import ir.maktab.finalproject.service.exception.SubServiceException;
-import ir.maktab.finalproject.service.impl.ExpertService;
+import ir.maktab.finalproject.service.impl.ExpertServiceI;
 import ir.maktab.finalproject.util.exception.ValidationException;
 import ir.maktab.finalproject.util.validation.Validation;
 import org.junit.jupiter.api.*;
@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class ExpertServiceTest {
     @Autowired
-    private ExpertService expertService;
+    private ExpertServiceI expertService;
 
     private static Expert expert;
 

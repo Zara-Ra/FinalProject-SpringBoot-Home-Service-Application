@@ -7,7 +7,6 @@ import ir.maktab.finalproject.data.enums.OrderStatus;
 import ir.maktab.finalproject.repository.ExpertOfferRepository;
 import ir.maktab.finalproject.service.exception.NotExitsException;
 import ir.maktab.finalproject.service.exception.OfferRequirementException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,10 +14,14 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class ExpertOfferService {
     private final ExpertOfferRepository expertOfferRepository;
     private final CustomerOrderService customerOrderService;
+
+    public ExpertOfferService(ExpertOfferRepository expertOfferRepository, CustomerOrderService customerOrderService) {
+        this.expertOfferRepository = expertOfferRepository;
+        this.customerOrderService = customerOrderService;
+    }
 
     @Transactional
     public ExpertOffer submitOffer(CustomerOrder customerOrder, ExpertOffer expertOffer) {

@@ -2,7 +2,7 @@ package ir.maktab.finalproject.service;
 
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.service.exception.PasswordException;
-import ir.maktab.finalproject.service.impl.CustomerService;
+import ir.maktab.finalproject.service.impl.CustomerServiceI;
 import ir.maktab.finalproject.util.exception.ValidationException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class CustomerServiceTest {
     @Autowired
-    private CustomerService customerService;
+    private CustomerServiceI customerService;
 
     private static Customer customer;
 

@@ -5,8 +5,7 @@ import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
 import ir.maktab.finalproject.repository.ExpertRepository;
-import ir.maktab.finalproject.service.RolesService;
-import ir.maktab.finalproject.service.impl.SubServiceService;
+import ir.maktab.finalproject.service.IRolesService;
 import ir.maktab.finalproject.service.exception.PasswordException;
 import ir.maktab.finalproject.service.exception.SubServiceException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
@@ -14,7 +13,6 @@ import ir.maktab.finalproject.service.exception.UserNotFoundException;
 import ir.maktab.finalproject.util.exception.PhotoValidationException;
 import ir.maktab.finalproject.util.validation.Validation;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +22,15 @@ import java.util.List;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
-public class ExpertService implements RolesService<Expert> {
+public class ExpertServiceI implements IRolesService<Expert> {
     private final ExpertRepository expertRepository;
 
     private final SubServiceService subServiceService;
+
+    public ExpertServiceI(ExpertRepository expertRepository, SubServiceService subServiceService) {
+        this.expertRepository = expertRepository;
+        this.subServiceService = subServiceService;
+    }
 
     @Override
     public Expert signUp(Expert expert) {
