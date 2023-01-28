@@ -15,12 +15,12 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class ExpertOfferService {
     private final ExpertOfferRepository expertOfferRepository;
     private final CustomerOrderService customerOrderService;
 
+    @Transactional
     public ExpertOffer submitOffer(CustomerOrder customerOrder, ExpertOffer expertOffer) {
         if (!customerOrder.getSubService().equals(expertOffer.getSubService()))
             throw new OfferRequirementException("SubService Of Order and Offer Doesn't Match");
@@ -43,6 +43,7 @@ public class ExpertOfferService {
         return saveOffer;
     }
 
+    @Transactional
     public void choseOffer(CustomerOrder customerOrder, ExpertOffer expertOffer) {
         if (!customerOrder.getExpertOfferList().contains(expertOffer))
             throw new NotExitsException("Offer Is Not For This Order");

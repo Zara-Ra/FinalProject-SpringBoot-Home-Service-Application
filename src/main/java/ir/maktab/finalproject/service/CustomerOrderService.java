@@ -18,7 +18,6 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class CustomerOrderService {
     private final CustomerOrderRepository customerOrderRepository;
@@ -70,6 +69,6 @@ public class CustomerOrderService {
         customerOrder.setStatus(OrderStatus.DONE);
         return customerOrderRepository.save(customerOrder);
 
-        //todo calculate duration(next phase) we will need ExpertOffer here
+        // todo calculate duration(next phase) we will need ExpertOffer here
     }
 }

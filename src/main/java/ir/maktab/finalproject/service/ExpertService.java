@@ -2,7 +2,6 @@ package ir.maktab.finalproject.service;
 
 import ir.maktab.finalproject.data.entity.Credit;
 import ir.maktab.finalproject.data.entity.roles.Expert;
-import ir.maktab.finalproject.data.entity.roles.User;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
 import ir.maktab.finalproject.repository.ExpertRepository;
@@ -17,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -95,7 +95,15 @@ public class ExpertService {
         return expertRepository.save(expert);
     }
 
-
+    public void getExpertPhoto(String email,String photoPath){
+        Expert expert = expertRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("No Expert Registered With This Email"));
+        try (FileOutputStream fos = new FileOutputStream(photoPath)) {
+            fos.write(expert.getPhoto());
+        } catch (IOException e) {
+            throw new PhotoValidationException("Unable To Save Photo");
+        }
+    }
     private void validateNewExpert(Expert expert, String photoPath) throws IOException {
         Validation.validateName(expert.getFirstName());
         Validation.validateName(expert.getLastName());

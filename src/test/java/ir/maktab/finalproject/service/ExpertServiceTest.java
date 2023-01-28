@@ -16,6 +16,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 
 import javax.sql.DataSource;
+import java.io.File;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -190,5 +192,14 @@ public class ExpertServiceTest {
         SubServiceException exception = assertThrows(SubServiceException.class
                 , () -> expertService.deleteSubServiceFromExpert(subService, expert));
         assertEquals("Expert Doesn't Have This Sub-Service", exception.getMessage());
+    }
+
+    @Order(14)
+    @Test
+    void getExpertPhotoTest(){
+        String downloadPath = "images/download.jpg";
+        expertService.getExpertPhoto("expert@email.com",downloadPath);
+        File file = new File(downloadPath);
+        assertTrue(file.exists());
     }
 }
