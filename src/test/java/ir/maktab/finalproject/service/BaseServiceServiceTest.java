@@ -3,6 +3,7 @@ package ir.maktab.finalproject.service;
 import ir.maktab.finalproject.data.entity.services.BaseService;
 import ir.maktab.finalproject.service.exception.BaseServiceException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
+import ir.maktab.finalproject.service.impl.BaseServiceService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,7 +26,7 @@ public class BaseServiceServiceTest {
     @Order(1)
     @Test
     void addBaseServiceTest() {
-        BaseService testBaseService = baseServiceService.addBaseService(baseService);
+        BaseService testBaseService = baseServiceService.add(baseService);
         assertEquals(baseService, testBaseService);
     }
 
@@ -34,7 +35,7 @@ public class BaseServiceServiceTest {
     void invalidAddBaseServiceViolateUniqueTest() {
         BaseService duplicateBaseService = BaseService.builder().baseName("BaseService1").build();
         UniqueViolationException exception = assertThrows(UniqueViolationException.class
-                , () -> baseServiceService.addBaseService(duplicateBaseService));
+                , () -> baseServiceService.add(duplicateBaseService));
         assertEquals("Base Service Already Exists", exception.getMessage());
     }
 
@@ -47,15 +48,15 @@ public class BaseServiceServiceTest {
     @Order(5)
     @Test
     void deleteBaseServiceTest() {
-        baseServiceService.deleteBaseService(baseService);
-        assertTrue(baseServiceService.findByBaseName(baseService.getBaseName()).isEmpty());
+        baseServiceService.delete(baseService);
+        assertTrue(baseServiceService.findByName(baseService.getBaseName()).isEmpty());
     }
 
     @Order(6)
     @Test
     void deleteUnavailableBaseServiceTest() {
         BaseService deleteBaseService = BaseService.builder().baseName("UnavailableBaseService").build();
-        BaseServiceException exception = assertThrows(BaseServiceException.class, () -> baseServiceService.deleteBaseService(deleteBaseService));
+        BaseServiceException exception = assertThrows(BaseServiceException.class, () -> baseServiceService.delete(deleteBaseService));
         assertEquals("Base Service Not Found", exception.getMessage());
     }
 }

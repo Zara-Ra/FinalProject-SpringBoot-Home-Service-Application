@@ -1,10 +1,10 @@
-package ir.maktab.finalproject.service;
+package ir.maktab.finalproject.service.impl;
 
 import ir.maktab.finalproject.data.entity.services.BaseService;
 import ir.maktab.finalproject.repository.BaseServiceRepository;
+import ir.maktab.finalproject.service.ServiceService;
 import ir.maktab.finalproject.service.exception.BaseServiceException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -14,10 +14,11 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class BaseServiceService {
+public class BaseServiceService implements ServiceService<BaseService> {
     private final BaseServiceRepository baseServiceRepository;
 
-    public BaseService addBaseService(BaseService baseService) {
+    @Override
+    public BaseService add(BaseService baseService) {
         try {
             return baseServiceRepository.save(baseService);
         } catch (DataIntegrityViolationException e) {
@@ -25,7 +26,8 @@ public class BaseServiceService {
         }
     }
 
-    public void deleteBaseService(BaseService baseService) {
+    @Override
+    public void delete(BaseService baseService) {
         Optional<BaseService> foundBaseService = baseServiceRepository.findByBaseName(baseService.getBaseName());
         if (foundBaseService.isEmpty())
             throw new BaseServiceException("Base Service Not Found");
@@ -36,7 +38,8 @@ public class BaseServiceService {
         return baseServiceRepository.findAll();
     }
 
-    public Optional<BaseService> findByBaseName(String baseName) {
+    @Override
+    public Optional<BaseService> findByName(String baseName) {
         return baseServiceRepository.findByBaseName(baseName);
     }
 }

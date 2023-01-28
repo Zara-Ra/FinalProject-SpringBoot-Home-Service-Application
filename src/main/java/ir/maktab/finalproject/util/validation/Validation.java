@@ -6,7 +6,11 @@ import lombok.experimental.UtilityClass;
 
 import java.io.*;
 import java.net.URLConnection;
-//import net.sf.jmimemagic.*;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+
+import net.sf.jmimemagic.*;
 
 @UtilityClass
 public class Validation {
@@ -31,7 +35,7 @@ public class Validation {
                 "alphanumeric values");
     }
 
-    public void validatePhoto(String photoPath) throws IOException {
+    /*public void validatePhoto(String photoPath) throws IOException {
         File file = new File(photoPath);
         int length = (int) file.length() / ONE_KILOBYTE;
         if (length > PHOTO_SIZE)
@@ -46,20 +50,28 @@ public class Validation {
         mimeType = URLConnection.guessContentTypeFromStream(is);
         if (!mimeType.equals("image/jpeg"))
             throw new PhotoValidationException("Invalid Photo Type Only 'jpeg' Accepted");
-    }
+    }*/
 
-    /*public void validatePhoto(byte[] photo) {
+    public void validatePhoto(byte[] photo) {
         MagicMatch match = null;
         int length = photo.length / ONE_KILOBYTE;
         if (length > PHOTO_SIZE)
-            throw new PhotoException("Photo Size Should Be Less Than 300 KiloBytes");
+            throw new PhotoValidationException("Photo Size Should Be Less Than 300 KiloBytes");
         try {
             match = Magic.getMagicMatch(photo);
         } catch (MagicParseException | MagicMatchNotFoundException | MagicException e) {
-            throw new PhotoException("Photo Invalid");
+            throw new PhotoValidationException("Photo Not Found");
         }
         String mimeType = match.getMimeType();
         if (!mimeType.equals("image/jpeg"))
-            throw new PhotoException("Invalid Photo Format, Only 'jpeg' Accepted");
-    }*/
+            throw new PhotoValidationException("Invalid Photo Type Only 'jpeg' Accepted");
+    }
+
+    public byte[] convertFileToBytes(String filePath){
+        try {
+            return Files.readAllBytes(Path.of(filePath));
+        } catch (NullPointerException | IOException e){
+            throw new PhotoValidationException("Photo Not Found");
+        }
+    }
 }

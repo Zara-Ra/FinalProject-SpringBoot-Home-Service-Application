@@ -1,12 +1,13 @@
 package ir.maktab.finalproject.service;
 
 import ir.maktab.finalproject.data.entity.roles.Expert;
-import ir.maktab.finalproject.data.entity.services.BaseService;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
 import ir.maktab.finalproject.service.exception.PasswordException;
 import ir.maktab.finalproject.service.exception.SubServiceException;
+import ir.maktab.finalproject.service.impl.ExpertService;
 import ir.maktab.finalproject.util.exception.ValidationException;
+import ir.maktab.finalproject.util.validation.Validation;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -17,7 +18,6 @@ import org.springframework.jdbc.datasource.init.ScriptUtils;
 
 import javax.sql.DataSource;
 import java.io.File;
-import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -46,8 +46,6 @@ public class ExpertServiceTest {
                 .lastName("Expert Lastname")
                 .subServiceList(new ArrayList<>()).build();
 
-        BaseService baseService = BaseService.builder().id(3).baseName("BaseService3").build();
-
         subService = SubService.builder()
                 .id(3)
                 .subName("SubService3")
@@ -66,7 +64,9 @@ public class ExpertServiceTest {
     @Order(1)
     @Test
     void signUpTest() {
-        Expert newExpert = expertService.signUp(expert, photoPath);
+        byte[] photo = Validation.convertFileToBytes(photoPath);
+        expert.setPhoto(photo);
+        Expert newExpert = expertService.signUp(expert);
         assertAll(
                 () -> assertEquals(expert.getEmail(), newExpert.getEmail()),
                 () -> assertEquals(expert.getPassword(), newExpert.getPassword()),
@@ -88,21 +88,21 @@ public class ExpertServiceTest {
             "email@email.com,12345678,Expert123,Expert,images/valid.jpg,Invalid Name Only Alphabetic Characters Accepted",
             "email@email.com,12345678,Expert,NIL,images/valid.jpg,Invalid Name Only Alphabetic Characters Accepted",
             "email@email.com,12345678,Expert,Expert123,images/valid.jpg,Invalid Name Only Alphabetic Characters Accepted",
-            "email@email.com,12345678,Expert,Expert,NIL,Photo Not Found",
-            "email@email.com,12345678,Expert,Expert,images/notFound.jpg,Photo Not Found",
             "email@email.com,12345678,Expert,Expert,images/invalidSize.jpg,Photo Size Should Be Less Than 300 KiloBytes",
             "email@email.com,12345678,Expert,Expert,images/invalidType.gif,Invalid Photo Type Only 'jpeg' Accepted",
             "email@email.com,12345678,Expert,Expert,images/invalidMIME.jpg,Photo Not Found"
     }, nullValues = "NIL")
     void invalidSignUpTest(String email, String password, String firstName, String lastName, String path, String exceptionMsg) {
+        byte[] photo = Validation.convertFileToBytes(path);
         Expert invalidExpert = Expert.builder()
                 .email(email)
                 .password(password)
                 .firstName(firstName)
-                .lastName(lastName).build();
+                .lastName(lastName)
+                .photo(photo).build();
 
         ValidationException exception = assertThrows(ValidationException.class,
-                () -> expertService.signUp(invalidExpert, path));
+                () -> expertService.signUp(invalidExpert));
         assertEquals(exceptionMsg, exception.getMessage());
     }
 
@@ -196,9 +196,9 @@ public class ExpertServiceTest {
 
     @Order(14)
     @Test
-    void getExpertPhotoTest(){
+    void getExpertPhotoTest() {
         String downloadPath = "images/download.jpg";
-        expertService.getExpertPhoto("expert@email.com",downloadPath);
+        expertService.getExpertPhoto("expert@email.com", downloadPath);
         File file = new File(downloadPath);
         assertTrue(file.exists());
     }

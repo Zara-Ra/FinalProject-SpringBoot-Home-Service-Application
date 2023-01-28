@@ -1,10 +1,12 @@
-package ir.maktab.finalproject.service;
+package ir.maktab.finalproject.service.impl;
 
 import ir.maktab.finalproject.data.entity.Credit;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
 import ir.maktab.finalproject.repository.ExpertRepository;
+import ir.maktab.finalproject.service.RolesService;
+import ir.maktab.finalproject.service.impl.SubServiceService;
 import ir.maktab.finalproject.service.exception.PasswordException;
 import ir.maktab.finalproject.service.exception.SubServiceException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
@@ -18,25 +20,19 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ExpertService {
+public class ExpertService implements RolesService<Expert> {
     private final ExpertRepository expertRepository;
 
     private final SubServiceService subServiceService;
 
-    public Expert signUp(Expert expert, String photoPath) {
-        try {
-            validateNewExpert(expert, photoPath);
-            expert.setPhoto(convertFileToBytes(photoPath));
-        } catch (IOException | NullPointerException e) {
-            throw new PhotoValidationException("Photo Not Found");
-        }
+    @Override
+    public Expert signUp(Expert expert) {
+        validateNewExpert(expert);
         expert.setStatus(ExpertStatus.NEW);
         expert.setCredit(Credit.builder().amount(0).build());
         expert.setAverageScore(0);
@@ -47,6 +43,7 @@ public class ExpertService {
         }
     }
 
+    @Override
     public Expert signIn(String email, String password) {
         validateAccount(email, password);
         Expert foundExpert = expertRepository.findByEmail(email).orElseThrow(() ->
@@ -56,9 +53,10 @@ public class ExpertService {
         return foundExpert;
     }
 
+    @Override
     public Expert changePassword(Expert expert, String oldPassword, String newPassword) {
         Expert findExpert = expertRepository.findByEmail(expert.getEmail())
-                .orElseThrow(() -> new UserNotFoundException("No Username Registerd With This Email"));
+                .orElseThrow(() -> new UserNotFoundException("No Username Registered With This Email"));
 
         if (!findExpert.getPassword().equals(oldPassword))
             throw new PasswordException("Entered Password Doesn't Match");
@@ -81,7 +79,7 @@ public class ExpertService {
         if (expert.getSubServiceList().stream().anyMatch(s -> s.equals(subService)))
             throw new SubServiceException("Sub-Service Already Assigned To Expert");
 
-        subServiceService.findBySubName(subService.getSubName())
+        subServiceService.findByName(subService.getSubName())
                 .orElseThrow(() -> new SubServiceException("Sub-Service Unavailable"));
 
         expert.getSubServiceList().add(subService);
@@ -95,7 +93,7 @@ public class ExpertService {
         return expertRepository.save(expert);
     }
 
-    public void getExpertPhoto(String email,String photoPath){
+    public void getExpertPhoto(String email, String photoPath) {
         Expert expert = expertRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("No Expert Registered With This Email"));
         try (FileOutputStream fos = new FileOutputStream(photoPath)) {
@@ -104,12 +102,12 @@ public class ExpertService {
             throw new PhotoValidationException("Unable To Save Photo");
         }
     }
-    private void validateNewExpert(Expert expert, String photoPath) throws IOException {
+
+    private void validateNewExpert(Expert expert) {
         Validation.validateName(expert.getFirstName());
         Validation.validateName(expert.getLastName());
         validateAccount(expert.getEmail(), expert.getPassword());
-        //Validation.validatePhoto(expert.getPhoto());
-        Validation.validatePhoto(photoPath);
+        Validation.validatePhoto(expert.getPhoto());
     }
 
     private void validateAccount(String email, String password) {
@@ -117,7 +115,4 @@ public class ExpertService {
         Validation.validatePassword(password);
     }
 
-    private byte[] convertFileToBytes(String filePath) throws IOException {
-        return Files.readAllBytes(Path.of(filePath));
-    }
 }

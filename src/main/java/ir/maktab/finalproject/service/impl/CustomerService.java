@@ -1,8 +1,9 @@
-package ir.maktab.finalproject.service;
+package ir.maktab.finalproject.service.impl;
 
 import ir.maktab.finalproject.data.entity.Credit;
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.repository.CustomerRepository;
+import ir.maktab.finalproject.service.RolesService;
 import ir.maktab.finalproject.service.exception.PasswordException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
 import ir.maktab.finalproject.service.exception.UserNotFoundException;
@@ -14,19 +15,20 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CustomerService {
+public class CustomerService implements RolesService<Customer> {
     private final CustomerRepository customerRepository;
-
+    @Override
     public Customer signUp(Customer customer) {
-        validateNewCustomer(customer);
-        customer.setCredit(Credit.builder().amount(0).build());
-        try {
-            return customerRepository.save(customer);
-        } catch (DataIntegrityViolationException e) {
-            throw new UniqueViolationException("Already Registered With This Email");
+            validateNewCustomer(customer);
+            customer.setCredit(Credit.builder().amount(0).build());
+            try {
+                return customerRepository.save(customer);
+            } catch (DataIntegrityViolationException e) {
+                throw new UniqueViolationException("Already Registered With This Email");
+            }
         }
-    }
 
+    @Override
     public Customer signIn(String email, String password) {
         validateAccount(email, password);
         Customer foundCustomer = customerRepository.findByEmail(email).orElseThrow(() ->
@@ -38,6 +40,7 @@ public class CustomerService {
         return foundCustomer;
     }
 
+    @Override
     public Customer changePassword(Customer customer, String oldPassword, String newPassword) {
         Customer findCustomer = customerRepository.findByEmail(customer.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("No Username Registerd With This Email"));

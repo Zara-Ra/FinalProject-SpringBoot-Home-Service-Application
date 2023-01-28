@@ -4,6 +4,7 @@ import ir.maktab.finalproject.data.entity.services.BaseService;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.service.exception.SubServiceException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
+import ir.maktab.finalproject.service.impl.SubServiceService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,7 +47,7 @@ public class SubServiceServiceTest {
     @Order(1)
     @Test
     void addSubServiceTest() {
-        SubService testSubService = subServiceService.addSubService(subService);
+        SubService testSubService = subServiceService.add(subService);
         assertEquals(subService, testSubService);
     }
 
@@ -55,7 +56,7 @@ public class SubServiceServiceTest {
     void invalidAddSubServiceViolateUniqueTest() {
         SubService duplicateSubService = SubService.builder().subName("SubService4").build();
         UniqueViolationException exception = assertThrows(UniqueViolationException.class
-                , () -> subServiceService.addSubService(duplicateSubService));
+                , () -> subServiceService.add(duplicateSubService));
         assertEquals("Base/Sub-Service Already Exists", exception.getMessage());
     }
 
@@ -68,8 +69,8 @@ public class SubServiceServiceTest {
     @Order(5)
     @Test
     void findBySubNameTest() {
-        Optional<SubService> subServiceAvailable = subServiceService.findBySubName("SubService4");
-        Optional<SubService> subServiceUnavailable = subServiceService.findBySubName("Test");
+        Optional<SubService> subServiceAvailable = subServiceService.findByName("SubService4");
+        Optional<SubService> subServiceUnavailable = subServiceService.findByName("Test");
 
         assertAll(
                 () -> assertTrue(subServiceAvailable.isPresent()),
@@ -99,7 +100,7 @@ public class SubServiceServiceTest {
     @Order(8)
     @Test
     void deleteSubServiceTest() {
-        subServiceService.deleteSubService(subService);
+        subServiceService.delete(subService);
         assertEquals(0, subServiceService.findAllByBaseService(baseService).size());
     }
 

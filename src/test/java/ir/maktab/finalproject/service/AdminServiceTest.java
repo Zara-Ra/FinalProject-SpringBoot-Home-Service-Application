@@ -1,6 +1,7 @@
 package ir.maktab.finalproject.service;
 
 import ir.maktab.finalproject.data.entity.roles.Admin;
+import ir.maktab.finalproject.service.impl.AdminService;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;

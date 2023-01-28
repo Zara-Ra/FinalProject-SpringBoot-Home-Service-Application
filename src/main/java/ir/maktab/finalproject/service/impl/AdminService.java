@@ -1,4 +1,4 @@
-package ir.maktab.finalproject.service;
+package ir.maktab.finalproject.service.impl;
 
 import ir.maktab.finalproject.data.entity.roles.Admin;
 import ir.maktab.finalproject.repository.AdminRepository;
