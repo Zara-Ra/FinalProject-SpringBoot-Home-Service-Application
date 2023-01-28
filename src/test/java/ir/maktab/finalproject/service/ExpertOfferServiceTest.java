@@ -7,7 +7,8 @@ import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.BaseService;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.OrderStatus;
-import ir.maktab.finalproject.service.exception.OrderRequirementException;
+import ir.maktab.finalproject.service.exception.NotExitsException;
+import ir.maktab.finalproject.service.exception.OfferRequirementException;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +32,7 @@ public class ExpertOfferServiceTest {
     @Autowired
     private ExpertOfferService expertOfferService;
 
+    private static ExpertOffer offer;
     private static SubService subService;
     private static Expert expert;
     private static CustomerOrder order;
@@ -80,7 +82,8 @@ public class ExpertOfferServiceTest {
                 .price(200)
                 .description("Order description")
                 .status(OrderStatus.WAITING_FOR_EXPERT_OFFER)
-                .preferredDate(afterNow).build();
+                .preferredDate(afterNow)
+                .expertOfferList(new ArrayList<>()).build();
         duration = Duration.ZERO.plusDays(1).plusHours(2).plusMinutes(30);
 
     }
@@ -97,51 +100,87 @@ public class ExpertOfferServiceTest {
     @Order(1)
     @Test
     void submitOfferTest() {
-        ExpertOffer offer = ExpertOffer.builder()
+        offer = ExpertOffer.builder()
                 .expert(expert)
                 .subService(subService)
                 .price(200)
-                .customerOrder(order)
-                //.isChosen(false)
+                //.customerOrder(order)
+                .isChosen(false)
                 .duration(duration)
                 .preferredDate(afterNow).build();
 
-        ExpertOffer savedOffer = expertOfferService.submitOffer(offer);
+        ExpertOffer savedOffer = expertOfferService.submitOffer(order, offer);
 
         assertAll(
-                () -> assertEquals(order,savedOffer.getCustomerOrder()),
-                () -> assertEquals(expert,savedOffer.getExpert()),
-                () -> assertEquals(subService,savedOffer.getSubService())
+                //() -> assertEquals(order, savedOffer.getCustomerOrder()),
+                () -> assertEquals(expert, savedOffer.getExpert()),
+                () -> assertEquals(subService, savedOffer.getSubService()),
+                () -> assertEquals(OrderStatus.WAITING_FOR_EXPERT_SELECTION, order.getStatus())
         );
     }
-    /*@Test
+
+    @Test
     @Order(2)
-    void invalidPriceForsubmitOfferTest() {
-        CustomerOrder order = CustomerOrder.builder()
-                .customer(customer)
+    void invalidPriceForSubmitOfferTest() {
+        ExpertOffer offer = ExpertOffer.builder()
+                .expert(expert)
                 .subService(subService)
                 .price(50)
-                .description("Invalid price")
+                //.customerOrder(order)
+                .duration(duration)
                 .preferredDate(afterNow).build();
-        OrderRequirementException exception = assertThrows(OrderRequirementException.class
-                , () -> expertOfferService.requestOrder(customer, order));
-        assertEquals("Price Of Order Should Be Greater Than Base Price Of The Sub-Service:( " +
-                order.getSubService().getSubName() + " " + order.getSubService().getBasePrice() + " )", exception.getMessage());
+        OfferRequirementException exception = assertThrows(OfferRequirementException.class
+                , () -> expertOfferService.submitOffer(order, offer));
+        assertEquals("Price Of Offer Should Be Greater Than Base Price Of The Sub-Service ( " +
+                offer.getSubService().getSubName() + " " + offer.getSubService().getBasePrice() + " )", exception.getMessage());
     }
 
     @Order(3)
     @Test
-    void invalidPreferredDateForsubmitOfferTest() {
-        CustomerOrder order = CustomerOrder.builder()
-                .customer(customer)
+    void invalidPreferredDateForSubmitOfferTest() {
+        ExpertOffer offer = ExpertOffer.builder()
+                .expert(expert)
                 .subService(subService)
                 .price(200)
-                .description("Invalid preferred date")
+                //.customerOrder(order)
+                .duration(duration)
                 .preferredDate(beforeNow).build();
-        OrderRequirementException exception = assertThrows(OrderRequirementException.class
-                , () -> expertOfferService.requestOrder(customer, order));
-        assertEquals("The Preferred Date Should Be After Now", exception.getMessage());
+        OfferRequirementException exception = assertThrows(OfferRequirementException.class
+                , () -> expertOfferService.submitOffer(order, offer));
+        assertEquals("The Preferred Date Should Be After Now And After The Customers Preferred Date"
+                , exception.getMessage());
     }
-*/
 
+    @Order(4)
+    @Test
+    void invalidDurationForSubmitOfferTest() {
+        ExpertOffer offer = ExpertOffer.builder()
+                .expert(expert)
+                .subService(subService)
+                .price(200)
+                //.customerOrder(order)
+                //.duration(duration)
+                .preferredDate(afterNow).build();
+        OfferRequirementException exception = assertThrows(OfferRequirementException.class
+                , () -> expertOfferService.submitOffer(order, offer));
+        assertEquals("Duration Should Not Be Empty", exception.getMessage());
+    }
+
+    @Order(5)
+    @Test
+    void choseOfferTest() {
+        expertOfferService.choseOffer(order, offer);
+        long count = expertOfferService.countByIsChosen(true);
+        assertEquals(1, count);
+    }
+
+    @Order(6)
+    @Test
+    void invalidChoseOfferTest() {
+        CustomerOrder invalidOrder = CustomerOrder.builder()
+                .expertOfferList(new ArrayList<>()).build();
+        NotExitsException exception = assertThrows(NotExitsException.class
+                , () -> expertOfferService.choseOffer(invalidOrder, offer));
+        assertEquals("Offer Is Not For This Order",exception.getMessage());
+    }
 }

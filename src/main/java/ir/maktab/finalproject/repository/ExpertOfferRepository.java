@@ -9,5 +9,6 @@ import java.util.List;
 
 @Repository
 public interface ExpertOfferRepository extends JpaRepository<ExpertOffer, Integer> {
-    List<ExpertOffer> findAllByCustomerOrderOrderByPriceAsc(CustomerOrder customerOrder);
+    long countByIsChosen(boolean isChosen);
+    //List<ExpertOffer> findAllByCustomerOrderOrderByPriceAsc(CustomerOrder customerOrder);
 }

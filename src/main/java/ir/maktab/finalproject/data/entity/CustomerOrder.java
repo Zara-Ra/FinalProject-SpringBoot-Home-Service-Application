@@ -1,13 +1,13 @@
 package ir.maktab.finalproject.data.entity;
 
 import ir.maktab.finalproject.data.entity.roles.Customer;
-import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -43,8 +43,11 @@ public class CustomerOrder {
     private OrderStatus status;
 
     /*@ManyToOne
-    private Expert expert;
-*/
+    private Expert expert;*/
+
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<ExpertOffer> expertOfferList;
+
     @OneToOne(cascade = CascadeType.MERGE)
     private ExpertOffer acceptedExpertOffer;
 

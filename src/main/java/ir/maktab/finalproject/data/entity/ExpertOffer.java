@@ -23,9 +23,9 @@ public class ExpertOffer {
     @ManyToOne
     Expert expert;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    /*@ManyToOne(cascade = CascadeType.MERGE)
     CustomerOrder customerOrder;
-
+*/
     @ManyToOne
     SubService subService;
 
@@ -41,5 +41,5 @@ public class ExpertOffer {
     @Column(nullable = false)
     private Duration duration;
 
-    //Boolean isChosen;
+    Boolean isChosen;
 }

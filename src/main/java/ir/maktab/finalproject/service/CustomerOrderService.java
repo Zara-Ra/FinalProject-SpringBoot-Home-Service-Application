@@ -12,8 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
@@ -43,16 +42,10 @@ public class CustomerOrderService {
         customerOrderRepository.save(customerOrder);
     }
 
-    public void chooseOffer(CustomerOrder customerOrder, ExpertOffer expertOffer){
-        //expertOffer.setIsChosen(true);
-        //expertOfferService.update(expertOffer);
-
-        customerOrder.setStatus(OrderStatus.WAITING_FOR_EXPERT_ARRIVAL);
-        //customerOrder.setExpert(expertOffer.getExpert());
-        customerOrder.setAcceptedExpertOffer(expertOffer);
-        customerOrderRepository.save(customerOrder);
+    public List<ExpertOffer> getAllOffersFor(CustomerOrder customerOrder, Comparator<ExpertOffer> comparator){
+        Collections.sort(customerOrder.getExpertOfferList(),comparator);
+        return customerOrder.getExpertOfferList();
     }
-
     public void expertArrived(CustomerOrder customerOrder, ExpertOffer expertOffer){
         if(expertOffer.getPreferredDate().before(new Date()))
             throw new OfferRequirementException("Expert Can't Start Work Before His/Her PreferredDate");
@@ -65,7 +58,12 @@ public class CustomerOrderService {
         customerOrderRepository.save(customerOrder);
 
         //todo calculate duration(next phase) we will need ExpertOffer here
-        // should also add two extra Date fields in CustomerOrder to calculate the actual Duration and compare it with the experts claim
+        // should also add two extra Date fields in CustomerOrder
+        // to calculate the actual Duration and compare it with the experts claim
     }
 
+    public boolean exitstsByExpertOffer(ExpertOffer expertOffer) {
+        //return customerOrderRepository.existsByExpertOffer(expertOffer);
+        return true;
+    }
 }
