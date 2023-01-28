@@ -1,11 +1,13 @@
 package ir.maktab.finalproject.service;
 
 import ir.maktab.finalproject.data.entity.CustomerOrder;
+import ir.maktab.finalproject.data.entity.ExpertOffer;
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.services.BaseService;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.OrderStatus;
 import ir.maktab.finalproject.service.exception.OrderRequirementException;
+import ir.maktab.finalproject.util.sort.SortExpertOffer;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +19,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,6 +29,7 @@ public class CustomerOrderServiceTest {
 
     @Autowired
     private CustomerOrderService customerOrderService;
+    private static CustomerOrder order;
 
     private static SubService subService;
     private static Customer customer;
@@ -50,6 +54,7 @@ public class CustomerOrderServiceTest {
                 .id(5)
                 .subName("SubService5")
                 .basePrice(100)
+                .description("description")
                 .baseService(baseService).build();
 
         long now = System.currentTimeMillis();
@@ -69,7 +74,7 @@ public class CustomerOrderServiceTest {
     @Order(1)
     @Test
     void requestOrderTest() {
-        CustomerOrder order = CustomerOrder.builder()
+        order = CustomerOrder.builder()
                 .customer(customer)
                 .subService(subService)
                 .price(200)
@@ -114,5 +119,34 @@ public class CustomerOrderServiceTest {
         assertEquals("The Preferred Date Should Be After Now", exception.getMessage());
     }
 
+    @Order(4)
+    @Test
+    void findAllBySubServiceAndStatusTest(){
+        List<CustomerOrder> customerOrders = customerOrderService.findAllBySubServiceAndStatus(subService);
+        assertTrue(customerOrders.contains(order));
+    }
 
+    @Order(5)
+    @Test
+    void getAllOffersForAcsTest(){
+        CustomerOrder order = CustomerOrder.builder()
+                .id(5).build();
+        List<ExpertOffer> sortedOffers = customerOrderService.getAllOffersForOrder(order, SortExpertOffer.SortByPriceAcs);
+        assertEquals(200,sortedOffers.get(0).getPrice());
+    }
+
+    @Order(6)
+    @Test
+    void getAllOffersForDcsTest(){
+        CustomerOrder order = CustomerOrder.builder()
+                .id(5).build();
+        List<ExpertOffer> sortedOffers = customerOrderService.getAllOffersForOrder(order, SortExpertOffer.SortByPriceDsc);
+        assertEquals(300,sortedOffers.get(0).getPrice());
+    }
+
+    @Order(7)
+    @Test
+    void expertArrivedTest(){
+
+    }
 }

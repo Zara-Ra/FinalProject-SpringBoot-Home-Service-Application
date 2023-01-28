@@ -2,6 +2,7 @@ package ir.maktab.finalproject.service;
 
 import ir.maktab.finalproject.data.entity.CustomerOrder;
 import ir.maktab.finalproject.data.entity.ExpertOffer;
+import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.enums.OrderStatus;
 import ir.maktab.finalproject.repository.ExpertOfferRepository;
 import ir.maktab.finalproject.service.exception.NotExitsException;
@@ -51,14 +52,8 @@ public class ExpertOfferService {
         expertOfferRepository.save(expertOffer);
     }
 
-    /*public boolean findAcceptedOrderFor(ExpertOffer expertOffer) {
-        CustomerOrder order = customerOrderService.findByExpertOffer(expertOffer)
-                .orElseThrow(() -> new UserNotFoundException("This Offer has not been accepted"));
-        return order.get
-    }*/
-
-    public void update(ExpertOffer expertOffer) {
-        expertOfferRepository.save(expertOffer);
+    public List<ExpertOffer> findAcceptedOrdersFor(Expert expert){
+        return expertOfferRepository.findAllByExpertAndIsChosen(expert,true);
     }
 
     public long countByIsChosen(boolean isChosen) {

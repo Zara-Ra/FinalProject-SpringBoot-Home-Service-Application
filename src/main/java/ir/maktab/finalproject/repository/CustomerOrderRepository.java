@@ -15,5 +15,7 @@ import java.util.Optional;
 public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Integer> {
     @Query("FROM CustomerOrder o WHERE o.subService = ?1 AND o.status = ?2 or o.status = ?3")
     List<CustomerOrder> findAllBySubServiceAndStatus(SubService subService, OrderStatus status1, OrderStatus status2);
+
+    CustomerOrder findByAcceptedExpertOffer(ExpertOffer acceptedOffer);
     //boolean existsByExpertOffer(ExpertOffer expertOffer);
 }

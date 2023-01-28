@@ -45,12 +45,19 @@ public class CustomerOrder {
     /*@ManyToOne
     private Expert expert;*/
 
+    @EqualsAndHashCode.Exclude
     @OneToMany(fetch = FetchType.EAGER)
     private List<ExpertOffer> expertOfferList;
 
+    @EqualsAndHashCode.Exclude
     @OneToOne(cascade = CascadeType.MERGE)
     private ExpertOffer acceptedExpertOffer;
 
+    @EqualsAndHashCode.Exclude
     @Temporal(value = TemporalType.TIMESTAMP)
-    private Date doneDate;
+    private Date startDate;
+
+    @EqualsAndHashCode.Exclude
+    @Temporal(value = TemporalType.TIMESTAMP)
+    private Date finishDate;
 }
