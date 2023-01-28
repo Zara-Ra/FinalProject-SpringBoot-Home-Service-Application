@@ -13,7 +13,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional
@@ -33,38 +35,41 @@ public class CustomerOrderService {
         customer.getCustomerOrderList().add(customerOrder);
         return customerOrderRepository.save(customerOrder);
     }
-    public List<CustomerOrder> findAllBySubServiceAndStatus(SubService subService) {
+
+    public List<CustomerOrder> findAllBySubServiceAndCorrectStatus(SubService subService) {
         return customerOrderRepository.findAllBySubServiceAndStatus(subService, OrderStatus.WAITING_FOR_EXPERT_SELECTION
                 , OrderStatus.WAITING_FOR_EXPERT_OFFER);
     }
 
-    public void updateOrder(CustomerOrder customerOrder) {
-        customerOrderRepository.save(customerOrder);
+    public CustomerOrder updateOrder(CustomerOrder customerOrder) {
+        return customerOrderRepository.save(customerOrder);
     }
 
-    public List<ExpertOffer> getAllOffersForOrder(CustomerOrder customerOrder, Comparator<ExpertOffer> comparator){
+    public List<ExpertOffer> getAllOffersForOrder(CustomerOrder customerOrder, Comparator<ExpertOffer> comparator) {
         CustomerOrder foundOrder = customerOrderRepository.findById(customerOrder.getId())
                 .orElseThrow(() -> new NotExitsException("Customer Order Not Found"));
         foundOrder.getExpertOfferList().sort(comparator);
         return foundOrder.getExpertOfferList();
     }
 
-    public CustomerOrder getOrderForAcceptedOffer(ExpertOffer expertOffer){
+    public CustomerOrder getOrderForAcceptedOffer(ExpertOffer expertOffer) {
         return customerOrderRepository.findByAcceptedExpertOffer(expertOffer);
     }
-    public void expertArrived(CustomerOrder customerOrder, ExpertOffer expertOffer){
-        if(expertOffer.getPreferredDate().after(new Date()))
+
+    public CustomerOrder expertArrived(CustomerOrder customerOrder, ExpertOffer expertOffer) {
+        Date now = new Date();
+        if (expertOffer.getPreferredDate().after(now))
             throw new OfferRequirementException("Expert Can't Start Work Before His/Her PreferredDate");
+        customerOrder.setStartDate(now);
         customerOrder.setStatus(OrderStatus.STARTED);
-        customerOrderRepository.save(customerOrder);
+        return customerOrderRepository.save(customerOrder);
     }
 
-    public void expertDone(CustomerOrder customerOrder, ExpertOffer expertOffer){
+    public CustomerOrder expertDone(CustomerOrder customerOrder, ExpertOffer expertOffer) {
+        customerOrder.setFinishDate(new Date());
         customerOrder.setStatus(OrderStatus.DONE);
-        customerOrderRepository.save(customerOrder);
+        return customerOrderRepository.save(customerOrder);
 
         //todo calculate duration(next phase) we will need ExpertOffer here
-        // should also add two extra Date fields in CustomerOrder
-        // to calculate the actual Duration and compare it with the experts claim
     }
 }

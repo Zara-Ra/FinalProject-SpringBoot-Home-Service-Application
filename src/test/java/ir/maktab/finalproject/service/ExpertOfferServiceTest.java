@@ -33,13 +33,17 @@ public class ExpertOfferServiceTest {
     private ExpertOfferService expertOfferService;
 
     private static ExpertOffer offer;
+
     private static SubService subService;
+
     private static Expert expert;
+
     private static CustomerOrder order;
 
     private static Date afterNow;
 
     private static Date beforeNow;
+
     private static Duration duration;
 
     @BeforeAll
@@ -104,7 +108,6 @@ public class ExpertOfferServiceTest {
                 .expert(expert)
                 .subService(subService)
                 .price(200)
-                //.customerOrder(order)
                 .isChosen(false)
                 .duration(duration)
                 .preferredDate(afterNow).build();
@@ -112,7 +115,6 @@ public class ExpertOfferServiceTest {
         ExpertOffer savedOffer = expertOfferService.submitOffer(order, offer);
 
         assertAll(
-                //() -> assertEquals(order, savedOffer.getCustomerOrder()),
                 () -> assertEquals(expert, savedOffer.getExpert()),
                 () -> assertEquals(subService, savedOffer.getSubService()),
                 () -> assertEquals(OrderStatus.WAITING_FOR_EXPERT_SELECTION, order.getStatus())
@@ -126,7 +128,6 @@ public class ExpertOfferServiceTest {
                 .expert(expert)
                 .subService(subService)
                 .price(50)
-                //.customerOrder(order)
                 .duration(duration)
                 .preferredDate(afterNow).build();
         OfferRequirementException exception = assertThrows(OfferRequirementException.class
@@ -142,7 +143,6 @@ public class ExpertOfferServiceTest {
                 .expert(expert)
                 .subService(subService)
                 .price(200)
-                //.customerOrder(order)
                 .duration(duration)
                 .preferredDate(beforeNow).build();
         OfferRequirementException exception = assertThrows(OfferRequirementException.class
@@ -158,8 +158,7 @@ public class ExpertOfferServiceTest {
                 .expert(expert)
                 .subService(subService)
                 .price(200)
-                //.customerOrder(order)
-                //.duration(duration)
+                .duration(null)
                 .preferredDate(afterNow).build();
         OfferRequirementException exception = assertThrows(OfferRequirementException.class
                 , () -> expertOfferService.submitOffer(order, offer));
@@ -181,6 +180,6 @@ public class ExpertOfferServiceTest {
                 .expertOfferList(new ArrayList<>()).build();
         NotExitsException exception = assertThrows(NotExitsException.class
                 , () -> expertOfferService.choseOffer(invalidOrder, offer));
-        assertEquals("Offer Is Not For This Order",exception.getMessage());
+        assertEquals("Offer Is Not For This Order", exception.getMessage());
     }
 }

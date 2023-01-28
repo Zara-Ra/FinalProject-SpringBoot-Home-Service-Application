@@ -28,7 +28,7 @@ public class BaseServiceService {
 
     public void deleteBaseService(BaseService baseService) {
         Optional<BaseService> foundBaseService = baseServiceRepository.findByBaseName(baseService.getBaseName());
-        if(foundBaseService.isEmpty())
+        if (foundBaseService.isEmpty())
             throw new BaseServiceException("Base Service Not Found");
         baseServiceRepository.delete(foundBaseService.get());
     }
@@ -37,5 +37,7 @@ public class BaseServiceService {
         return baseServiceRepository.findAll();
     }
 
-    public Optional<BaseService> findByBaseName(String baseName){ return baseServiceRepository.findByBaseName(baseName);}
+    public Optional<BaseService> findByBaseName(String baseName) {
+        return baseServiceRepository.findByBaseName(baseName);
+    }
 }

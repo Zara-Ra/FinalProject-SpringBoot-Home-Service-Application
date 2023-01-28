@@ -7,7 +7,6 @@ import ir.maktab.finalproject.data.enums.OrderStatus;
 import ir.maktab.finalproject.repository.ExpertOfferRepository;
 import ir.maktab.finalproject.service.exception.NotExitsException;
 import ir.maktab.finalproject.service.exception.OfferRequirementException;
-import ir.maktab.finalproject.service.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +21,9 @@ public class ExpertOfferService {
     private final ExpertOfferRepository expertOfferRepository;
     private final CustomerOrderService customerOrderService;
 
-    public ExpertOffer submitOffer(CustomerOrder customerOrder,ExpertOffer expertOffer) {
+    public ExpertOffer submitOffer(CustomerOrder customerOrder, ExpertOffer expertOffer) {
+        if (!customerOrder.getSubService().equals(expertOffer.getSubService()))
+            throw new OfferRequirementException("SubService Of Order and Offer Doesn't Match");
         if (expertOffer.getPrice() < expertOffer.getSubService().getBasePrice())
             throw new OfferRequirementException("Price Of Offer Should Be Greater Than Base Price Of The Sub-Service ( "
                     + expertOffer.getSubService().getSubName() + " " + expertOffer.getSubService().getBasePrice() + " )");
@@ -42,8 +43,8 @@ public class ExpertOfferService {
         return saveOffer;
     }
 
-    public void choseOffer(CustomerOrder customerOrder, ExpertOffer expertOffer){
-        if(!customerOrder.getExpertOfferList().contains(expertOffer))
+    public void choseOffer(CustomerOrder customerOrder, ExpertOffer expertOffer) {
+        if (!customerOrder.getExpertOfferList().contains(expertOffer))
             throw new NotExitsException("Offer Is Not For This Order");
         expertOffer.setIsChosen(true);
         customerOrder.setStatus(OrderStatus.WAITING_FOR_EXPERT_ARRIVAL);
@@ -52,8 +53,8 @@ public class ExpertOfferService {
         expertOfferRepository.save(expertOffer);
     }
 
-    public List<ExpertOffer> findAcceptedOrdersFor(Expert expert){
-        return expertOfferRepository.findAllByExpertAndIsChosen(expert,true);
+    public List<ExpertOffer> findAcceptedOrdersFor(Expert expert) {
+        return expertOfferRepository.findAllByExpertAndIsChosen(expert, true);
     }
 
     public long countByIsChosen(boolean isChosen) {

@@ -1,8 +1,8 @@
 package ir.maktab.finalproject.service;
 
 import ir.maktab.finalproject.data.entity.Credit;
-import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.Expert;
+import ir.maktab.finalproject.data.entity.roles.User;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
 import ir.maktab.finalproject.repository.ExpertRepository;
@@ -34,8 +34,7 @@ public class ExpertService {
         try {
             validateNewExpert(expert, photoPath);
             expert.setPhoto(convertFileToBytes(photoPath));
-        }
-        catch (IOException | NullPointerException e){
+        } catch (IOException | NullPointerException e) {
             throw new PhotoValidationException("Photo Not Found");
         }
         expert.setStatus(ExpertStatus.NEW);
@@ -95,7 +94,6 @@ public class ExpertService {
         expert.getSubServiceList().remove(subService);
         return expertRepository.save(expert);
     }
-
 
 
     private void validateNewExpert(Expert expert, String photoPath) throws IOException {

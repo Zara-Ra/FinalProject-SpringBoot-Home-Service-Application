@@ -7,7 +7,6 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Duration;
-import java.util.Comparator;
 import java.util.Date;
 
 @Data
@@ -24,9 +23,6 @@ public class ExpertOffer {
     @ManyToOne
     Expert expert;
 
-    /*@ManyToOne(cascade = CascadeType.MERGE)
-    CustomerOrder customerOrder;
-*/
     @ManyToOne
     SubService subService;
 

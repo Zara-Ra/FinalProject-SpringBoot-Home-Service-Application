@@ -29,11 +29,9 @@ public class ExpertServiceTest {
     @Autowired
     private ExpertService expertService;
 
-    /*@Autowired
-    private SubServiceService subServiceService;
-*/
     private static Expert expert;
-    private static String photoPath = "images/valid.jpg";
+
+    private static final String photoPath = "images/valid.jpg";
 
     private static SubService subService;
 

@@ -55,7 +55,7 @@ public class BaseServiceServiceTest {
     @Test
     void deleteUnavailableBaseServiceTest() {
         BaseService deleteBaseService = BaseService.builder().baseName("UnavailableBaseService").build();
-        BaseServiceException exception = assertThrows(BaseServiceException.class,()->baseServiceService.deleteBaseService(deleteBaseService));
-        assertEquals("Base Service Not Found",exception.getMessage());
+        BaseServiceException exception = assertThrows(BaseServiceException.class, () -> baseServiceService.deleteBaseService(deleteBaseService));
+        assertEquals("Base Service Not Found", exception.getMessage());
     }
 }

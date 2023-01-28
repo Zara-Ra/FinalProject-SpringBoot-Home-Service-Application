@@ -41,8 +41,7 @@ public class Expert extends User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Expert)) return false;
-        if (!super.equals(o)) return false;
-        return true;
+        return super.equals(o);
     }
 
     @Override

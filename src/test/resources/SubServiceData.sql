@@ -1,2 +1,2 @@
 insert into base_service (id, base_name)
-values (4,'BaseService4');
+values (4, 'BaseService4');

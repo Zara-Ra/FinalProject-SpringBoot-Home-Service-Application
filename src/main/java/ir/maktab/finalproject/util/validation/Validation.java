@@ -13,7 +13,7 @@ public class Validation {
     private static final int ONE_KILOBYTE = 1024;
     private static final int PHOTO_SIZE = 300;
 
-    private TriConsumer validate = (s, r, m) -> {
+    private final TriConsumer validate = (s, r, m) -> {
         if (s == null || s.equals("") || !s.matches(r))
             throw new ValidationException(m);
     };

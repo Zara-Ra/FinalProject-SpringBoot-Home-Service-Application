@@ -42,9 +42,6 @@ public class CustomerOrder {
     @Enumerated(value = EnumType.STRING)
     private OrderStatus status;
 
-    /*@ManyToOne
-    private Expert expert;*/
-
     @EqualsAndHashCode.Exclude
     @OneToMany(fetch = FetchType.EAGER)
     private List<ExpertOffer> expertOfferList;

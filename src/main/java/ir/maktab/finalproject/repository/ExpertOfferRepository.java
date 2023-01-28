@@ -1,6 +1,5 @@
 package ir.maktab.finalproject.repository;
 
-import ir.maktab.finalproject.data.entity.CustomerOrder;
 import ir.maktab.finalproject.data.entity.ExpertOffer;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,7 +13,5 @@ public interface ExpertOfferRepository extends JpaRepository<ExpertOffer, Intege
 
     List<ExpertOffer> findAllByExpert(Expert expert);
 
-    List<ExpertOffer> findAllByExpertAndIsChosen(Expert expert,Boolean isChosen);
-
-    //List<ExpertOffer> findAllByCustomerOrderOrderByPriceAsc(CustomerOrder customerOrder);
+    List<ExpertOffer> findAllByExpertAndIsChosen(Expert expert, Boolean isChosen);
 }

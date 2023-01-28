@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Integer> {
@@ -17,5 +16,4 @@ public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, In
     List<CustomerOrder> findAllBySubServiceAndStatus(SubService subService, OrderStatus status1, OrderStatus status2);
 
     CustomerOrder findByAcceptedExpertOffer(ExpertOffer acceptedOffer);
-    //boolean existsByExpertOffer(ExpertOffer expertOffer);
 }

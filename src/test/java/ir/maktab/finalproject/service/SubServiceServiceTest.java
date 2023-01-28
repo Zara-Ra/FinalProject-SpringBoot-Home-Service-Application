@@ -88,11 +88,12 @@ public class SubServiceServiceTest {
                 () -> assertEquals("New Description", editSubService.getDescription())
         );
     }
+
     @Order(7)
     @Test
-    void invalidEditSubServiceTest(){
+    void invalidEditSubServiceTest() {
         SubService unavailableSubService = SubService.builder().subName("Unavailable").build();
-        assertThrows(SubServiceException.class,()->subServiceService.editSubService(unavailableSubService));
+        assertThrows(SubServiceException.class, () -> subServiceService.editSubService(unavailableSubService));
     }
 
     @Order(8)
@@ -104,10 +105,10 @@ public class SubServiceServiceTest {
 
     @Order(9)
     @Test
-    void invalidDeleteSubServiceTest(){
+    void invalidDeleteSubServiceTest() {
         SubService unavailableSubService = SubService.builder().subName("Unavailable").build();
-        SubServiceException exception = assertThrows(SubServiceException.class,()->subServiceService.editSubService(unavailableSubService));
-        assertEquals("Sub Service Not Found",exception.getMessage());
+        SubServiceException exception = assertThrows(SubServiceException.class, () -> subServiceService.editSubService(unavailableSubService));
+        assertEquals("Sub Service Not Found", exception.getMessage());
     }
 
 }

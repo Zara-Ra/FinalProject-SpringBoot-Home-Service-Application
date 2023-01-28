@@ -6,6 +6,7 @@ import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.services.BaseService;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.OrderStatus;
+import ir.maktab.finalproject.service.exception.OfferRequirementException;
 import ir.maktab.finalproject.service.exception.OrderRequirementException;
 import ir.maktab.finalproject.util.sort.SortExpertOffer;
 import org.junit.jupiter.api.*;
@@ -17,6 +18,7 @@ import org.springframework.jdbc.datasource.init.ScriptUtils;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,9 +31,11 @@ public class CustomerOrderServiceTest {
 
     @Autowired
     private CustomerOrderService customerOrderService;
+
     private static CustomerOrder order;
 
     private static SubService subService;
+
     private static Customer customer;
 
     private static Date afterNow;
@@ -121,32 +125,66 @@ public class CustomerOrderServiceTest {
 
     @Order(4)
     @Test
-    void findAllBySubServiceAndStatusTest(){
-        List<CustomerOrder> customerOrders = customerOrderService.findAllBySubServiceAndStatus(subService);
+    void findAllBySubServiceAndStatusTest() {
+        List<CustomerOrder> customerOrders = customerOrderService.findAllBySubServiceAndCorrectStatus(subService);
         assertTrue(customerOrders.contains(order));
     }
 
     @Order(5)
     @Test
-    void getAllOffersForAcsTest(){
+    void getAllOffersForAcsTest() {
         CustomerOrder order = CustomerOrder.builder()
                 .id(5).build();
         List<ExpertOffer> sortedOffers = customerOrderService.getAllOffersForOrder(order, SortExpertOffer.SortByPriceAcs);
-        assertEquals(200,sortedOffers.get(0).getPrice());
+        assertEquals(200, sortedOffers.get(0).getPrice());
     }
 
     @Order(6)
     @Test
-    void getAllOffersForDcsTest(){
+    void getAllOffersForDcsTest() {
         CustomerOrder order = CustomerOrder.builder()
                 .id(5).build();
         List<ExpertOffer> sortedOffers = customerOrderService.getAllOffersForOrder(order, SortExpertOffer.SortByPriceDsc);
-        assertEquals(300,sortedOffers.get(0).getPrice());
+        assertEquals(300, sortedOffers.get(0).getPrice());
     }
 
     @Order(7)
     @Test
-    void expertArrivedTest(){
+    void expertArrivedTest() {
+        Duration duration = Duration.ZERO.plusDays(1).plusHours(2).plusMinutes(30);
+        ExpertOffer offer = ExpertOffer.builder()
+                .id(555)
+                .duration(duration)
+                .preferredDate(beforeNow).build();
+        order.setAcceptedExpertOffer(offer);
+        CustomerOrder savedOrder = customerOrderService.expertArrived(order, offer);
+        assertEquals(OrderStatus.STARTED, savedOrder.getStatus());
+    }
 
+    @Order(8)
+    @Test
+    void invalidExpertArrivedTest() {
+        Duration duration = Duration.ZERO.plusDays(1).plusHours(2).plusMinutes(30);
+        ExpertOffer offer = ExpertOffer.builder()
+                .id(555)
+                .duration(duration)
+                .preferredDate(afterNow).build();
+        order.setAcceptedExpertOffer(offer);
+        OfferRequirementException exception = assertThrows(OfferRequirementException.class,
+                () -> customerOrderService.expertArrived(order, offer));
+        assertEquals("Expert Can't Start Work Before His/Her PreferredDate", exception.getMessage());
+    }
+
+    @Order(9)
+    @Test
+    void expertDoneTest() {
+        Duration duration = Duration.ZERO.plusDays(1).plusHours(2).plusMinutes(30);
+        ExpertOffer offer = ExpertOffer.builder()
+                .id(555)
+                .duration(duration)
+                .preferredDate(beforeNow).build();
+        order.setAcceptedExpertOffer(offer);
+        CustomerOrder savedOrder = customerOrderService.expertDone(order, offer);
+        assertEquals(OrderStatus.DONE, savedOrder.getStatus());
     }
 }

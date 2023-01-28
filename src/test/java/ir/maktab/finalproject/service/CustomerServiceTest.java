@@ -1,8 +1,6 @@
 package ir.maktab.finalproject.service;
 
 import ir.maktab.finalproject.data.entity.roles.Customer;
-import ir.maktab.finalproject.data.entity.services.BaseService;
-import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.service.exception.PasswordException;
 import ir.maktab.finalproject.util.exception.ValidationException;
 import org.junit.jupiter.api.*;
@@ -17,7 +15,6 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,18 +34,6 @@ public class CustomerServiceTest {
                 .firstName("Customer Name")
                 .lastName("Customer Lastname")
                 .customerOrderList(new ArrayList<>()).build();
-
-        /*BaseService baseService = BaseService.builder().id(2).baseName("BaseService2").build();
-
-        subService = SubService.builder()
-                .id(2)
-                .subName("SubService2")
-                .basePrice(100)
-                .baseService(baseService).build();
-
-        long now = System.currentTimeMillis();
-        afterNow = new Date(now + 900000);
-        beforeNow = new Date(now - 900000);*/
     }
 
     @BeforeAll
