@@ -29,8 +29,8 @@ public class BaseServiceService implements IService<BaseService> {
     }
 
     @Override
-    public void delete(BaseService baseService) {
-        Optional<BaseService> foundBaseService = baseServiceRepository.findByBaseName(baseService.getBaseName());
+    public void delete(String baseServiceName) {
+        Optional<BaseService> foundBaseService = baseServiceRepository.findByBaseName(baseServiceName);
         if (foundBaseService.isEmpty())
             throw new BaseServiceException("Base Service Not Found");
         baseServiceRepository.delete(foundBaseService.get());

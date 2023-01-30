@@ -1,5 +1,6 @@
 package ir.maktab.finalproject.data.entity.roles;
 
+import ir.maktab.finalproject.data.entity.roles.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,6 +24,8 @@ public abstract class Account {
 
     @Column(length = 8, nullable = false)
     protected String password;
+
+    protected Role role;
 
     public Account(String email, String password) {
         this.email = email;

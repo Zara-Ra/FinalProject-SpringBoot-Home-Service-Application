@@ -30,8 +30,8 @@ public class SubServiceService implements IService<SubService> {
     }
 
     @Override
-    public void delete(SubService subService) {
-        Optional<SubService> foundSubService = subServiceRepository.findBySubName(subService.getSubName());
+    public void delete(String subServiceName) {
+        Optional<SubService> foundSubService = subServiceRepository.findBySubName(subServiceName);
         if (foundSubService.isEmpty())
             throw new SubServiceException("Sub Service Not Found");
         subServiceRepository.delete(foundSubService.get());

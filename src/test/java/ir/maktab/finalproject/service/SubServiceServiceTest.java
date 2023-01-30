@@ -100,7 +100,7 @@ public class SubServiceServiceTest {
     @Order(8)
     @Test
     void deleteSubServiceTest() {
-        subServiceService.delete(subService);
+        subServiceService.delete(subService.getSubName());
         assertEquals(0, subServiceService.findAllByBaseService(baseService).size());
     }
 
