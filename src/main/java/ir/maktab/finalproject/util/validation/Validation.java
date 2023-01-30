@@ -3,14 +3,11 @@ package ir.maktab.finalproject.util.validation;
 import ir.maktab.finalproject.util.exception.PhotoValidationException;
 import ir.maktab.finalproject.util.exception.ValidationException;
 import lombok.experimental.UtilityClass;
-
-import java.io.*;
-import java.net.URLConnection;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
-
 import net.sf.jmimemagic.*;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 @UtilityClass
 public class Validation {
@@ -67,10 +64,10 @@ public class Validation {
             throw new PhotoValidationException("Invalid Photo Type Only 'jpeg' Accepted");
     }
 
-    public byte[] convertFileToBytes(String filePath){
+    public byte[] convertFileToBytes(String filePath) {
         try {
             return Files.readAllBytes(Path.of(filePath));
-        } catch (NullPointerException | IOException e){
+        } catch (NullPointerException | IOException e) {
             throw new PhotoValidationException("Photo Not Found");
         }
     }

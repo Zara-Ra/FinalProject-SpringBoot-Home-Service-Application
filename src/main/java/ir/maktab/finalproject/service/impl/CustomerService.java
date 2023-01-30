@@ -21,14 +21,14 @@ public class CustomerService implements IRolesService<Customer> {
 
     @Override
     public Customer signUp(Customer customer) {
-            validateNewCustomer(customer);
-            customer.setCredit(Credit.builder().amount(0).build());
-            try {
-                return customerRepository.save(customer);
-            } catch (DataIntegrityViolationException e) {
-                throw new UniqueViolationException("Already Registered With This Email");
-            }
+        validateNewCustomer(customer);
+        customer.setCredit(Credit.builder().amount(0).build());
+        try {
+            return customerRepository.save(customer);
+        } catch (DataIntegrityViolationException e) {
+            throw new UniqueViolationException("Already Registered With This Email");
         }
+    }
 
     @Override
     public Customer signIn(String email, String password) {
