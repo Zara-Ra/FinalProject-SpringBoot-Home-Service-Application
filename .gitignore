@@ -6,6 +6,7 @@ target/
 !**/src/test/**/target/
 mvnw.cmd
 mvnw
+*.zip
 
 ### STS ###
 .apt_generated

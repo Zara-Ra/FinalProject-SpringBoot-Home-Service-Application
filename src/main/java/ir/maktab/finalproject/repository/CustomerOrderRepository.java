@@ -17,4 +17,5 @@ public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, In
     List<CustomerOrder> findAllBySubServiceAndTwoStatus(SubService subService, OrderStatus status1, OrderStatus status2);
 
     Optional<CustomerOrder> findByAcceptedExpertOffer(ExpertOffer acceptedOffer);
+
 }
