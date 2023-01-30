@@ -9,11 +9,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Integer> {
     @Query("FROM CustomerOrder o WHERE o.subService = ?1 AND o.status = ?2 or o.status = ?3")
-    List<CustomerOrder> findAllBySubServiceAndStatus(SubService subService, OrderStatus status1, OrderStatus status2);
+    List<CustomerOrder> findAllBySubServiceAndTwoStatus(SubService subService, OrderStatus status1, OrderStatus status2);
 
-    CustomerOrder findByAcceptedExpertOffer(ExpertOffer acceptedOffer);
+    Optional<CustomerOrder> findByAcceptedExpertOffer(ExpertOffer acceptedOffer);
 }

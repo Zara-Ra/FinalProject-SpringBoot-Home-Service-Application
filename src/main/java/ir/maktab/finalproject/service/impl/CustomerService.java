@@ -12,10 +12,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CustomerServiceI implements IRolesService<Customer> {
+public class CustomerService implements IRolesService<Customer> {
     private final CustomerRepository customerRepository;
 
-    public CustomerServiceI(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
 

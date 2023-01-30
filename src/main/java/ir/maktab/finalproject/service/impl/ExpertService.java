@@ -22,12 +22,12 @@ import java.util.List;
 
 @Service
 @Transactional
-public class ExpertServiceI implements IRolesService<Expert> {
+public class ExpertService implements IRolesService<Expert> {
     private final ExpertRepository expertRepository;
 
     private final SubServiceService subServiceService;
 
-    public ExpertServiceI(ExpertRepository expertRepository, SubServiceService subServiceService) {
+    public ExpertService(ExpertRepository expertRepository, SubServiceService subServiceService) {
         this.expertRepository = expertRepository;
         this.subServiceService = subServiceService;
     }

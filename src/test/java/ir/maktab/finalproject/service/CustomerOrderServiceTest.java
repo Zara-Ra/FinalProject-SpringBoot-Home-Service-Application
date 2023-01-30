@@ -35,6 +35,8 @@ public class CustomerOrderServiceTest {
 
     private static CustomerOrder order;
 
+    private static CustomerOrder orderForSortTest;
+
     private static SubService subService;
 
     private static Customer customer;
@@ -65,6 +67,10 @@ public class CustomerOrderServiceTest {
         long now = System.currentTimeMillis();
         afterNow = new Date(now + 900000);
         beforeNow = new Date(now - 900000);
+
+
+        orderForSortTest = CustomerOrder.builder()
+                .id(5).build();
     }
 
     @BeforeAll
@@ -127,25 +133,22 @@ public class CustomerOrderServiceTest {
     @Order(4)
     @Test
     void findAllBySubServiceAndStatusTest() {
-        List<CustomerOrder> customerOrders = customerOrderService.findAllBySubServiceAndCorrectStatus(subService);
+        List<CustomerOrder> customerOrders = customerOrderService.findAllBySubServiceAndTwoStatus(subService);
         assertTrue(customerOrders.contains(order));
     }
 
     @Order(5)
     @Test
-    void getAllOffersForAcsTest() {
-        CustomerOrder order = CustomerOrder.builder()
-                .id(5).build();
-        List<ExpertOffer> sortedOffers = customerOrderService.getAllOffersForOrder(order, SortExpertOffer.SortByPriceAcs);
-        assertEquals(200, sortedOffers.get(0).getPrice());
+    void getAllOffersTest() {
+        List<ExpertOffer> defaultSortedOffers = customerOrderService.getAllOffersForOrder(orderForSortTest);
+        orderForSortTest.setExpertOfferList(defaultSortedOffers);
+        assertEquals(200, defaultSortedOffers.get(0).getPrice());
     }
 
     @Order(6)
     @Test
     void getAllOffersForDcsTest() {
-        CustomerOrder order = CustomerOrder.builder()
-                .id(5).build();
-        List<ExpertOffer> sortedOffers = customerOrderService.getAllOffersForOrder(order, SortExpertOffer.SortByPriceDsc);
+        List<ExpertOffer> sortedOffers = customerOrderService.getAllOffersForOrder(orderForSortTest, SortExpertOffer.SortByPriceDsc);
         assertEquals(300, sortedOffers.get(0).getPrice());
     }
 

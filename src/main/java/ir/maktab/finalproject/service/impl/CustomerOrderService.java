@@ -9,11 +9,13 @@ import ir.maktab.finalproject.repository.CustomerOrderRepository;
 import ir.maktab.finalproject.service.exception.NotExitsException;
 import ir.maktab.finalproject.service.exception.OfferRequirementException;
 import ir.maktab.finalproject.service.exception.OrderRequirementException;
+import ir.maktab.finalproject.util.sort.SortExpertOffer;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerOrderService {
@@ -36,8 +38,8 @@ public class CustomerOrderService {
         return customerOrderRepository.save(customerOrder);
     }
 
-    public List<CustomerOrder> findAllBySubServiceAndCorrectStatus(SubService subService) {
-        return customerOrderRepository.findAllBySubServiceAndStatus(subService, OrderStatus.WAITING_FOR_EXPERT_SELECTION
+    public List<CustomerOrder> findAllBySubServiceAndTwoStatus(SubService subService) {
+        return customerOrderRepository.findAllBySubServiceAndTwoStatus(subService, OrderStatus.WAITING_FOR_EXPERT_SELECTION
                 , OrderStatus.WAITING_FOR_EXPERT_OFFER);
     }
 
@@ -45,14 +47,19 @@ public class CustomerOrderService {
         return customerOrderRepository.save(customerOrder);
     }
 
-    public List<ExpertOffer> getAllOffersForOrder(CustomerOrder customerOrder, Comparator<ExpertOffer> comparator) {
+    public List<ExpertOffer> getAllOffersForOrder(CustomerOrder customerOrder) {
         CustomerOrder foundOrder = customerOrderRepository.findById(customerOrder.getId())
                 .orElseThrow(() -> new NotExitsException("Customer Order Not Found"));
-        foundOrder.getExpertOfferList().sort(comparator);
+        foundOrder.getExpertOfferList().sort(SortExpertOffer.SortByPriceAcs);
         return foundOrder.getExpertOfferList();
     }
 
-    public CustomerOrder getOrderForAcceptedOffer(ExpertOffer expertOffer) {
+    public List<ExpertOffer> getAllOffersForOrder(CustomerOrder customerOrder, Comparator<ExpertOffer> comparator) {
+        customerOrder.getExpertOfferList().sort(comparator);
+        return customerOrder.getExpertOfferList();
+    }
+
+    public Optional<CustomerOrder> getOrderForAcceptedOffer(ExpertOffer expertOffer) {
         return customerOrderRepository.findByAcceptedExpertOffer(expertOffer);
     }
 
