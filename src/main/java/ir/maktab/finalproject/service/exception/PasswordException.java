@@ -1,6 +1,8 @@
 package ir.maktab.finalproject.service.exception;
 
-public class PasswordException extends RuntimeException {
+import ir.maktab.finalproject.util.exception.ValidationException;
+
+public class PasswordException extends ValidationException {
     public PasswordException(String message) {
         super(message);
     }

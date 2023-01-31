@@ -14,7 +14,7 @@ public class SubService {
     @EqualsAndHashCode.Exclude
     private Integer id;
 
-    @ManyToOne/*(cascade = CascadeType.MERGE)*/
+    @ManyToOne
     private BaseService baseService;
 
     @Column(unique = true, updatable = false, nullable = false)
