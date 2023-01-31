@@ -43,11 +43,13 @@ public interface Mapper {
     Expert convertExpert(ExpertDto expertDto);
 
     @Named("pathToBytes")
-    public static byte[] convertFileToBytes(String filePath) {
+    static byte[] convertPathToBytes(String filePath) {
         try {
             return Files.readAllBytes(Path.of(filePath));
         } catch (NullPointerException | IOException e) {
             throw new PhotoValidationException("Photo Not Found");
         }
     }
+
+    List<ExpertDto> convertExperts(List<Expert> allExpert);
 }

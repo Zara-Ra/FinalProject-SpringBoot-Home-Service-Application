@@ -28,13 +28,13 @@ public class CustomerController {
     @PostMapping("/login")
     public String login(@RequestBody AccountDto accountDto){
         Customer customer = customerService.signIn(accountDto.getEmail(), accountDto.getPassword());
-        return "Welcome "+ customer.getFirstName();
+        return "Welcome "+ customer.getFirstName()+" "+customer.getLastName();
     }
 
     @PostMapping("/change_password")
     public String changePassword(@RequestBody AccountDto accountDto){
         Customer customer = customerService.changePassword(accountDto.getEmail(), accountDto.getPassword(),accountDto.getNewPassword());
-        return "Password Changed For "+ customer.getFirstName();
+        return "Password Changed For "+ customer.getFirstName()+" "+customer.getLastName();
     }
 
 }

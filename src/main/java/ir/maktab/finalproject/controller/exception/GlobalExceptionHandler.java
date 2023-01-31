@@ -1,5 +1,6 @@
 package ir.maktab.finalproject.controller.exception;
 
+import ir.maktab.finalproject.service.exception.NotAllowedException;
 import ir.maktab.finalproject.service.exception.NotExitsException;
 import ir.maktab.finalproject.service.exception.OfferRequirementException;
 import ir.maktab.finalproject.service.exception.OrderRequirementException;
@@ -15,6 +16,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             ValidationException.class
             , NotExitsException.class
+            , NotAllowedException.class
             , OrderRequirementException.class, OfferRequirementException.class
     })
 

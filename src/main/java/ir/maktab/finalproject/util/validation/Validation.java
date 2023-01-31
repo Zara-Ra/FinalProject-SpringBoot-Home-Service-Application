@@ -63,12 +63,4 @@ public class Validation {
         if (!mimeType.equals("image/jpeg"))
             throw new PhotoValidationException("Invalid Photo Type Only 'jpeg' Accepted");
     }
-
-    public byte[] convertFileToBytes(String filePath) {
-        try {
-            return Files.readAllBytes(Path.of(filePath));
-        } catch (NullPointerException | IOException e) {
-            throw new PhotoValidationException("Photo Not Found");
-        }
-    }
 }

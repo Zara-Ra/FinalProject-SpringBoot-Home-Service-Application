@@ -7,6 +7,7 @@ import ir.maktab.finalproject.service.exception.PasswordException;
 import ir.maktab.finalproject.service.exception.SubServiceException;
 import ir.maktab.finalproject.service.impl.ExpertService;
 import ir.maktab.finalproject.util.exception.ValidationException;
+import ir.maktab.finalproject.util.mapper.Mapper;
 import ir.maktab.finalproject.util.validation.Validation;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -64,7 +65,7 @@ public class ExpertServiceTest {
     @Order(1)
     @Test
     void signUpTest() {
-        byte[] photo = Validation.convertFileToBytes(photoPath);
+        byte[] photo = Mapper.convertPathToBytes(photoPath);
         expert.setPhoto(photo);
         Expert newExpert = expertService.signUp(expert);
         assertAll(
@@ -93,7 +94,7 @@ public class ExpertServiceTest {
             "email@email.com,12345678,Expert,Expert,images/invalidMIME.jpg,Photo Not Found"
     }, nullValues = "NIL")
     void invalidSignUpTest(String email, String password, String firstName, String lastName, String path, String exceptionMsg) {
-        byte[] photo = Validation.convertFileToBytes(path);
+        byte[] photo = Mapper.convertPathToBytes(photoPath);
         Expert invalidExpert = Expert.builder()
                 .email(email)
                 .password(password)
@@ -149,7 +150,7 @@ public class ExpertServiceTest {
     @Order(8)
     @Test
     void setExpertStatusTest() {
-        Expert changedExpert = expertService.setExpertStatus(expert, ExpertStatus.APPROVED);
+        Expert changedExpert = expertService.setExpertStatus(expert.getId(), ExpertStatus.APPROVED);
         assertEquals(ExpertStatus.APPROVED, changedExpert.getStatus());
     }
 

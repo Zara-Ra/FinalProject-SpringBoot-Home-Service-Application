@@ -7,10 +7,7 @@ import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
 import ir.maktab.finalproject.repository.ExpertRepository;
 import ir.maktab.finalproject.service.IRolesService;
-import ir.maktab.finalproject.service.exception.PasswordException;
-import ir.maktab.finalproject.service.exception.SubServiceException;
-import ir.maktab.finalproject.service.exception.UniqueViolationException;
-import ir.maktab.finalproject.service.exception.UserNotFoundException;
+import ir.maktab.finalproject.service.exception.*;
 import ir.maktab.finalproject.util.exception.PhotoValidationException;
 import ir.maktab.finalproject.util.validation.Validation;
 import jakarta.transaction.Transactional;
@@ -20,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -70,16 +68,25 @@ public class ExpertService implements IRolesService<Expert> {
         return expertRepository.save(findExpert);
     }
 
+    public Optional<Expert> findByEmail(String email){
+        return expertRepository.findByEmail(email);
+    }
+
     public List<Expert> findAllExpertByStatus(ExpertStatus status) {
         return expertRepository.findAllByStatus(status);
     }
 
-    public Expert setExpertStatus(Expert expert, ExpertStatus status) {
+    public Expert setExpertStatus(Integer expertId, ExpertStatus status) {
+        Expert expert = expertRepository.findById(expertId)
+                .orElseThrow(()->new NotExitsException("Expert Not Exits"));
         expert.setStatus(status);
         return expertRepository.save(expert);
     }
 
     public Expert addSubServiceToExpert(SubService subService, Expert expert) {
+        if(!expert.getStatus().equals(ExpertStatus.APPROVED))
+            throw new NotAllowedException("Expert Is Not Approved Yet");
+
         if (expert.getSubServiceList().stream().anyMatch(s -> s.equals(subService)))
             throw new SubServiceException("Sub-Service Already Assigned To Expert");
 
@@ -93,6 +100,7 @@ public class ExpertService implements IRolesService<Expert> {
     public Expert deleteSubServiceFromExpert(SubService subService, Expert expert) {
         if (expert.getSubServiceList().stream().noneMatch(s -> s.equals(subService)))
             throw new SubServiceException("Expert Doesn't Have This Sub-Service");
+
         expert.getSubServiceList().remove(subService);
         return expertRepository.save(expert);
     }
