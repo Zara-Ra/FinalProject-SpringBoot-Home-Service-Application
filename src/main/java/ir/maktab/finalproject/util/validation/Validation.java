@@ -28,7 +28,7 @@ public class Validation {
     }
 
     public void validatePassword(String password) {
-        validate.accept(password, "^([0-9a-zA-Z]){8}$", "Invalid Password should be 8 characters including " +
+        validate.accept(password, "^([0-9a-zA-Z]){8,}$", "Invalid Password should be 8 characters including " +
                 "alphanumeric values");
     }
 

@@ -5,5 +5,5 @@ public interface IRolesService<T> {
 
     T signIn(String email, String password);
 
-    T changePassword(T role, String oldPassword, String newPassword);
+    T changePassword(String email, String oldPassword, String newPassword);
 }

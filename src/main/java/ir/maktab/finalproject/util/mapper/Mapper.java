@@ -1,7 +1,9 @@
 package ir.maktab.finalproject.util.mapper;
 
 import ir.maktab.finalproject.data.dto.BaseServiceDto;
+import ir.maktab.finalproject.data.dto.CustomerDto;
 import ir.maktab.finalproject.data.dto.SubServiceDto;
+import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.services.BaseService;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import org.mapstruct.Mapping;
@@ -15,7 +17,9 @@ public interface Mapper {
     Mapper INSTANCE = Mappers.getMapper(Mapper.class);
 
     BaseService convertBaseService(BaseServiceDto baseServiceDto);
+
     BaseServiceDto convertBaseService(BaseService baseService);
+
     List<BaseServiceDto> convertBaseServiceList(List<BaseService> list);
 
     @Mapping(source = "baseServiceName", target = "baseService.baseName")
@@ -23,5 +27,11 @@ public interface Mapper {
 
     @Mapping(target = "baseServiceName", source = "baseService.baseName")
     SubServiceDto convertSubService(SubService subService);
+
     List<SubServiceDto> convertSubServiceList(List<SubService> list);
+
+    Customer convertCustomer(CustomerDto customerDto);
+
+
+    //Expert convertExpert(UserDto userDto);
 }

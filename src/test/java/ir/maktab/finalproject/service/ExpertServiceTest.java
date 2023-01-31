@@ -127,7 +127,7 @@ public class ExpertServiceTest {
     @Order(5)
     @Test
     void changePasswordTest() {
-        Expert changePasswordExpert = expertService.changePassword(expert, "expert12", "12345678");
+        Expert changePasswordExpert = expertService.changePassword(expert.getEmail(), "expert12", "12345678");
         assertEquals("12345678", changePasswordExpert.getPassword());
     }
 
@@ -135,7 +135,7 @@ public class ExpertServiceTest {
     @Test
     void invalidChangePasswordTest() {
         PasswordException exception = assertThrows(PasswordException.class,
-                () -> expertService.changePassword(expert, "invalidOldPassword", "newPassword"));
+                () -> expertService.changePassword(expert.getEmail(), "invalidOldPassword", "newPassword"));
         assertEquals("Entered Password Doesn't Match", exception.getMessage());
     }
 

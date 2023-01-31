@@ -2,6 +2,7 @@ package ir.maktab.finalproject.service.impl;
 
 import ir.maktab.finalproject.data.entity.Credit;
 import ir.maktab.finalproject.data.entity.roles.Customer;
+import ir.maktab.finalproject.data.entity.roles.enums.Role;
 import ir.maktab.finalproject.repository.CustomerRepository;
 import ir.maktab.finalproject.service.IRolesService;
 import ir.maktab.finalproject.service.exception.PasswordException;
@@ -10,6 +11,8 @@ import ir.maktab.finalproject.service.exception.UserNotFoundException;
 import ir.maktab.finalproject.util.validation.Validation;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CustomerService implements IRolesService<Customer> {
@@ -23,6 +26,7 @@ public class CustomerService implements IRolesService<Customer> {
     public Customer signUp(Customer customer) {
         validateNewCustomer(customer);
         customer.setCredit(Credit.builder().amount(0).build());
+        customer.setRole(Role.ROLE_CUSTOMER);
         try {
             return customerRepository.save(customer);
         } catch (DataIntegrityViolationException e) {
@@ -43,16 +47,16 @@ public class CustomerService implements IRolesService<Customer> {
     }
 
     @Override
-    public Customer changePassword(Customer customer, String oldPassword, String newPassword) {
-        Customer findCustomer = customerRepository.findByEmail(customer.getEmail())
+    public Customer changePassword(String email, String oldPassword, String newPassword) {
+        Customer findCustomer = customerRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("No Username Registerd With This Email"));
 
         if (!findCustomer.getPassword().equals(oldPassword))
             throw new PasswordException("Entered Password Doesn't Match");
 
         Validation.validatePassword(newPassword);
-        customer.setPassword(newPassword);
-        return customerRepository.save(customer);
+        findCustomer.setPassword(newPassword);
+        return customerRepository.save(findCustomer);
     }
 
     private void validateNewCustomer(Customer customer) {

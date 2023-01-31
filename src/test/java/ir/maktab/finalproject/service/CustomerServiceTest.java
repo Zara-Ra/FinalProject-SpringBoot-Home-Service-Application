@@ -104,7 +104,7 @@ public class CustomerServiceTest {
     @Order(5)
     @Test
     void changePasswordTest() {
-        Customer changePasswordCustomer = customerService.changePassword(customer, "customer", "12345678");
+        Customer changePasswordCustomer = customerService.changePassword(customer.getEmail(), "customer", "12345678");
         assertEquals("12345678", changePasswordCustomer.getPassword());
     }
 
@@ -112,7 +112,7 @@ public class CustomerServiceTest {
     @Test
     void invalidChangePasswordTest() {
         PasswordException exception = assertThrows(PasswordException.class,
-                () -> customerService.changePassword(customer, "invalidOldPassword", "newPassword"));
+                () -> customerService.changePassword(customer.getEmail(), "invalidOldPassword", "newPassword"));
         assertEquals("Entered Password Doesn't Match", exception.getMessage());
     }
 

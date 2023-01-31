@@ -2,6 +2,7 @@ package ir.maktab.finalproject.service.impl;
 
 import ir.maktab.finalproject.data.entity.Credit;
 import ir.maktab.finalproject.data.entity.roles.Expert;
+import ir.maktab.finalproject.data.entity.roles.enums.Role;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
 import ir.maktab.finalproject.repository.ExpertRepository;
@@ -38,6 +39,7 @@ public class ExpertService implements IRolesService<Expert> {
         expert.setStatus(ExpertStatus.NEW);
         expert.setCredit(Credit.builder().amount(0).build());
         expert.setAverageScore(0);
+        expert.setRole(Role.ROLE_EXPERT);
         try {
             return expertRepository.save(expert);
         } catch (DataIntegrityViolationException e) {
@@ -56,16 +58,16 @@ public class ExpertService implements IRolesService<Expert> {
     }
 
     @Override
-    public Expert changePassword(Expert expert, String oldPassword, String newPassword) {
-        Expert findExpert = expertRepository.findByEmail(expert.getEmail())
+    public Expert changePassword(String email, String oldPassword, String newPassword) {
+        Expert findExpert = expertRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("No Username Registered With This Email"));
 
         if (!findExpert.getPassword().equals(oldPassword))
             throw new PasswordException("Entered Password Doesn't Match");
 
         Validation.validatePassword(newPassword);
-        expert.setPassword(newPassword);
-        return expertRepository.save(expert);
+        findExpert.setPassword(newPassword);
+        return expertRepository.save(findExpert);
     }
 
     public List<Expert> findAllExpertByStatus(ExpertStatus status) {
