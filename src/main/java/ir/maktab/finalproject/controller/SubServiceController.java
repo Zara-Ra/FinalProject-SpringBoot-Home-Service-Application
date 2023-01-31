@@ -39,8 +39,14 @@ public class SubServiceController {
         .orElseThrow(()-> new SubServiceException("Sub Service Not Exits")));
     }
 
-    @GetMapping("find_all/{baseName}")
+    @GetMapping("/find_all/{baseName}")
     public List<SubServiceDto> findAllSubServiceForBaseService(@PathVariable String baseName){
         return Mapper.INSTANCE.convertSubServiceList(subServiceService.findAllByBaseService(baseName));
+    }
+
+    @PutMapping("/edit")
+    public String editSubService(@RequestBody SubServiceDto subServiceDto){
+        subServiceService.editSubService(Mapper.INSTANCE.convertSubService(subServiceDto));
+        return "Sub Service Edited";
     }
 }

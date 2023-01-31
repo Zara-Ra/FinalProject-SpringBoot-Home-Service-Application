@@ -7,7 +7,6 @@ import ir.maktab.finalproject.service.IService;
 import ir.maktab.finalproject.service.exception.NotExitsException;
 import ir.maktab.finalproject.service.exception.SubServiceException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,10 +26,10 @@ public class SubServiceService implements IService<SubService> {
     public SubService add(SubService subService) {
         BaseService baseService = baseServiceService.findByName(subService.getBaseService().getBaseName())
                 .orElseThrow(() -> new NotExitsException("Base Service Not Exists"));
-        if(subServiceRepository.findBySubName(subService.getSubName()).isPresent())
-                throw new UniqueViolationException("Sub-Service Already Exists");
+        if (subServiceRepository.findBySubName(subService.getSubName()).isPresent())
+            throw new UniqueViolationException("Sub-Service Already Exists");
         subService.setBaseService(baseService);
-            return subServiceRepository.save(subService);
+        return subServiceRepository.save(subService);
     }
 
     @Override
@@ -42,12 +41,11 @@ public class SubServiceService implements IService<SubService> {
     }
 
     public SubService editSubService(SubService subService) {
-        Optional<SubService> foundSubService = subServiceRepository.findBySubName(subService.getSubName());
-        if (foundSubService.isEmpty())
-            throw new SubServiceException("Sub Service Not Found");
-        foundSubService.get().setBasePrice(subService.getBasePrice());
-        foundSubService.get().setDescription(subService.getDescription());
-        return subServiceRepository.save(subService);
+        SubService foundSubService = subServiceRepository.findBySubName(subService.getSubName())
+                .orElseThrow(() -> new SubServiceException("Sub Service Not Found"));
+        foundSubService.setBasePrice(subService.getBasePrice());
+        foundSubService.setDescription(subService.getDescription());
+        return subServiceRepository.save(foundSubService);
     }
 
     public List<SubService> findAllByBaseService(String baseName) {
@@ -58,6 +56,5 @@ public class SubServiceService implements IService<SubService> {
     public Optional<SubService> findByName(String subName) {
         return subServiceRepository.findBySubName(subName);
     }
-
 
 }
