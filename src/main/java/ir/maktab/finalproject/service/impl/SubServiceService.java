@@ -4,6 +4,7 @@ import ir.maktab.finalproject.data.entity.services.BaseService;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.repository.SubServiceRepository;
 import ir.maktab.finalproject.service.IService;
+import ir.maktab.finalproject.service.exception.NotExitsException;
 import ir.maktab.finalproject.service.exception.SubServiceException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -15,18 +16,21 @@ import java.util.Optional;
 @Service
 public class SubServiceService implements IService<SubService> {
     private final SubServiceRepository subServiceRepository;
+    private final BaseServiceService baseServiceService;
 
-    public SubServiceService(SubServiceRepository subServiceRepository) {
+    public SubServiceService(SubServiceRepository subServiceRepository, BaseServiceService baseServiceService) {
         this.subServiceRepository = subServiceRepository;
+        this.baseServiceService = baseServiceService;
     }
 
     @Override
     public SubService add(SubService subService) {
-        try {
+        BaseService baseService = baseServiceService.findByName(subService.getBaseService().getBaseName())
+                .orElseThrow(() -> new NotExitsException("Base Service Not Exists"));
+        if(subServiceRepository.findBySubName(subService.getSubName()).isPresent())
+                throw new UniqueViolationException("Sub-Service Already Exists");
+        subService.setBaseService(baseService);
             return subServiceRepository.save(subService);
-        } catch (DataIntegrityViolationException e) {
-            throw new UniqueViolationException("Base/Sub-Service Already Exists");
-        }
     }
 
     @Override
@@ -46,8 +50,8 @@ public class SubServiceService implements IService<SubService> {
         return subServiceRepository.save(subService);
     }
 
-    public List<SubService> findAllByBaseService(BaseService baseService) {
-        return subServiceRepository.findAllByBaseService(baseService);
+    public List<SubService> findAllByBaseService(String baseName) {
+        return subServiceRepository.findAllByBaseService_BaseName(baseName);
     }
 
     @Override

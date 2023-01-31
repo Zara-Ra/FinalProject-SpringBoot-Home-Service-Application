@@ -63,7 +63,7 @@ public class SubServiceServiceTest {
     @Order(4)
     @Test
     void findAllByBaseServiceTest() {
-        assertEquals(1, subServiceService.findAllByBaseService(baseService).size());
+        assertEquals(1, subServiceService.findAllByBaseService(baseService.getBaseName()).size());
     }
 
     @Order(5)
@@ -101,7 +101,7 @@ public class SubServiceServiceTest {
     @Test
     void deleteSubServiceTest() {
         subServiceService.delete(subService.getSubName());
-        assertEquals(0, subServiceService.findAllByBaseService(baseService).size());
+        assertEquals(0, subServiceService.findAllByBaseService(baseService.getBaseName()).size());
     }
 
     @Order(9)

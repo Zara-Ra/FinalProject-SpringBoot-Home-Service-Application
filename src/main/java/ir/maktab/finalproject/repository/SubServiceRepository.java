@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface SubServiceRepository extends JpaRepository<SubService, Integer> {
-    List<SubService> findAllByBaseService(BaseService baseService);
+    List<SubService> findAllByBaseService_BaseName(String baseName);
 
     Optional<SubService> findBySubName(String subName);
 }

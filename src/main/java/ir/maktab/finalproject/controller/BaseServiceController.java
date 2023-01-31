@@ -14,11 +14,9 @@ import java.util.List;
 public class BaseServiceController {
 
     private final BaseServiceService baseServiceService;
-    private final SubServiceService subServiceService;
 
-    public BaseServiceController(BaseServiceService baseServiceService, SubServiceService subServiceService) {
+    public BaseServiceController(BaseServiceService baseServiceService) {
         this.baseServiceService = baseServiceService;
-        this.subServiceService = subServiceService;
     }
 
     @PostMapping("/add")
@@ -39,7 +37,7 @@ public class BaseServiceController {
         .orElseThrow(()-> new BaseServiceException("Base Service Not Exits")));
     }
 
-    @GetMapping("find_all")
+    @GetMapping("/find_all")
     public List<BaseServiceDto> findAllBaseService(){
         return Mapper.INSTANCE.convertBaseServiceList(baseServiceService.findAllBaseService());
     }
