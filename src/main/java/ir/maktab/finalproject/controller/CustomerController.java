@@ -20,13 +20,13 @@ public class CustomerController {
     }
 
     @PostMapping("/register")
-    public String registerCustomer(@RequestBody CustomerDto customerDto) {
+    public String register(@RequestBody CustomerDto customerDto) {
         customerService.signUp(Mapper.INSTANCE.convertCustomer(customerDto));
         return "Customer Registered";
     }
 
     @PostMapping("/login")
-    public String loginCustomer(@RequestBody AccountDto accountDto){
+    public String login(@RequestBody AccountDto accountDto){
         Customer customer = customerService.signIn(accountDto.getEmail(), accountDto.getPassword());
         return "Welcome "+ customer.getFirstName();
     }
