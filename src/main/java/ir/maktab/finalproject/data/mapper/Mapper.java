@@ -22,7 +22,7 @@ import java.util.List;
 @org.mapstruct.Mapper
 public interface Mapper {
 
-    Mapper INSTANCE = Mappers.getMapper(Mapper.class);
+    //Mapper INSTANCE = Mappers.getMapper(Mapper.class);
 
     BaseService convertBaseService(BaseServiceDto baseServiceDto);
 

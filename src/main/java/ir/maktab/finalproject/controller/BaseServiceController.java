@@ -1,6 +1,7 @@
 package ir.maktab.finalproject.controller;
 
 import ir.maktab.finalproject.data.dto.BaseServiceDto;
+import ir.maktab.finalproject.data.mapper.ServiceMapper;
 import ir.maktab.finalproject.service.exception.BaseServiceException;
 import ir.maktab.finalproject.service.impl.BaseServiceService;
 import ir.maktab.finalproject.data.mapper.Mapper;
@@ -20,7 +21,7 @@ public class BaseServiceController {
 
     @PostMapping("/add")
     public String addBaseService(@RequestBody BaseServiceDto baseServiceDto){
-        baseServiceService.add(Mapper.INSTANCE.convertBaseService(baseServiceDto));
+        baseServiceService.add(ServiceMapper.INSTANCE.convertBaseService(baseServiceDto));
         return "Base Service Added";
     }
 
@@ -32,12 +33,12 @@ public class BaseServiceController {
 
     @GetMapping("/find/{name}")
     public BaseServiceDto findBaseService(@PathVariable String name){
-        return Mapper.INSTANCE.convertBaseService(baseServiceService.findByName(name)
+        return ServiceMapper.INSTANCE.convertBaseService(baseServiceService.findByName(name)
         .orElseThrow(()-> new BaseServiceException("Base Service Not Exits")));
     }
 
     @GetMapping("/find_all")
     public List<BaseServiceDto> findAllBaseService(){
-        return Mapper.INSTANCE.convertBaseServiceList(baseServiceService.findAllBaseService());
+        return ServiceMapper.INSTANCE.convertBaseServiceList(baseServiceService.findAllBaseService());
     }
 }

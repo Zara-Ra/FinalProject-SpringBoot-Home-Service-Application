@@ -3,6 +3,7 @@ package ir.maktab.finalproject.controller;
 import ir.maktab.finalproject.data.dto.AccountDto;
 import ir.maktab.finalproject.data.dto.CustomerDto;
 import ir.maktab.finalproject.data.entity.roles.Customer;
+import ir.maktab.finalproject.data.mapper.UserMapper;
 import ir.maktab.finalproject.service.impl.CustomerService;
 import ir.maktab.finalproject.data.mapper.Mapper;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +22,7 @@ public class CustomerController {
 
     @PostMapping("/register")
     public String register(@RequestBody CustomerDto customerDto) {
-        customerService.signUp(Mapper.INSTANCE.convertCustomer(customerDto));
+        customerService.signUp(UserMapper.INSTANCE.convertCustomer(customerDto));
         return "Customer Registered";
     }
 

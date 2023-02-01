@@ -2,6 +2,7 @@ package ir.maktab.finalproject.controller;
 
 import ir.maktab.finalproject.data.dto.ExpertOfferDto;
 import ir.maktab.finalproject.data.mapper.Mapper;
+import ir.maktab.finalproject.data.mapper.OfferMapper;
 import ir.maktab.finalproject.service.impl.ExpertOfferService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +22,7 @@ public class ExpertOfferController {
 
     @PostMapping("/submit_offer")
     public String submitOffer(@RequestBody ExpertOfferDto expertOfferDto) {
-        expertOfferService.submitOffer(expertOfferDto.getOrderId(), Mapper.INSTANCE.convertOffer(expertOfferDto));
+        expertOfferService.submitOffer(expertOfferDto.getOrderId(), OfferMapper.INSTANCE.convertOffer(expertOfferDto));
 
         return "Offer Has Been Submitted";
     }

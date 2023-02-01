@@ -6,6 +6,7 @@ import ir.maktab.finalproject.data.dto.PhotoInfoDto;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
+import ir.maktab.finalproject.data.mapper.UserMapper;
 import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.impl.ExpertService;
 import ir.maktab.finalproject.service.impl.SubServiceService;
@@ -27,7 +28,7 @@ public class ExpertController {
 
     @PostMapping("/register")
     public String register(@RequestBody ExpertDto expertDto) {
-        expertService.signUp(Mapper.INSTANCE.convertExpert(expertDto));
+        expertService.signUp(UserMapper.INSTANCE.convertExpert(expertDto));
         return "Expert Registered";
     }
 
@@ -45,7 +46,7 @@ public class ExpertController {
 
     @GetMapping("/new_experts")
     public List<ExpertDto> findNewExperts() {
-        return Mapper.INSTANCE.convertExpertList(expertService.findAllExpertByStatus(ExpertStatus.NEW));
+        return UserMapper.INSTANCE.convertExpertList(expertService.findAllExpertByStatus(ExpertStatus.NEW));
     }
 
     @GetMapping("/update_status")
