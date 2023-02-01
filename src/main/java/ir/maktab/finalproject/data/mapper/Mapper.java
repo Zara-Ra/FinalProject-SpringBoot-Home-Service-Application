@@ -1,7 +1,8 @@
-package ir.maktab.finalproject.util.mapper;
+package ir.maktab.finalproject.data.mapper;
 
 import ir.maktab.finalproject.data.dto.*;
 import ir.maktab.finalproject.data.entity.CustomerOrder;
+import ir.maktab.finalproject.data.entity.ExpertOffer;
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.BaseService;
@@ -10,10 +11,12 @@ import ir.maktab.finalproject.util.exception.PhotoValidationException;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.convert.Jsr310Converters;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.List;
 
 @org.mapstruct.Mapper
@@ -62,4 +65,15 @@ public interface Mapper {
     CustomerOrderDto convertOrder(CustomerOrder customerOrder);
 
     List<CustomerOrderDto> convertOrderList(List<CustomerOrder> orders);
+
+    @Mapping(source = "expertEmail", target = "expert.email")
+    @Mapping(source = "subServiceName", target = "subService.subName")
+    @Mapping(target = "preferredDate", source = "preferredDate", dateFormat = "yyyy-MM-dd hh:mm")
+    ExpertOffer convertOffer(ExpertOfferDto offerDto);
+
+
+    @Mapping(target = "expertEmail", source = "expert.email")
+    @Mapping(target = "subServiceName", source = "subService.subName")
+    @Mapping(target = "preferredDate", source = "preferredDate", dateFormat = "yyyy-MM-dd hh:mm")
+    ExpertOfferDto convertOffer(ExpertOffer offer);
 }

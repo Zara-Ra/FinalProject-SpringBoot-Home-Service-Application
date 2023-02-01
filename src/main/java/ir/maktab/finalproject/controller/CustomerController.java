@@ -4,7 +4,7 @@ import ir.maktab.finalproject.data.dto.AccountDto;
 import ir.maktab.finalproject.data.dto.CustomerDto;
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.service.impl.CustomerService;
-import ir.maktab.finalproject.util.mapper.Mapper;
+import ir.maktab.finalproject.data.mapper.Mapper;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

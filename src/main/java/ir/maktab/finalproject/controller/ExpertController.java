@@ -6,10 +6,10 @@ import ir.maktab.finalproject.data.dto.PhotoInfoDto;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
-import ir.maktab.finalproject.service.exception.NotExitsException;
+import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.impl.ExpertService;
 import ir.maktab.finalproject.service.impl.SubServiceService;
-import ir.maktab.finalproject.util.mapper.Mapper;
+import ir.maktab.finalproject.data.mapper.Mapper;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,9 +57,9 @@ public class ExpertController {
     @GetMapping("/assign_subservice")
     public String assignSubService(@RequestParam String subServiceName, @RequestParam String expertEmail) {
         Expert expert = expertService.findByEmail(expertEmail)
-                .orElseThrow(() -> new NotExitsException("Expert Not Exits"));
+                .orElseThrow(() -> new NotExistsException("Expert Not Exits"));
         SubService subService = subServiceService.findByName(subServiceName)
-                .orElseThrow(() -> new NotExitsException("SubService Not Exits"));
+                .orElseThrow(() -> new NotExistsException("SubService Not Exits"));
 
         expertService.addSubServiceToExpert(subService, expert);
         return "Sub Service Assigned To Expert";
@@ -68,9 +68,9 @@ public class ExpertController {
     @GetMapping("/delete_subservice")
     public String deleteSubService(@RequestParam String subServiceName, @RequestParam String expertEmail) {
         Expert expert = expertService.findByEmail(expertEmail)
-                .orElseThrow(() -> new NotExitsException("Expert Not Exits"));
+                .orElseThrow(() -> new NotExistsException("Expert Not Exits"));
         SubService subService = subServiceService.findByName(subServiceName)
-                .orElseThrow(() -> new NotExitsException("SubService Not Exits"));
+                .orElseThrow(() -> new NotExistsException("SubService Not Exits"));
 
         expertService.deleteSubServiceFromExpert(subService, expert);
         return "Sub Service Deleted From Expert";

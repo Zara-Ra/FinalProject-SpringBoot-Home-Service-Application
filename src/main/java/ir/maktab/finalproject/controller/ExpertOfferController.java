@@ -1,15 +1,17 @@
 package ir.maktab.finalproject.controller;
 
-import ir.maktab.finalproject.data.dto.CustomerOrderDto;
+import ir.maktab.finalproject.data.dto.ExpertOfferDto;
+import ir.maktab.finalproject.data.mapper.Mapper;
 import ir.maktab.finalproject.service.impl.ExpertOfferService;
-import ir.maktab.finalproject.util.mapper.Mapper;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Duration;
+
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/offer")
 public class ExpertOfferController {
     private final ExpertOfferService expertOfferService;
 
@@ -17,10 +19,11 @@ public class ExpertOfferController {
         this.expertOfferService = expertOfferService;
     }
 
-    /*@PostMapping("/request")
-    public String submitOffer(@RequestBody ExpertOfferDto expertOfferDto){
-        expertOfferService.submitOffer()
-        return "Offer Has Been Registered";
-    }*/
+    @PostMapping("/submit_offer")
+    public String submitOffer(@RequestBody ExpertOfferDto expertOfferDto) {
+        expertOfferService.submitOffer(expertOfferDto.getOrderId(), Mapper.INSTANCE.convertOffer(expertOfferDto));
+
+        return "Offer Has Been Submitted";
+    }
 
 }

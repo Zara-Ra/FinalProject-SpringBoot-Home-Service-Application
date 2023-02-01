@@ -6,12 +6,11 @@ import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.OrderStatus;
 import ir.maktab.finalproject.repository.CustomerOrderRepository;
-import ir.maktab.finalproject.service.exception.NotExitsException;
+import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.exception.OfferRequirementException;
 import ir.maktab.finalproject.service.exception.OrderRequirementException;
 import ir.maktab.finalproject.service.exception.UserNotFoundException;
 import ir.maktab.finalproject.util.sort.SortExpertOffer;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -49,7 +48,7 @@ public class CustomerOrderService {
                 .orElseThrow(()->new UserNotFoundException("Customer Not Exits"));
 
         SubService subService = subServiceService.findByName(customerOrder.getSubService().getSubName())
-                .orElseThrow(()-> new NotExitsException("Sub Serviec Not Exits"));
+                .orElseThrow(()-> new NotExistsException("Sub Serviec Not Exits"));
 
         if (customerOrder.getPrice() < customerOrder.getSubService().getBasePrice())
             throw new OrderRequirementException("Price Of Order Should Be Greater Than Base Price Of The Sub-Service:( "
@@ -67,7 +66,7 @@ public class CustomerOrderService {
 
     public List<CustomerOrder> findAllBySubServiceAndTwoStatus(String subServiceName) {
         SubService subService = subServiceService.findByName(subServiceName)
-                .orElseThrow(()->new NotExitsException("Sub Service Not Exits"));
+                .orElseThrow(()->new NotExistsException("Sub Service Not Exits"));
         return customerOrderRepository.findAllBySubServiceAndTwoStatus(subService, OrderStatus.WAITING_FOR_EXPERT_SELECTION
                 , OrderStatus.WAITING_FOR_EXPERT_OFFER);
     }
@@ -78,7 +77,7 @@ public class CustomerOrderService {
 
     public List<ExpertOffer> getAllOffersForOrder(CustomerOrder customerOrder) {
         CustomerOrder foundOrder = customerOrderRepository.findById(customerOrder.getId())
-                .orElseThrow(() -> new NotExitsException("Customer Order Not Found"));
+                .orElseThrow(() -> new NotExistsException("Customer Order Not Found"));
         foundOrder.getExpertOfferList().sort(SortExpertOffer.SortByPriceAcs);
         return foundOrder.getExpertOfferList();
     }
@@ -107,5 +106,9 @@ public class CustomerOrderService {
         return customerOrderRepository.save(customerOrder);
 
         // todo calculate duration(next phase) we will need ExpertOffer here
+    }
+
+    public Optional<CustomerOrder> findById(Integer orderId) {
+        return customerOrderRepository.findById(orderId);
     }
 }

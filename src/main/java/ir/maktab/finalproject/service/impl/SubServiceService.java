@@ -4,7 +4,7 @@ import ir.maktab.finalproject.data.entity.services.BaseService;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.repository.SubServiceRepository;
 import ir.maktab.finalproject.service.IService;
-import ir.maktab.finalproject.service.exception.NotExitsException;
+import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.exception.SubServiceException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class SubServiceService implements IService<SubService> {
     @Override
     public SubService add(SubService subService) {
         BaseService baseService = baseServiceService.findByName(subService.getBaseService().getBaseName())
-                .orElseThrow(() -> new NotExitsException("Base Service Not Exists"));
+                .orElseThrow(() -> new NotExistsException("Base Service Not Exists"));
         if (subServiceRepository.findBySubName(subService.getSubName()).isPresent())
             throw new UniqueViolationException("Sub-Service Already Exists");
         subService.setBaseService(baseService);

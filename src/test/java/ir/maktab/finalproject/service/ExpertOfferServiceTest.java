@@ -7,7 +7,7 @@ import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.BaseService;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.OrderStatus;
-import ir.maktab.finalproject.service.exception.NotExitsException;
+import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.exception.OfferRequirementException;
 import ir.maktab.finalproject.service.impl.ExpertOfferService;
 import org.junit.jupiter.api.*;
@@ -179,7 +179,7 @@ public class ExpertOfferServiceTest {
     void invalidChoseOfferTest() {
         CustomerOrder invalidOrder = CustomerOrder.builder()
                 .expertOfferList(new ArrayList<>()).build();
-        NotExitsException exception = assertThrows(NotExitsException.class
+        NotExistsException exception = assertThrows(NotExistsException.class
                 , () -> expertOfferService.choseOffer(invalidOrder, offer));
         assertEquals("Offer Is Not For This Order", exception.getMessage());
     }

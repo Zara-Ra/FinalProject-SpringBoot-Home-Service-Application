@@ -78,7 +78,7 @@ public class ExpertService implements IRolesService<Expert> {
 
     public Expert setExpertStatus(Integer expertId, ExpertStatus status) {
         Expert expert = expertRepository.findById(expertId)
-                .orElseThrow(()->new NotExitsException("Expert Not Exits"));
+                .orElseThrow(()->new NotExistsException("Expert Not Exits"));
         expert.setStatus(status);
         return expertRepository.save(expert);
     }
