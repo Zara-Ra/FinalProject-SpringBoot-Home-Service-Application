@@ -2,7 +2,7 @@ package ir.maktab.finalproject.controller;
 
 import ir.maktab.finalproject.data.dto.AccountDto;
 import ir.maktab.finalproject.data.dto.ExpertDto;
-import ir.maktab.finalproject.data.dto.PhotoInfo;
+import ir.maktab.finalproject.data.dto.PhotoInfoDto;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
@@ -77,8 +77,8 @@ public class ExpertController {
     }
 
     @PostMapping("/save_photo")
-    public String savePhoto(@RequestBody PhotoInfo photoInfo){
-        expertService.getExpertPhoto(photoInfo.getOwnerEmail(),photoInfo.getSavePath());
+    public String savePhoto(@RequestBody PhotoInfoDto photoInfoDto){
+        expertService.getExpertPhoto(photoInfoDto.getOwnerEmail(), photoInfoDto.getSavePath());
         return "Photo Saved";
     }
 }

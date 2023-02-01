@@ -1,9 +1,7 @@
 package ir.maktab.finalproject.util.mapper;
 
-import ir.maktab.finalproject.data.dto.BaseServiceDto;
-import ir.maktab.finalproject.data.dto.CustomerDto;
-import ir.maktab.finalproject.data.dto.ExpertDto;
-import ir.maktab.finalproject.data.dto.SubServiceDto;
+import ir.maktab.finalproject.data.dto.*;
+import ir.maktab.finalproject.data.entity.CustomerOrder;
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.BaseService;
@@ -52,4 +50,9 @@ public interface Mapper {
     }
 
     List<ExpertDto> convertExperts(List<Expert> allExpert);
+
+    @Mapping(source = "customerEmail", target = "customer.email")
+    @Mapping(source = "subServiceName", target = "subService.subName")
+    @Mapping(target = "preferredDate", source = "preferredDate", dateFormat = "yyyy-MM-dd hh:mm")
+    CustomerOrder convertOrder(CustomerOrderDto customerOrderDto);
 }

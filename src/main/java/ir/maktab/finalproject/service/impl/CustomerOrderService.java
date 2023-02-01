@@ -9,7 +9,9 @@ import ir.maktab.finalproject.repository.CustomerOrderRepository;
 import ir.maktab.finalproject.service.exception.NotExitsException;
 import ir.maktab.finalproject.service.exception.OfferRequirementException;
 import ir.maktab.finalproject.service.exception.OrderRequirementException;
+import ir.maktab.finalproject.service.exception.UserNotFoundException;
 import ir.maktab.finalproject.util.sort.SortExpertOffer;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -20,9 +22,12 @@ import java.util.Optional;
 @Service
 public class CustomerOrderService {
     private final CustomerOrderRepository customerOrderRepository;
-
-    public CustomerOrderService(CustomerOrderRepository customerOrderRepository) {
+    private final CustomerService customerService;
+    private final SubServiceService subServiceService;
+    public CustomerOrderService(CustomerOrderRepository customerOrderRepository, CustomerService customerService, SubServiceService subServiceService) {
         this.customerOrderRepository = customerOrderRepository;
+        this.customerService = customerService;
+        this.subServiceService = subServiceService;
     }
 
     public CustomerOrder requestOrder(Customer customer, CustomerOrder customerOrder) {
@@ -35,6 +40,29 @@ public class CustomerOrderService {
 
         customerOrder.setStatus(OrderStatus.WAITING_FOR_EXPERT_OFFER);
         customer.getCustomerOrderList().add(customerOrder);
+        return customerOrderRepository.save(customerOrder);
+    }
+
+
+    public CustomerOrder requestOrder(CustomerOrder customerOrder) {
+
+        Customer customer = customerService.findByEmail(customerOrder.getCustomer().getEmail())
+                .orElseThrow(()->new UserNotFoundException("Customer Not Exits"));
+
+        SubService subService = subServiceService.findByName(customerOrder.getSubService().getSubName())
+                .orElseThrow(()-> new NotExitsException("Sub Serviec Not Exits"));
+
+        if (customerOrder.getPrice() < customerOrder.getSubService().getBasePrice())
+            throw new OrderRequirementException("Price Of Order Should Be Greater Than Base Price Of The Sub-Service:( "
+                    + customerOrder.getSubService().getSubName() + " " + customerOrder.getSubService().getBasePrice() + " )");
+
+        if (customerOrder.getPreferredDate().before(new Date()))
+            throw new OrderRequirementException("The Preferred Date Should Be After Now");
+
+        customer.getCustomerOrderList().add(customerOrder);
+        customerOrder.setCustomer(customer);
+        customerOrder.setSubService(subService);
+        customerOrder.setStatus(OrderStatus.WAITING_FOR_EXPERT_OFFER);
         return customerOrderRepository.save(customerOrder);
     }
 

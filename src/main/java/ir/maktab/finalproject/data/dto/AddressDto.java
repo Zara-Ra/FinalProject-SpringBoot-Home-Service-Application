@@ -5,9 +5,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PhotoInfo {
+public class AddressDto {
 
-    private String ownerEmail;
+    private String city;
 
-    private String savePath;
+    private String  street;
+
+    private String number;
 }
