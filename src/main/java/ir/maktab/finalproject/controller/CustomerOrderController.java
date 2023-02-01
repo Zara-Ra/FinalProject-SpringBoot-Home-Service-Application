@@ -1,14 +1,11 @@
 package ir.maktab.finalproject.controller;
 
-import ir.maktab.finalproject.data.dto.CustomerDto;
 import ir.maktab.finalproject.data.dto.CustomerOrderDto;
-import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.service.impl.CustomerOrderService;
 import ir.maktab.finalproject.util.mapper.Mapper;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/order")
@@ -20,9 +17,16 @@ public class CustomerOrderController {
     }
 
     @PostMapping("/request")
-    public String requestOrder(@RequestBody CustomerOrderDto customerOrderDto){
+    public String requestOrder(@RequestBody CustomerOrderDto customerOrderDto) {
         customerOrderService.requestOrder(Mapper.INSTANCE.convertOrder(customerOrderDto));
         return "Order Has Been Registered";
     }
+
+    @GetMapping("/all_order/{subName}")
+    public List<CustomerOrderDto> findAllBySubService(@PathVariable String subName) {
+        return Mapper.INSTANCE.convertOrderList(customerOrderService.findAllBySubServiceAndTwoStatus(subName));
+    }
+
+
 
 }

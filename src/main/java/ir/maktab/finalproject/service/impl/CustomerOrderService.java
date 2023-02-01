@@ -43,7 +43,6 @@ public class CustomerOrderService {
         return customerOrderRepository.save(customerOrder);
     }
 
-
     public CustomerOrder requestOrder(CustomerOrder customerOrder) {
 
         Customer customer = customerService.findByEmail(customerOrder.getCustomer().getEmail())
@@ -66,7 +65,9 @@ public class CustomerOrderService {
         return customerOrderRepository.save(customerOrder);
     }
 
-    public List<CustomerOrder> findAllBySubServiceAndTwoStatus(SubService subService) {
+    public List<CustomerOrder> findAllBySubServiceAndTwoStatus(String subServiceName) {
+        SubService subService = subServiceService.findByName(subServiceName)
+                .orElseThrow(()->new NotExitsException("Sub Service Not Exits"));
         return customerOrderRepository.findAllBySubServiceAndTwoStatus(subService, OrderStatus.WAITING_FOR_EXPERT_SELECTION
                 , OrderStatus.WAITING_FOR_EXPERT_OFFER);
     }

@@ -20,6 +20,7 @@ public class CustomerOrder {
     @EqualsAndHashCode.Exclude
     private Integer id;
 
+    @ToString.Exclude
     @ManyToOne(cascade = CascadeType.MERGE)
     private Customer customer;
 
@@ -36,13 +37,14 @@ public class CustomerOrder {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date preferredDate;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.ALL)
     private Address address;
 
     @Enumerated(value = EnumType.STRING)
     private OrderStatus status;
 
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToMany(fetch = FetchType.EAGER)
     private List<ExpertOffer> expertOfferList;
 

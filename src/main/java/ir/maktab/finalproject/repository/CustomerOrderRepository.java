@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Integer> {
-    @Query("FROM CustomerOrder o WHERE o.subService = ?1 AND o.status = ?2 or o.status = ?3")
+    @Query("FROM CustomerOrder o WHERE o.subService = ?1 AND o.status = ?2 OR o.status = ?3")
     List<CustomerOrder> findAllBySubServiceAndTwoStatus(SubService subService, OrderStatus status1, OrderStatus status2);
 
     Optional<CustomerOrder> findByAcceptedExpertOffer(ExpertOffer acceptedOffer);

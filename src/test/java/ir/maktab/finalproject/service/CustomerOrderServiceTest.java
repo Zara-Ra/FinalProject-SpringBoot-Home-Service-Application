@@ -133,7 +133,7 @@ public class CustomerOrderServiceTest {
     @Order(4)
     @Test
     void findAllBySubServiceAndStatusTest() {
-        List<CustomerOrder> customerOrders = customerOrderService.findAllBySubServiceAndTwoStatus(subService);
+        List<CustomerOrder> customerOrders = customerOrderService.findAllBySubServiceAndTwoStatus(subService.getSubName());
         assertTrue(customerOrders.contains(order));
     }
 

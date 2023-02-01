@@ -49,10 +49,17 @@ public interface Mapper {
         }
     }
 
-    List<ExpertDto> convertExperts(List<Expert> allExpert);
+    List<ExpertDto> convertExpertList(List<Expert> allExpert);
 
     @Mapping(source = "customerEmail", target = "customer.email")
     @Mapping(source = "subServiceName", target = "subService.subName")
     @Mapping(target = "preferredDate", source = "preferredDate", dateFormat = "yyyy-MM-dd hh:mm")
     CustomerOrder convertOrder(CustomerOrderDto customerOrderDto);
+
+    @Mapping(source = "customer.email" , target = "customerEmail")
+    @Mapping(source = "subService.subName" , target = "subServiceName")
+    @Mapping(target = "preferredDate", source = "preferredDate", dateFormat = "yyyy-MM-dd hh:mm")
+    CustomerOrderDto convertOrder(CustomerOrder customerOrder);
+
+    List<CustomerOrderDto> convertOrderList(List<CustomerOrder> orders);
 }

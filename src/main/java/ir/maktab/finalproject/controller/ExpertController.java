@@ -45,7 +45,7 @@ public class ExpertController {
 
     @GetMapping("/new_experts")
     public List<ExpertDto> findNewExperts() {
-        return Mapper.INSTANCE.convertExperts(expertService.findAllExpertByStatus(ExpertStatus.NEW));
+        return Mapper.INSTANCE.convertExpertList(expertService.findAllExpertByStatus(ExpertStatus.NEW));
     }
 
     @GetMapping("/update_status")
