@@ -11,12 +11,15 @@ import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.impl.ExpertService;
 import ir.maktab.finalproject.service.impl.SubServiceService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/expert")
+@Validated
 public class ExpertController {
     private final ExpertService expertService;
     private final SubServiceService subServiceService;
@@ -67,7 +70,7 @@ public class ExpertController {
     }
 
     @GetMapping("/delete_subservice")
-    public String deleteSubService(@RequestParam String subServiceName, @RequestParam String expertEmail) {
+    public String deleteSubService(@RequestParam String subServiceName, @Email @RequestParam String expertEmail) {
         Expert expert = expertService.findByEmail(expertEmail)
                 .orElseThrow(() -> new NotExistsException("Expert Not Exits"));
         SubService subService = subServiceService.findByName(subServiceName)
