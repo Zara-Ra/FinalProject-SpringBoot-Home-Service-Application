@@ -5,7 +5,7 @@ import ir.maktab.finalproject.data.dto.CustomerDto;
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.mapper.UserMapper;
 import ir.maktab.finalproject.service.impl.CustomerService;
-import ir.maktab.finalproject.data.mapper.Mapper;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,21 +21,21 @@ public class CustomerController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody CustomerDto customerDto) {
+    public String register(@Valid @RequestBody CustomerDto customerDto) {
         customerService.signUp(UserMapper.INSTANCE.convertCustomer(customerDto));
         return "Customer Registered";
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody AccountDto accountDto){
+    public String login(@Valid @RequestBody AccountDto accountDto) {
         Customer customer = customerService.signIn(accountDto.getEmail(), accountDto.getPassword());
-        return "Welcome "+ customer.getFirstName()+" "+customer.getLastName();
+        return "Welcome " + customer.getFirstName() + " " + customer.getLastName();
     }
 
     @PostMapping("/change_password")
-    public String changePassword(@RequestBody AccountDto accountDto){
-        Customer customer = customerService.changePassword(accountDto.getEmail(), accountDto.getPassword(),accountDto.getNewPassword());
-        return "Password Changed For "+ customer.getFirstName()+" "+customer.getLastName();
+    public String changePassword(@Valid @RequestBody AccountDto accountDto) {
+        Customer customer = customerService.changePassword(accountDto.getEmail(), accountDto.getPassword(), accountDto.getNewPassword());
+        return "Password Changed For " + customer.getFirstName() + " " + customer.getLastName();
     }
 
 }

@@ -3,7 +3,7 @@ package ir.maktab.finalproject.controller;
 import ir.maktab.finalproject.data.dto.CustomerOrderDto;
 import ir.maktab.finalproject.data.mapper.OrderMapper;
 import ir.maktab.finalproject.service.impl.CustomerOrderService;
-import ir.maktab.finalproject.data.mapper.Mapper;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class CustomerOrderController {
     }
 
     @PostMapping("/request_order")
-    public String requestOrder(@RequestBody CustomerOrderDto customerOrderDto) {
+    public String requestOrder(@Valid @RequestBody CustomerOrderDto customerOrderDto) {
         customerOrderService.requestOrder(OrderMapper.INSTANCE.convertOrder(customerOrderDto));
         return "Order Has Been Registered";
     }

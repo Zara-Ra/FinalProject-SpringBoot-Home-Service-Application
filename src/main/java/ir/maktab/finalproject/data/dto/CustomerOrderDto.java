@@ -23,8 +23,9 @@ public class CustomerOrderDto {
 
     private String description;
 
-    @FutureOrPresent
+    @NotNull
     private String preferredDate;
 
+    @NotNull
     private AddressDto address;
 }

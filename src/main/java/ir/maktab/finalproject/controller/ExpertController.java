@@ -10,7 +10,7 @@ import ir.maktab.finalproject.data.mapper.UserMapper;
 import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.impl.ExpertService;
 import ir.maktab.finalproject.service.impl.SubServiceService;
-import ir.maktab.finalproject.data.mapper.Mapper;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,19 +27,19 @@ public class ExpertController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody ExpertDto expertDto) {
+    public String register(@Valid @RequestBody ExpertDto expertDto) {
         expertService.signUp(UserMapper.INSTANCE.convertExpert(expertDto));
         return "Expert Registered";
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody AccountDto accountDto) {
+    public String login(@Valid @RequestBody AccountDto accountDto) {
         Expert expert = expertService.signIn(accountDto.getEmail(), accountDto.getPassword());
         return "Welcome " + expert.getFirstName() + " " + expert.getLastName();
     }
 
     @PostMapping("/change_password")
-    public String changePassword(@RequestBody AccountDto accountDto) {
+    public String changePassword(@Valid @RequestBody AccountDto accountDto) {
         Expert expert = expertService.changePassword(accountDto.getEmail(), accountDto.getPassword(), accountDto.getNewPassword());
         return "Password Changed For " + expert.getFirstName() + " " + expert.getLastName();
     }
@@ -78,7 +78,7 @@ public class ExpertController {
     }
 
     @PostMapping("/save_photo")
-    public String savePhoto(@RequestBody PhotoInfoDto photoInfoDto){
+    public String savePhoto(@Valid @RequestBody PhotoInfoDto photoInfoDto) {
         expertService.getExpertPhoto(photoInfoDto.getOwnerEmail(), photoInfoDto.getSavePath());
         return "Photo Saved";
     }
