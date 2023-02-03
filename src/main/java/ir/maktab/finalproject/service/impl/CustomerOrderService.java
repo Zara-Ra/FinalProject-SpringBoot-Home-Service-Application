@@ -75,16 +75,11 @@ public class CustomerOrderService {
         return customerOrderRepository.save(customerOrder);
     }
 
-    public List<ExpertOffer> getAllOffersForOrder(CustomerOrder customerOrder) {
-        CustomerOrder foundOrder = customerOrderRepository.findById(customerOrder.getId())
+    public List<ExpertOffer> getAllOffersForOrder(Integer customerOrderId,Comparator<ExpertOffer> comparator) {
+        CustomerOrder foundOrder = customerOrderRepository.findById(customerOrderId)
                 .orElseThrow(() -> new NotExistsException("Customer Order Not Found"));
-        foundOrder.getExpertOfferList().sort(SortExpertOffer.SortByPriceAcs);
+        foundOrder.getExpertOfferList().sort(comparator);
         return foundOrder.getExpertOfferList();
-    }
-
-    public List<ExpertOffer> getAllOffersForOrder(CustomerOrder customerOrder, Comparator<ExpertOffer> comparator) {
-        customerOrder.getExpertOfferList().sort(comparator);
-        return customerOrder.getExpertOfferList();
     }
 
     public Optional<CustomerOrder> getOrderForAcceptedOffer(ExpertOffer expertOffer) {

@@ -7,6 +7,7 @@ target/
 mvnw.cmd
 mvnw
 *.zip
+*.rar
 
 ### STS ###
 .apt_generated

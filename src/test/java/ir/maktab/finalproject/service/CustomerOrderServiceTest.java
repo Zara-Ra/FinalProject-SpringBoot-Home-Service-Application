@@ -140,7 +140,7 @@ public class CustomerOrderServiceTest {
     @Order(5)
     @Test
     void getAllOffersTest() {
-        List<ExpertOffer> defaultSortedOffers = customerOrderService.getAllOffersForOrder(orderForSortTest);
+        List<ExpertOffer> defaultSortedOffers = customerOrderService.getAllOffersForOrder(orderForSortTest.getId(),SortExpertOffer.SortByPriceAcs);
         orderForSortTest.setExpertOfferList(defaultSortedOffers);
         assertEquals(200, defaultSortedOffers.get(0).getPrice());
     }
@@ -148,7 +148,7 @@ public class CustomerOrderServiceTest {
     @Order(6)
     @Test
     void getAllOffersForDcsTest() {
-        List<ExpertOffer> sortedOffers = customerOrderService.getAllOffersForOrder(orderForSortTest, SortExpertOffer.SortByPriceDsc);
+        List<ExpertOffer> sortedOffers = customerOrderService.getAllOffersForOrder(orderForSortTest.getId(), SortExpertOffer.SortByPriceDsc);
         assertEquals(300, sortedOffers.get(0).getPrice());
     }
 

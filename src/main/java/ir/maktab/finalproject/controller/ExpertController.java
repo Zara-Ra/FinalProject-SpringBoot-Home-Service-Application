@@ -12,6 +12,7 @@ import ir.maktab.finalproject.service.impl.ExpertService;
 import ir.maktab.finalproject.service.impl.SubServiceService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,13 +54,13 @@ public class ExpertController {
     }
 
     @GetMapping("/update_status")
-    public String updateStatus(@RequestParam Integer expertId) {
+    public String updateStatus(@RequestParam @Min(1) Integer expertId) {
         expertService.setExpertStatus(expertId, ExpertStatus.APPROVED);
         return "Expert Status Updated";
     }
 
     @GetMapping("/assign_subservice")
-    public String assignSubService(@RequestParam String subServiceName, @RequestParam String expertEmail) {
+    public String assignSubService(@RequestParam String subServiceName, @RequestParam @Email String expertEmail) {
         Expert expert = expertService.findByEmail(expertEmail)
                 .orElseThrow(() -> new NotExistsException("Expert Not Exits"));
         SubService subService = subServiceService.findByName(subServiceName)
@@ -70,7 +71,7 @@ public class ExpertController {
     }
 
     @GetMapping("/delete_subservice")
-    public String deleteSubService(@RequestParam String subServiceName, @Email @RequestParam String expertEmail) {
+    public String deleteSubService(@RequestParam String subServiceName, @RequestParam @Email String expertEmail) {
         Expert expert = expertService.findByEmail(expertEmail)
                 .orElseThrow(() -> new NotExistsException("Expert Not Exits"));
         SubService subService = subServiceService.findByName(subServiceName)

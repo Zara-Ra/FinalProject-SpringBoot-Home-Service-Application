@@ -6,6 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper
 public interface OfferMapper {
 
@@ -20,4 +22,6 @@ public interface OfferMapper {
     @Mapping(target = "subServiceName", source = "subService.subName")
     @Mapping(target = "preferredDate", source = "preferredDate", dateFormat = "yyyy-MM-dd HH:mm")
     ExpertOfferDto convertOffer(ExpertOffer offer);
+
+    List<ExpertOfferDto> convertOfferList(List<ExpertOffer> offers);
 }
