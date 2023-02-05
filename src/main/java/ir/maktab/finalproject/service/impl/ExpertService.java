@@ -131,4 +131,7 @@ public class ExpertService implements IRolesService<Expert> {
         Validation.validatePassword(password);
     }
 
+    public Expert updateExpert(Expert expert) {
+        return expertRepository.save(expert);
+    }
 }

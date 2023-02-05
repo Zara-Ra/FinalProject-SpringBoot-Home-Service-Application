@@ -1,11 +1,13 @@
 package ir.maktab.finalproject.controller;
 
 import ir.maktab.finalproject.controller.enums.SortType;
+import ir.maktab.finalproject.data.dto.AcceptedOrderDto;
 import ir.maktab.finalproject.data.dto.CustomerOrderDto;
 import ir.maktab.finalproject.data.dto.ExpertOfferDto;
 import ir.maktab.finalproject.data.entity.ExpertOffer;
 import ir.maktab.finalproject.data.mapper.OfferMapper;
 import ir.maktab.finalproject.data.mapper.OrderMapper;
+import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.impl.CustomerOrderService;
 import ir.maktab.finalproject.util.exception.ValidationException;
 import ir.maktab.finalproject.util.sort.SortExpertOffer;
@@ -56,4 +58,17 @@ public class CustomerOrderController {
                 (customerOrderService.getAllOffersForOrder(orderId, comparator));
     }
 
+    @GetMapping("/find_order")
+    public CustomerOrderDto findOrder(@RequestParam @Min(1) Integer orderId) {
+        return OrderMapper.INSTANCE.convertOrder(customerOrderService.findById(orderId).orElseThrow(
+                () -> new NotExistsException("Order Not Exists")
+        ));
+    }
+
+    @GetMapping("/find_accepted_order")
+    public AcceptedOrderDto findAcceptedOrder(@RequestParam @Min(1) Integer orderId) {
+        return OrderMapper.INSTANCE.convertAcceptedOrder(customerOrderService.findById(orderId).orElseThrow(
+                () -> new NotExistsException("Order Not Exists")
+        ));
+    }
 }

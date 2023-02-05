@@ -81,7 +81,7 @@ public class CustomerOrderService {
         return foundOrder.getExpertOfferList();
     }
 
-    public Optional<CustomerOrder> getOrderForAcceptedOffer(ExpertOffer expertOffer) {
+    public Optional<CustomerOrder> getOrderForAcceptedOffer(ExpertOffer expertOffer) {//todo not used
         return customerOrderRepository.findByAcceptedExpertOffer(expertOffer);
     }
 

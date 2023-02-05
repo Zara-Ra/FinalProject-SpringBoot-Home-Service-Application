@@ -4,6 +4,7 @@ import ir.maktab.finalproject.data.entity.CustomerOrder;
 import ir.maktab.finalproject.data.entity.ExpertOffer;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.SubService;
+import ir.maktab.finalproject.data.enums.ExpertStatus;
 import ir.maktab.finalproject.data.enums.OrderStatus;
 import ir.maktab.finalproject.repository.ExpertOfferRepository;
 import ir.maktab.finalproject.service.exception.NotExistsException;
@@ -12,8 +13,10 @@ import ir.maktab.finalproject.service.exception.UserNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ExpertOfferService {
@@ -108,14 +111,32 @@ public class ExpertOfferService {
         CustomerOrder customerOrder = customerOrderService.findById(orderId)
                 .orElseThrow(() -> new NotExistsException("Order Not Exists"));
 
-        expertOfferRepository.findById(offerId)
+        ExpertOffer expertOffer = expertOfferRepository.findById(offerId)
                 .orElseThrow(() -> new NotExistsException("Offer Not Exists"));
 
         customerOrder.setFinishDate(new Date());
         customerOrder.setStatus(OrderStatus.DONE);
+        calculateExpertDelay(customerOrder, expertOffer);
         return customerOrderService.updateOrder(customerOrder);
 
-        // todo calculate duration(next phase) we will need ExpertOffer here
+    }
+
+    private void calculateExpertDelay(CustomerOrder customerOrder, ExpertOffer expertOffer) {
+        Date start = customerOrder.getStartDate();
+        Date finish = customerOrder.getFinishDate();
+
+        Duration duration = Duration.between(start.toInstant(), finish.toInstant());
+
+        long hours = expertOffer.getDuration().minus(duration).toHours();
+        if (hours >= 0)
+            return;
+
+        double averageScore = expertOffer.getExpert().getAverageScore() - hours;
+        expertOffer.getExpert().setAverageScore(averageScore);
+        if (averageScore < 0)
+            expertOffer.getExpert().setStatus(ExpertStatus.SUSPEND);
+
+        expertService.updateExpert(expertOffer.getExpert());
     }
 
     @Transactional
