@@ -71,4 +71,10 @@ public class CustomerOrderController {
                 () -> new NotExistsException("Order Not Exists")
         ));
     }
+
+    @GetMapping("/pay_credit")
+    public String payFromCredit(@RequestParam @Min(1) Integer orderId){
+        customerOrderService.payFromCredit(orderId);
+        return "Order Payed";
+    }
 }

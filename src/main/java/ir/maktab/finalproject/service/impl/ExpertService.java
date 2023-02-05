@@ -134,4 +134,10 @@ public class ExpertService implements IRolesService<Expert> {
     public Expert updateExpert(Expert expert) {
         return expertRepository.save(expert);
     }
+
+    public void pay(Expert expert, double payAmount) {
+        double expertCredit = expert.getCredit().getAmount() + 0.7 * payAmount;
+        expert.getCredit().setAmount(expertCredit);
+        expertRepository.save(expert);
+    }
 }

@@ -6,6 +6,7 @@ import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.enums.Role;
 import ir.maktab.finalproject.repository.CustomerRepository;
 import ir.maktab.finalproject.service.IRolesService;
+import ir.maktab.finalproject.service.exception.CreditException;
 import ir.maktab.finalproject.service.exception.PasswordException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
 import ir.maktab.finalproject.service.exception.UserNotFoundException;
@@ -76,6 +77,25 @@ public class CustomerService implements IRolesService<Customer> {
 
     public Optional<Customer> findByEmail(String email) {
         return customerRepository.findByEmail(email);
+    }
+
+    public Customer updateCustomer(Customer customer) {
+        return customerRepository.save(customer);
+    }
+
+    public void pay(Customer customer, double payAmount) {
+        double creditAmount = customer.getCredit().getAmount();
+        if (creditAmount < payAmount)
+            throw new CreditException("Credit Not Enough");
+        customer.getCredit().setAmount(creditAmount - payAmount);
+        customerRepository.save(customer);
+    }
+
+    public void increaseCredit(String customerEmail, double amount) {
+        Customer customer = findByEmail(customerEmail)
+                .orElseThrow(()-> new UserNotFoundException("Customer Not Exists"));
+        customer.getCredit().setAmount(amount);
+        customerRepository.save(customer);
     }
 }
 

@@ -3,6 +3,7 @@ package ir.maktab.finalproject.service.impl;
 import ir.maktab.finalproject.data.entity.CustomerOrder;
 import ir.maktab.finalproject.data.entity.ExpertOffer;
 import ir.maktab.finalproject.data.entity.roles.Customer;
+import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.OrderStatus;
 import ir.maktab.finalproject.repository.CustomerOrderRepository;
@@ -10,6 +11,7 @@ import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.exception.OrderRequirementException;
 import ir.maktab.finalproject.service.exception.UserNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.Date;
@@ -19,13 +21,18 @@ import java.util.Optional;
 @Service
 public class CustomerOrderService {
     private final CustomerOrderRepository customerOrderRepository;
+
     private final CustomerService customerService;
+
     private final SubServiceService subServiceService;
 
-    public CustomerOrderService(CustomerOrderRepository customerOrderRepository, CustomerService customerService, SubServiceService subServiceService) {
+    private final ExpertService expertService;
+
+    public CustomerOrderService(CustomerOrderRepository customerOrderRepository, CustomerService customerService, SubServiceService subServiceService, ExpertService expertService) {
         this.customerOrderRepository = customerOrderRepository;
         this.customerService = customerService;
         this.subServiceService = subServiceService;
+        this.expertService = expertService;
     }
 
     public CustomerOrder requestOrder(Customer customer, CustomerOrder customerOrder) {
@@ -87,5 +94,26 @@ public class CustomerOrderService {
 
     public Optional<CustomerOrder> findById(Integer orderId) {
         return customerOrderRepository.findById(orderId);
+    }
+
+    @Transactional // todo isolation propagation
+    public void payFromCredit(Integer orderId) {
+        CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
+                .orElseThrow(() -> new NotExistsException("Order Not Exists"));
+        double payAmount = customerOrder.getAcceptedExpertOffer().getPrice();
+
+        Customer customer = customerOrder.getCustomer();
+        customerService.pay(customer,payAmount);
+
+        Expert expert = customerOrder.getAcceptedExpertOffer().getExpert();
+        expertService.pay(expert,payAmount);
+
+        customerOrder.setStatus(OrderStatus.PAYED);
+        customerOrderRepository.save(customerOrder);
+    }
+
+    @Transactional
+    public void payOnline(Integer orderId){
+
     }
 }

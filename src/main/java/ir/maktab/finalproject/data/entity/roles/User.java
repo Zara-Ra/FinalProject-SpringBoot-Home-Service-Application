@@ -31,7 +31,7 @@ public abstract class User extends Account {
     protected Date registerDate;
 
     @EqualsAndHashCode.Exclude
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.ALL)
     protected Credit credit;
 
     public User(String email, String password, String firstName, String lastName) {
