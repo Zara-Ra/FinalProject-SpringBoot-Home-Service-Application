@@ -7,10 +7,8 @@ import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.OrderStatus;
 import ir.maktab.finalproject.repository.CustomerOrderRepository;
 import ir.maktab.finalproject.service.exception.NotExistsException;
-import ir.maktab.finalproject.service.exception.OfferRequirementException;
 import ir.maktab.finalproject.service.exception.OrderRequirementException;
 import ir.maktab.finalproject.service.exception.UserNotFoundException;
-import ir.maktab.finalproject.util.sort.SortExpertOffer;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -23,6 +21,7 @@ public class CustomerOrderService {
     private final CustomerOrderRepository customerOrderRepository;
     private final CustomerService customerService;
     private final SubServiceService subServiceService;
+
     public CustomerOrderService(CustomerOrderRepository customerOrderRepository, CustomerService customerService, SubServiceService subServiceService) {
         this.customerOrderRepository = customerOrderRepository;
         this.customerService = customerService;
@@ -45,10 +44,10 @@ public class CustomerOrderService {
     public CustomerOrder requestOrder(CustomerOrder customerOrder) {
 
         Customer customer = customerService.findByEmail(customerOrder.getCustomer().getEmail())
-                .orElseThrow(()->new UserNotFoundException("Customer Not Exits"));
+                .orElseThrow(() -> new UserNotFoundException("Customer Not Exits"));
 
         SubService subService = subServiceService.findByName(customerOrder.getSubService().getSubName())
-                .orElseThrow(()-> new NotExistsException("Sub Serviec Not Exits"));
+                .orElseThrow(() -> new NotExistsException("Sub Service Not Exits"));
 
         if (customerOrder.getPrice() < customerOrder.getSubService().getBasePrice())
             throw new OrderRequirementException("Price Of Order Should Be Greater Than Base Price Of The Sub-Service:( "
@@ -66,7 +65,7 @@ public class CustomerOrderService {
 
     public List<CustomerOrder> findAllBySubServiceAndTwoStatus(String subServiceName) {
         SubService subService = subServiceService.findByName(subServiceName)
-                .orElseThrow(()->new NotExistsException("Sub Service Not Exits"));
+                .orElseThrow(() -> new NotExistsException("Sub Service Not Exits"));
         return customerOrderRepository.findAllBySubServiceAndTwoStatus(subService, OrderStatus.WAITING_FOR_EXPERT_SELECTION
                 , OrderStatus.WAITING_FOR_EXPERT_OFFER);
     }
@@ -75,7 +74,7 @@ public class CustomerOrderService {
         return customerOrderRepository.save(customerOrder);
     }
 
-    public List<ExpertOffer> getAllOffersForOrder(Integer customerOrderId,Comparator<ExpertOffer> comparator) {
+    public List<ExpertOffer> getAllOffersForOrder(Integer customerOrderId, Comparator<ExpertOffer> comparator) {
         CustomerOrder foundOrder = customerOrderRepository.findById(customerOrderId)
                 .orElseThrow(() -> new NotExistsException("Customer Order Not Found"));
         foundOrder.getExpertOfferList().sort(comparator);
@@ -84,23 +83,6 @@ public class CustomerOrderService {
 
     public Optional<CustomerOrder> getOrderForAcceptedOffer(ExpertOffer expertOffer) {
         return customerOrderRepository.findByAcceptedExpertOffer(expertOffer);
-    }
-
-    public CustomerOrder expertArrived(CustomerOrder customerOrder, ExpertOffer expertOffer) {
-        Date now = new Date();
-        if (expertOffer.getPreferredDate().after(now))
-            throw new OfferRequirementException("Expert Can't Start Work Before His/Her PreferredDate");
-        customerOrder.setStartDate(now);
-        customerOrder.setStatus(OrderStatus.STARTED);
-        return customerOrderRepository.save(customerOrder);
-    }
-
-    public CustomerOrder expertDone(CustomerOrder customerOrder, ExpertOffer expertOffer) {
-        customerOrder.setFinishDate(new Date());
-        customerOrder.setStatus(OrderStatus.DONE);
-        return customerOrderRepository.save(customerOrder);
-
-        // todo calculate duration(next phase) we will need ExpertOffer here
     }
 
     public Optional<CustomerOrder> findById(Integer orderId) {

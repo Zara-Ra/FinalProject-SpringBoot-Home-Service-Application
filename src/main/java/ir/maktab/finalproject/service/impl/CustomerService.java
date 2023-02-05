@@ -1,5 +1,6 @@
 package ir.maktab.finalproject.service.impl;
 
+import ir.maktab.finalproject.data.dto.AccountDto;
 import ir.maktab.finalproject.data.entity.Credit;
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.enums.Role;
@@ -12,7 +13,6 @@ import ir.maktab.finalproject.util.validation.Validation;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -48,15 +48,18 @@ public class CustomerService implements IRolesService<Customer> {
     }
 
     @Override
-    public Customer changePassword(String email, String oldPassword, String newPassword) {
-        Customer findCustomer = customerRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("No Username Registerd With This Email"));
+    public Customer changePassword(AccountDto accountDto) {
+        if (!accountDto.getNewPassword().equals(accountDto.getRepeatPassword()))
+            throw new PasswordException("New Password And Repeat Password Don't Match");
 
-        if (!findCustomer.getPassword().equals(oldPassword))
-            throw new PasswordException("Entered Password Doesn't Match");
+        Customer findCustomer = customerRepository.findByEmail(accountDto.getEmail())
+                .orElseThrow(() -> new UserNotFoundException("No Username Registered With This Email"));
 
-        Validation.validatePassword(newPassword);
-        findCustomer.setPassword(newPassword);
+        if (!findCustomer.getPassword().equals(accountDto.getPassword()))
+            throw new PasswordException("Incorrect Old Password");
+
+        Validation.validatePassword(accountDto.getNewPassword());
+        findCustomer.setPassword(accountDto.getNewPassword());
         return customerRepository.save(findCustomer);
     }
 

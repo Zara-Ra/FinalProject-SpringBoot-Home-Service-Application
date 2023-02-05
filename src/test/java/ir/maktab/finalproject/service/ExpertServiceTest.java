@@ -1,13 +1,14 @@
 package ir.maktab.finalproject.service;
 
+import ir.maktab.finalproject.data.dto.AccountDto;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
+import ir.maktab.finalproject.data.mapper.UserMapper;
 import ir.maktab.finalproject.service.exception.PasswordException;
 import ir.maktab.finalproject.service.exception.SubServiceException;
 import ir.maktab.finalproject.service.impl.ExpertService;
 import ir.maktab.finalproject.util.exception.ValidationException;
-import ir.maktab.finalproject.data.mapper.Mapper;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -64,7 +65,7 @@ public class ExpertServiceTest {
     @Order(1)
     @Test
     void signUpTest() {
-        byte[] photo = Mapper.convertPathToBytes(photoPath);
+        byte[] photo = UserMapper.convertPathToBytes(photoPath);
         expert.setPhoto(photo);
         Expert newExpert = expertService.signUp(expert);
         assertAll(
@@ -93,7 +94,7 @@ public class ExpertServiceTest {
             "email@email.com,12345678,Expert,Expert,images/invalidMIME.jpg,Photo Not Found"
     }, nullValues = "NIL")
     void invalidSignUpTest(String email, String password, String firstName, String lastName, String path, String exceptionMsg) {
-        byte[] photo = Mapper.convertPathToBytes(photoPath);
+        byte[] photo = UserMapper.convertPathToBytes(photoPath);
         Expert invalidExpert = Expert.builder()
                 .email(email)
                 .password(password)
@@ -127,15 +128,25 @@ public class ExpertServiceTest {
     @Order(5)
     @Test
     void changePasswordTest() {
-        Expert changePasswordExpert = expertService.changePassword(expert.getEmail(), "expert12", "12345678");
+        AccountDto accountDto = AccountDto.builder().email(expert.getEmail())
+                .password("expert12")
+                .newPassword("12345678")
+                .repeatPassword("12345678").build();
+
+        Expert changePasswordExpert = expertService.changePassword(accountDto);
         assertEquals("12345678", changePasswordExpert.getPassword());
     }
 
     @Order(6)
     @Test
     void invalidChangePasswordTest() {
+        AccountDto accountDto = AccountDto.builder().email(expert.getEmail())
+                .password("invalidOldPassword")
+                .newPassword("newPassword")
+                .repeatPassword("newPassword").build();
+
         PasswordException exception = assertThrows(PasswordException.class,
-                () -> expertService.changePassword(expert.getEmail(), "invalidOldPassword", "newPassword"));
+                () -> expertService.changePassword(accountDto));
         assertEquals("Entered Password Doesn't Match", exception.getMessage());
     }
 

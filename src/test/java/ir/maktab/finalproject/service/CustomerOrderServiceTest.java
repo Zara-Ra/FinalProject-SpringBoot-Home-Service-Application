@@ -152,43 +152,4 @@ public class CustomerOrderServiceTest {
         assertEquals(300, sortedOffers.get(0).getPrice());
     }
 
-    @Order(7)
-    @Test
-    void expertArrivedTest() {
-        Duration duration = Duration.ZERO.plusDays(1).plusHours(2).plusMinutes(30);
-        ExpertOffer offer = ExpertOffer.builder()
-                .id(555)
-                .duration(duration)
-                .preferredDate(beforeNow).build();
-        order.setAcceptedExpertOffer(offer);
-        CustomerOrder savedOrder = customerOrderService.expertArrived(order, offer);
-        assertEquals(OrderStatus.STARTED, savedOrder.getStatus());
-    }
-
-    @Order(8)
-    @Test
-    void invalidExpertArrivedTest() {
-        Duration duration = Duration.ZERO.plusDays(1).plusHours(2).plusMinutes(30);
-        ExpertOffer offer = ExpertOffer.builder()
-                .id(555)
-                .duration(duration)
-                .preferredDate(afterNow).build();
-        order.setAcceptedExpertOffer(offer);
-        OfferRequirementException exception = assertThrows(OfferRequirementException.class,
-                () -> customerOrderService.expertArrived(order, offer));
-        assertEquals("Expert Can't Start Work Before His/Her PreferredDate", exception.getMessage());
-    }
-
-    @Order(9)
-    @Test
-    void expertDoneTest() {
-        Duration duration = Duration.ZERO.plusDays(1).plusHours(2).plusMinutes(30);
-        ExpertOffer offer = ExpertOffer.builder()
-                .id(555)
-                .duration(duration)
-                .preferredDate(beforeNow).build();
-        order.setAcceptedExpertOffer(offer);
-        CustomerOrder savedOrder = customerOrderService.expertDone(order, offer);
-        assertEquals(OrderStatus.DONE, savedOrder.getStatus());
-    }
 }

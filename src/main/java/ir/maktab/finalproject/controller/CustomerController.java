@@ -34,7 +34,7 @@ public class CustomerController {
 
     @PostMapping("/change_password")
     public String changePassword(@Valid @RequestBody AccountDto accountDto) {
-        Customer customer = customerService.changePassword(accountDto.getEmail(), accountDto.getPassword(), accountDto.getNewPassword());
+        Customer customer = customerService.changePassword(accountDto);
         return "Password Changed For " + customer.getFirstName() + " " + customer.getLastName();
     }
 

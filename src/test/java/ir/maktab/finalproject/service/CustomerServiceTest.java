@@ -1,5 +1,6 @@
 package ir.maktab.finalproject.service;
 
+import ir.maktab.finalproject.data.dto.AccountDto;
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.service.exception.PasswordException;
 import ir.maktab.finalproject.service.impl.CustomerService;
@@ -104,15 +105,24 @@ public class CustomerServiceTest {
     @Order(5)
     @Test
     void changePasswordTest() {
-        Customer changePasswordCustomer = customerService.changePassword(customer.getEmail(), "customer", "12345678");
+        AccountDto accountDto = AccountDto.builder().email(customer.getEmail())
+                .password("customer")
+                .newPassword("12345678")
+                .repeatPassword("12345678").build();
+        Customer changePasswordCustomer = customerService.changePassword(accountDto);
         assertEquals("12345678", changePasswordCustomer.getPassword());
     }
 
     @Order(6)
     @Test
     void invalidChangePasswordTest() {
+        AccountDto accountDto = AccountDto.builder().email(customer.getEmail())
+                .password("invalidOldPassword")
+                .newPassword("12345678")
+                .repeatPassword("12345678").build();
+
         PasswordException exception = assertThrows(PasswordException.class,
-                () -> customerService.changePassword(customer.getEmail(), "invalidOldPassword", "newPassword"));
+                () -> customerService.changePassword(accountDto));
         assertEquals("Entered Password Doesn't Match", exception.getMessage());
     }
 

@@ -15,11 +15,13 @@ public interface OfferMapper {
     
     @Mapping(source = "expertEmail", target = "expert.email")
     @Mapping(source = "subServiceName", target = "subService.subName")
+    @Mapping(source = "orderId", target = "customerOrder.id")
     @Mapping(target = "preferredDate", source = "preferredDate", dateFormat = "yyyy-MM-dd HH:mm")
     ExpertOffer convertOffer(ExpertOfferDto offerDto);
 
     @Mapping(target = "expertEmail", source = "expert.email")
     @Mapping(target = "subServiceName", source = "subService.subName")
+    @Mapping(target = "orderId", source = "customerOrder.id")
     @Mapping(target = "preferredDate", source = "preferredDate", dateFormat = "yyyy-MM-dd HH:mm")
     ExpertOfferDto convertOffer(ExpertOffer offer);
 

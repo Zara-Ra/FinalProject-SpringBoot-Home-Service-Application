@@ -1,5 +1,6 @@
 package ir.maktab.finalproject.service.impl;
 
+import ir.maktab.finalproject.data.dto.AccountDto;
 import ir.maktab.finalproject.data.entity.Credit;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.roles.enums.Role;
@@ -56,19 +57,22 @@ public class ExpertService implements IRolesService<Expert> {
     }
 
     @Override
-    public Expert changePassword(String email, String oldPassword, String newPassword) {
-        Expert findExpert = expertRepository.findByEmail(email)
+    public Expert changePassword(AccountDto accountDto) {
+        if (!accountDto.getNewPassword().equals(accountDto.getRepeatPassword()))
+            throw new PasswordException("New Password And Repeat Password Don't Match");
+
+        Expert findCustomer = expertRepository.findByEmail(accountDto.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("No Username Registered With This Email"));
 
-        if (!findExpert.getPassword().equals(oldPassword))
-            throw new PasswordException("Entered Password Doesn't Match");
+        if (!findCustomer.getPassword().equals(accountDto.getPassword()))
+            throw new PasswordException("Incorrect Old Password");
 
-        Validation.validatePassword(newPassword);
-        findExpert.setPassword(newPassword);
-        return expertRepository.save(findExpert);
+        Validation.validatePassword(accountDto.getNewPassword());
+        findCustomer.setPassword(accountDto.getNewPassword());
+        return expertRepository.save(findCustomer);
     }
 
-    public Optional<Expert> findByEmail(String email){
+    public Optional<Expert> findByEmail(String email) {
         return expertRepository.findByEmail(email);
     }
 
@@ -78,13 +82,13 @@ public class ExpertService implements IRolesService<Expert> {
 
     public Expert setExpertStatus(Integer expertId, ExpertStatus status) {
         Expert expert = expertRepository.findById(expertId)
-                .orElseThrow(()->new NotExistsException("Expert Not Exits"));
+                .orElseThrow(() -> new NotExistsException("Expert Not Exits"));
         expert.setStatus(status);
         return expertRepository.save(expert);
     }
 
     public Expert addSubServiceToExpert(SubService subService, Expert expert) {
-        if(!expert.getStatus().equals(ExpertStatus.APPROVED))
+        if (!expert.getStatus().equals(ExpertStatus.APPROVED))
             throw new NotAllowedException("Expert Is Not Approved Yet");
 
         if (expert.getSubServiceList().stream().anyMatch(s -> s.equals(subService)))

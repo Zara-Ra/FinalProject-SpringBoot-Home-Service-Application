@@ -4,21 +4,22 @@ import ir.maktab.finalproject.data.entity.Review;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
 @Entity
 public class Expert extends User {
+
     @Enumerated(value = EnumType.STRING)
     private ExpertStatus status;
 
@@ -48,5 +49,4 @@ public class Expert extends User {
     public int hashCode() {
         return Objects.hash(super.hashCode());
     }
-
 }

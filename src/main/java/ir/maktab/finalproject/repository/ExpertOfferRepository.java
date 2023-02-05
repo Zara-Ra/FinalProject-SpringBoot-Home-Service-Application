@@ -13,5 +13,5 @@ public interface ExpertOfferRepository extends JpaRepository<ExpertOffer, Intege
 
     List<ExpertOffer> findAllByExpert(Expert expert);
 
-    List<ExpertOffer> findAllByExpertAndIsChosen(Expert expert, Boolean isChosen);
+    List<ExpertOffer> findAllByExpertEmailAndIsChosen(String email, Boolean isChosen);
 }

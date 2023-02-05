@@ -26,6 +26,10 @@ public class ExpertOffer {
     @ManyToOne
     SubService subService;
 
+    @EqualsAndHashCode.Exclude
+    @OneToOne
+    CustomerOrder customerOrder;
+
     @Temporal(value = TemporalType.DATE)
     @CreationTimestamp
     private Date registerDate;

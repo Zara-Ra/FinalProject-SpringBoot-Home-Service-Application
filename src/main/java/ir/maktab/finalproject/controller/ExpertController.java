@@ -44,7 +44,7 @@ public class ExpertController {
 
     @PostMapping("/change_password")
     public String changePassword(@Valid @RequestBody AccountDto accountDto) {
-        Expert expert = expertService.changePassword(accountDto.getEmail(), accountDto.getPassword(), accountDto.getNewPassword());
+        Expert expert = expertService.changePassword(accountDto);
         return "Password Changed For " + expert.getFirstName() + " " + expert.getLastName();
     }
 

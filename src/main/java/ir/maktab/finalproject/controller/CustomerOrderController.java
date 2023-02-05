@@ -7,6 +7,7 @@ import ir.maktab.finalproject.data.entity.ExpertOffer;
 import ir.maktab.finalproject.data.mapper.OfferMapper;
 import ir.maktab.finalproject.data.mapper.OrderMapper;
 import ir.maktab.finalproject.service.impl.CustomerOrderService;
+import ir.maktab.finalproject.util.exception.ValidationException;
 import ir.maktab.finalproject.util.sort.SortExpertOffer;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -38,14 +39,19 @@ public class CustomerOrderController {
     }
 
     @GetMapping("/all_offers_for_order")
-    public List<ExpertOfferDto> getAllOffersForOrder(@RequestParam @Min(1) Integer orderId){
+    public List<ExpertOfferDto> getAllOffersForOrder(@RequestParam @Min(1) Integer orderId) {
         return OfferMapper.INSTANCE.convertOfferList
                 (customerOrderService.getAllOffersForOrder(orderId, SortExpertOffer.SortByPriceAcs));
     }
 
     @GetMapping("/all_offers_for_order_sort")
-    public List<ExpertOfferDto> getAllOffersForOrder(@RequestParam @Min(1) Integer orderId,@RequestParam String sortBy){
-        Comparator<ExpertOffer> comparator = SortType.valueOf(sortBy).getComparator();
+    public List<ExpertOfferDto> getAllOffersForOrder(@RequestParam @Min(1) Integer orderId, @RequestParam String sortBy) {
+        Comparator<ExpertOffer> comparator;
+        try {
+            comparator = SortType.valueOf(sortBy).getComparator();
+        } catch (IllegalArgumentException e) {
+            throw new ValidationException("Invalid Sort Type");
+        }
         return OfferMapper.INSTANCE.convertOfferList
                 (customerOrderService.getAllOffersForOrder(orderId, comparator));
     }

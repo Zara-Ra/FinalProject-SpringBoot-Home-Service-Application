@@ -113,7 +113,7 @@ public class ExpertOfferServiceTest {
                 .duration(duration)
                 .preferredDate(afterNow).build();
 
-        ExpertOffer savedOffer = expertOfferService.submitOffer(order, offer);
+        ExpertOffer savedOffer = expertOfferService.submitOffer(order.getId(), offer);
 
         assertAll(
                 () -> assertEquals(expert, savedOffer.getExpert()),
@@ -132,7 +132,7 @@ public class ExpertOfferServiceTest {
                 .duration(duration)
                 .preferredDate(afterNow).build();
         OfferRequirementException exception = assertThrows(OfferRequirementException.class
-                , () -> expertOfferService.submitOffer(order, offer));
+                , () -> expertOfferService.submitOffer(order.getId(), offer));
         assertEquals("Price Of Offer Should Be Greater Than Base Price Of The Sub-Service ( " +
                 offer.getSubService().getSubName() + " " + offer.getSubService().getBasePrice() + " )", exception.getMessage());
     }
@@ -147,7 +147,7 @@ public class ExpertOfferServiceTest {
                 .duration(duration)
                 .preferredDate(beforeNow).build();
         OfferRequirementException exception = assertThrows(OfferRequirementException.class
-                , () -> expertOfferService.submitOffer(order, offer));
+                , () -> expertOfferService.submitOffer(order.getId(), offer));
         assertEquals("The Preferred Date Should Be After Now And After The Customers Preferred Date"
                 , exception.getMessage());
     }
@@ -162,14 +162,14 @@ public class ExpertOfferServiceTest {
                 .duration(null)
                 .preferredDate(afterNow).build();
         OfferRequirementException exception = assertThrows(OfferRequirementException.class
-                , () -> expertOfferService.submitOffer(order, offer));
+                , () -> expertOfferService.submitOffer(order.getId(), offer));
         assertEquals("Duration Should Not Be Empty", exception.getMessage());
     }
 
     @Order(5)
     @Test
     void choseOfferTest() {
-        expertOfferService.choseOffer(order, offer);
+        expertOfferService.choseOffer(order.getId(), offer.getId());
         long count = expertOfferService.countByIsChosen(true);
         assertEquals(1, count);
     }
@@ -180,7 +180,47 @@ public class ExpertOfferServiceTest {
         CustomerOrder invalidOrder = CustomerOrder.builder()
                 .expertOfferList(new ArrayList<>()).build();
         NotExistsException exception = assertThrows(NotExistsException.class
-                , () -> expertOfferService.choseOffer(invalidOrder, offer));
+                , () -> expertOfferService.choseOffer(invalidOrder.getId(), offer.getId()));
         assertEquals("Offer Is Not For This Order", exception.getMessage());
+    }
+
+    @Order(7)
+    @Test
+    void expertArrivedTest() {
+        Duration duration = Duration.ZERO.plusDays(1).plusHours(2).plusMinutes(30);
+        ExpertOffer offer = ExpertOffer.builder()
+                .id(555)
+                .duration(duration)
+                .preferredDate(beforeNow).build();
+        order.setAcceptedExpertOffer(offer);
+        CustomerOrder savedOrder = expertOfferService.expertArrived(order.getId(), offer.getId());
+        assertEquals(OrderStatus.STARTED, savedOrder.getStatus());
+    }
+
+    @Order(8)
+    @Test
+    void invalidExpertArrivedTest() {
+        Duration duration = Duration.ZERO.plusDays(1).plusHours(2).plusMinutes(30);
+        ExpertOffer offer = ExpertOffer.builder()
+                .id(555)
+                .duration(duration)
+                .preferredDate(afterNow).build();
+        order.setAcceptedExpertOffer(offer);
+        OfferRequirementException exception = assertThrows(OfferRequirementException.class,
+                () -> expertOfferService.expertArrived(order.getId(), offer.getId()));
+        assertEquals("Expert Can't Start Work Before His/Her PreferredDate", exception.getMessage());
+    }
+
+    @Order(9)
+    @Test
+    void expertDoneTest() {
+        Duration duration = Duration.ZERO.plusDays(1).plusHours(2).plusMinutes(30);
+        ExpertOffer offer = ExpertOffer.builder()
+                .id(555)
+                .duration(duration)
+                .preferredDate(beforeNow).build();
+        order.setAcceptedExpertOffer(offer);
+        CustomerOrder savedOrder = expertOfferService.expertDone(order.getId(), offer.getId());
+        assertEquals(OrderStatus.DONE, savedOrder.getStatus());
     }
 }
