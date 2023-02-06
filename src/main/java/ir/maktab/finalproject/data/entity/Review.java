@@ -20,4 +20,6 @@ public class Review {
     private int score;
 
     private String comment;
+
+    // todo add order or offer
 }
