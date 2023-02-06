@@ -1,4 +1,4 @@
-package ir.maktab.finalproject.util.captcha.servlet;
+package ir.maktab.finalproject.util.captcha;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,7 +15,7 @@ import java.io.OutputStream;
 import java.util.Random;
 
 @WebServlet("/captcha-servlet")
-public class CaptchaServlet extends HttpServlet {
+public class CaptchaUtil extends HttpServlet {
 
 	private static final long serialVersionUID = -5840561187921381583L;
 	

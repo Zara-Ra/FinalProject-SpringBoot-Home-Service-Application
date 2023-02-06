@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
+    <meta http-equiv="refresh" content="600">
 
     <link rel="stylesheet" href="./css/bootstrap.rtl.min.css">
     <link rel = "stylesheet" href="./css/style.css">
-    <title>Title</title>
+    <title>Payment</title>
 </head>
 <body>
 
@@ -24,11 +24,18 @@
                                     <input type="text" id="cardNumber" class="form-control form-control-lg" siez="19"
                                           placeholder="xxxx-xxxx-xxxx-xxxx" minlength="16" maxlength="19"/>
                                 </div>
+                                <div>
+                                    <div id="pie_to_be"></div>
+                                    <style>
+                                        div#pie_to_be { width: 80px; height: 80px; margin: 5px; color:#444444; font-family:arial; font-size:32px; }
+                                    </style>
+                                </div>
+
                             </div>
 
                             <div class="d-flex justify-content-between align-items-center pb-2">
                                 <div class="form-outline">
-                                    <label class="form-label" for="expirationDate">Expiration</label>
+                                    <label class="form-label" for="expirationDate">Expiration Date</label>
                                     <input type="text" id="expirationDate" class="form-control form-control-lg"
                                            placeholder="YYYY-MM"
                                            size="7" minlength="7" maxlength="7"/>
@@ -42,18 +49,17 @@
                                 </div>
                             </div>
 
-
-                            <div class="col-md-6">
+                            <div class="d-flex justify-content-between align-items-center pb-2">
                                 <img alt="captcha" src="/captcha-servlet">
                             </div>
-                            <label for="captcha"> enter code </label>
 
-                            <div class="col-md-6">
-                                <input class="form-control" type="text" id="captcha" placeholder="Enter Captcha"
-                                       required="true"/>
-
+                            <div class="d-flex justify-content-between align-items-center pb-2">
+                                <div class="form-outline">
+                                    <label class="form-label" for="captcha">Enter Code</label>
+                                    <input type="text" id="captcha" class="form-control form-control-lg"
+                                           size="5" minlength="5" maxlength="5"/>
+                                </div>
                             </div>
-
                             <p></p>
                                 <div class="d-grid gap-2">
                                     <button class="btn btn-primary" type="button" id="submit">Submit</button>
@@ -70,6 +76,7 @@
 <script src="js/jquery-3.6.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/script.js"></script>
+<script src="js/timer.js"></script>
 
 </body>
 </html>

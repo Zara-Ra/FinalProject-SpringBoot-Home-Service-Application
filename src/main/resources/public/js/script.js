@@ -18,15 +18,16 @@ $("#submit").on('click', function (e) {
         processData: false,
         contentType: false,
         dataType: "text",
-        success: function (response) {
-            e.preventDefault();
-            alert("Success")
-        },
-        error: function (/*xhr*/jqXHR, textStatus, errorThrown) {
+        error: function () {
             e.preventDefault();
             alert("Error")
             //alert('Request Status: ' + xhr.status + ' Status Text: ' + xhr.statusText)
-        }
+        },
+        success: function () {
+            e.preventDefault();
+            alert("Success")
+        },
+        timeout: 6000
     });
 })
 

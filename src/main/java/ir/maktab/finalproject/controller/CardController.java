@@ -19,8 +19,6 @@ public class CardController {
         System.out.println(request.getSession().getAttribute("captcha"));
         if (!cardDto.getCaptcha().equals(request.getSession().getAttribute("captcha")))
             throw new ValidationException("Captcha Mismatch");
-
-
         return "Pay Online";
     }
 
