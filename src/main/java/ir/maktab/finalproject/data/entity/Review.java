@@ -21,5 +21,6 @@ public class Review {
 
     private String comment;
 
-    // todo add order or offer
+    @OneToOne
+    private CustomerOrder customerOrder;
 }

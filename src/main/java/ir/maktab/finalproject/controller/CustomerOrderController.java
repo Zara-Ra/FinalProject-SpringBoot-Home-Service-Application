@@ -2,22 +2,27 @@ package ir.maktab.finalproject.controller;
 
 import ir.maktab.finalproject.controller.enums.SortType;
 import ir.maktab.finalproject.data.dto.AcceptedOrderDto;
-import ir.maktab.finalproject.data.dto.CardDto;
+import ir.maktab.finalproject.data.dto.PaymentDto;
 import ir.maktab.finalproject.data.dto.CustomerOrderDto;
 import ir.maktab.finalproject.data.dto.ExpertOfferDto;
 import ir.maktab.finalproject.data.entity.ExpertOffer;
+import ir.maktab.finalproject.data.enums.PaymentType;
 import ir.maktab.finalproject.data.mapper.OfferMapper;
 import ir.maktab.finalproject.data.mapper.OrderMapper;
 import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.impl.CustomerOrderService;
 import ir.maktab.finalproject.util.exception.ValidationException;
 import ir.maktab.finalproject.util.sort.SortExpertOffer;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -73,17 +78,26 @@ public class CustomerOrderController {
         ));
     }
 
-    /*@GetMapping("/pay_credit")
-    public String payFromCredit(@RequestParam @Min(1) Integer orderId){
-        customerOrderService.payFromCredit(orderId);
-        return "Order Payed";
-    }
-    @CrossOrigin(maxAge = 600)
+    @CrossOrigin
     @PostMapping("/pay_online")
-    public String payOnline(@Valid @ModelAttribute CardDto cardDto) {
-        //captcha
-        //redirect to bank
+    public String payOnline(@Valid @ModelAttribute PaymentDto paymentDto, HttpServletRequest request) {
+        try {
+            Date expirationDate = new SimpleDateFormat("yyyy-MM").parse(paymentDto.getExpirationDate());
+            if(expirationDate.before(new Date())){
+                throw new ValidationException("Card Has Expired");}
+        } catch (ParseException e) {
+            throw new ValidationException("Invalid Date Format");
+        }
+        if (!paymentDto.getCaptcha().equals(request.getSession().getAttribute("captcha")))
+            throw new ValidationException("Captcha Mismatch");
+        //call bank
+        customerOrderService.pay(paymentDto.getOrderId(), PaymentType.ONLINE);
+        return "Order Payed Online";
+    }
 
-        return "OK";
-    }*/
+    @GetMapping("/pay_credit")
+    public String payFromCredit(@RequestParam @Min(1) Integer orderId){
+        customerOrderService.pay(orderId,PaymentType.CREDIT);
+        return "Order Payed By Credit";
+    }
 }

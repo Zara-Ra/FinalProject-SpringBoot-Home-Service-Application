@@ -2,13 +2,11 @@ package ir.maktab.finalproject.service.impl;
 
 import ir.maktab.finalproject.data.entity.CustomerOrder;
 import ir.maktab.finalproject.data.entity.ExpertOffer;
-import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
 import ir.maktab.finalproject.data.enums.OrderStatus;
 import ir.maktab.finalproject.repository.ExpertOfferRepository;
-import ir.maktab.finalproject.service.exception.CreditException;
 import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.exception.OfferRequirementException;
 import ir.maktab.finalproject.service.exception.UserNotFoundException;
@@ -108,6 +106,7 @@ public class ExpertOfferService {
         return customerOrderService.updateOrder(customerOrder);
     }
 
+    @Transactional
     public CustomerOrder expertDone(Integer orderId, Integer offerId) {
         CustomerOrder customerOrder = customerOrderService.findById(orderId)
                 .orElseThrow(() -> new NotExistsException("Order Not Exists"));
@@ -119,7 +118,6 @@ public class ExpertOfferService {
         customerOrder.setStatus(OrderStatus.DONE);
         calculateExpertDelay(customerOrder, expertOffer);
         return customerOrderService.updateOrder(customerOrder);
-
     }
 
     private void calculateExpertDelay(CustomerOrder customerOrder, ExpertOffer expertOffer) {
@@ -132,7 +130,7 @@ public class ExpertOfferService {
         if (hours >= 0)
             return;
 
-        double averageScore = expertOffer.getExpert().getAverageScore() - hours;
+        double averageScore = expertOffer.getExpert().getAverageScore() - Math.abs(hours);
         expertOffer.getExpert().setAverageScore(averageScore);
         if (averageScore < 0)
             expertOffer.getExpert().setStatus(ExpertStatus.SUSPEND);

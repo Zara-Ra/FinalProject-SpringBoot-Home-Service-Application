@@ -20,6 +20,7 @@ public class CustomerOrderDto {
 
     @NotNull
     private String subServiceName;
+
     @NotNull
     private String price;
 

@@ -6,6 +6,7 @@ import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.OrderStatus;
+import ir.maktab.finalproject.data.enums.PaymentType;
 import ir.maktab.finalproject.repository.CustomerOrderRepository;
 import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.exception.OrderRequirementException;
@@ -96,24 +97,21 @@ public class CustomerOrderService {
         return customerOrderRepository.findById(orderId);
     }
 
-    @Transactional // todo isolation propagation
-    public void payFromCredit(Integer orderId) {
+    @Transactional
+    public void pay(Integer orderId, PaymentType paymentType) {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
                 .orElseThrow(() -> new NotExistsException("Order Not Exists"));
         double payAmount = customerOrder.getAcceptedExpertOffer().getPrice();
 
-        Customer customer = customerOrder.getCustomer();
-        customerService.pay(customer,payAmount);
+        if(paymentType.equals(PaymentType.CREDIT)) {
+            Customer customer = customerOrder.getCustomer();
+            customerService.pay(customer, payAmount);
+        }
 
         Expert expert = customerOrder.getAcceptedExpertOffer().getExpert();
         expertService.pay(expert,payAmount);
 
         customerOrder.setStatus(OrderStatus.PAYED);
         customerOrderRepository.save(customerOrder);
-    }
-
-    @Transactional
-    public void payOnline(Integer orderId){
-
     }
 }

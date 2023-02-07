@@ -6,7 +6,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CardDto {
+public class PaymentDto {
+
+    private Integer orderId;
 
     @Pattern(regexp = "^[0-9]{16}$")
     private String cardNumber;

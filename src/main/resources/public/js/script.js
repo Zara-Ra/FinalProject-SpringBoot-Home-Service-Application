@@ -4,16 +4,18 @@ $("#submit").on('click', function (e) {
     const expirationDate = document.getElementById("expirationDate")
     const cvv2 = document.getElementById("cvv2");
     const captcha = document.getElementById("captcha");
+    const orderId = document.getElementById("orderId");
 
     const form = new FormData();
     form.append("cardNumber", cardNumber.value);
     form.append("expirationDate", expirationDate.value);
     form.append("cvv2", cvv2.value);
     form.append("captcha", captcha.value);
+    form.append("orderId",orderId.value);
 
     $.ajax({
         type: "POST",
-        url: "http://localhost:8080/payment/pay_online",
+        url: "http://localhost:8080/order/pay_online",
         data: form,
         processData: false,
         contentType: false,
@@ -21,7 +23,6 @@ $("#submit").on('click', function (e) {
         error: function () {
             e.preventDefault();
             alert("Error")
-            //alert('Request Status: ' + xhr.status + ' Status Text: ' + xhr.statusText)
         },
         success: function () {
             e.preventDefault();
