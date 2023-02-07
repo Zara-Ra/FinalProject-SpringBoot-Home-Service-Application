@@ -2,6 +2,7 @@ package ir.maktab.finalproject.service.impl;
 
 import ir.maktab.finalproject.data.entity.CustomerOrder;
 import ir.maktab.finalproject.data.entity.ExpertOffer;
+import ir.maktab.finalproject.data.entity.Review;
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.SubService;
@@ -113,5 +114,20 @@ public class CustomerOrderService {
 
         customerOrder.setStatus(OrderStatus.PAYED);
         customerOrderRepository.save(customerOrder);
+    }
+
+    @Transactional
+    public void addReview(Review review) {
+        CustomerOrder customerOrder = customerOrderRepository.findById(review.getCustomerOrder().getId())
+                .orElseThrow(() -> new NotExistsException("Order Not Exists"));
+        if(!customerOrder.getStatus().equals(OrderStatus.PAYED))
+            throw new OrderRequirementException("Order Not Payed Yet");
+
+        Expert expert = customerOrder.getAcceptedExpertOffer().getExpert();
+        review.setCustomerOrder(customerOrder);
+        expert.getReviewList().add(review);
+        double averageScore = expert.getReviewList().stream().mapToInt(r->r.getScore()).average().getAsDouble();
+        expert.setAverageScore(averageScore);
+        expertService.updateExpert(expert);
     }
 }

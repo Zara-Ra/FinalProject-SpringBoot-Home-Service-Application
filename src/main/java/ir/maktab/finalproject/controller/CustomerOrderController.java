@@ -1,14 +1,12 @@
 package ir.maktab.finalproject.controller;
 
 import ir.maktab.finalproject.controller.enums.SortType;
-import ir.maktab.finalproject.data.dto.AcceptedOrderDto;
-import ir.maktab.finalproject.data.dto.PaymentDto;
-import ir.maktab.finalproject.data.dto.CustomerOrderDto;
-import ir.maktab.finalproject.data.dto.ExpertOfferDto;
+import ir.maktab.finalproject.data.dto.*;
 import ir.maktab.finalproject.data.entity.ExpertOffer;
 import ir.maktab.finalproject.data.enums.PaymentType;
 import ir.maktab.finalproject.data.mapper.OfferMapper;
 import ir.maktab.finalproject.data.mapper.OrderMapper;
+import ir.maktab.finalproject.data.mapper.ReviewMapper;
 import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.impl.CustomerOrderService;
 import ir.maktab.finalproject.util.exception.ValidationException;
@@ -99,5 +97,11 @@ public class CustomerOrderController {
     public String payFromCredit(@RequestParam @Min(1) Integer orderId){
         customerOrderService.pay(orderId,PaymentType.CREDIT);
         return "Order Payed By Credit";
+    }
+
+    @PostMapping("/add_review")
+    public String addReview(@RequestBody ReviewDto reviewDto){
+        customerOrderService.addReview(ReviewMapper.INSTANCE.convertReview(reviewDto));
+        return "Review Added";
     }
 }

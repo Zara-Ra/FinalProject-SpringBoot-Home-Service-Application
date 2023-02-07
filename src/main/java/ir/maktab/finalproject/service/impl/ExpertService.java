@@ -1,7 +1,9 @@
 package ir.maktab.finalproject.service.impl;
 
 import ir.maktab.finalproject.data.dto.AccountDto;
+import ir.maktab.finalproject.data.dto.ReviewDto;
 import ir.maktab.finalproject.data.entity.Credit;
+import ir.maktab.finalproject.data.entity.Review;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.roles.enums.Role;
 import ir.maktab.finalproject.data.entity.services.SubService;
@@ -139,5 +141,16 @@ public class ExpertService implements IRolesService<Expert> {
         double expertCredit = expert.getCredit().getAmount() + 0.7 * payAmount;
         expert.getCredit().setAmount(expertCredit);
         expertRepository.save(expert);
+    }
+
+    public Review getOrderScore(Integer orderId, String expertEmail) {
+        Expert expert = expertRepository.findByEmail(expertEmail)
+                .orElseThrow(() -> new UserNotFoundException("Expert Not Exists"));
+        Review review = expert.getReviewList().stream()
+                .filter(r -> r.getCustomerOrder().getId().equals(orderId))
+                .findFirst()
+                .orElseThrow(() -> new NotExistsException("No Review For This Order"));
+        review.setComment("");
+        return review;
     }
 }

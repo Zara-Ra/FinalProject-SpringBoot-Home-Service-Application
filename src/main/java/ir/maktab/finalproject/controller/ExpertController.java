@@ -3,9 +3,11 @@ package ir.maktab.finalproject.controller;
 import ir.maktab.finalproject.data.dto.AccountDto;
 import ir.maktab.finalproject.data.dto.ExpertDto;
 import ir.maktab.finalproject.data.dto.PhotoInfoDto;
+import ir.maktab.finalproject.data.dto.ReviewDto;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
+import ir.maktab.finalproject.data.mapper.ReviewMapper;
 import ir.maktab.finalproject.data.mapper.UserMapper;
 import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.impl.ExpertService;
@@ -85,5 +87,10 @@ public class ExpertController {
     public String savePhoto(@Valid @RequestBody PhotoInfoDto photoInfoDto) {
         expertService.getExpertPhoto(photoInfoDto.getOwnerEmail(), photoInfoDto.getSavePath());
         return "Photo Saved";
+    }
+
+    @GetMapping("/order_score")
+    public ReviewDto orderScore(@RequestParam Integer orderId, @RequestParam String expertEmail){
+        return ReviewMapper.INSTANCE.convertReview(expertService.getOrderScore(orderId,expertEmail));
     }
 }
