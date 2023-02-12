@@ -2,13 +2,12 @@ package ir.maktab.finalproject.data.entity.roles;
 
 import ir.maktab.finalproject.data.entity.roles.enums.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
@@ -25,6 +24,7 @@ public abstract class Account {
     @Column(length = 8, nullable = false)
     protected String password;
 
+    @Enumerated(value = EnumType.STRING)
     protected Role role;
 
     public Account(String email, String password) {

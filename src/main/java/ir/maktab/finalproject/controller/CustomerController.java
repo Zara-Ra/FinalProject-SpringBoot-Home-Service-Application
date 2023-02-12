@@ -1,16 +1,18 @@
 package ir.maktab.finalproject.controller;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import ir.maktab.finalproject.data.dto.AccountDto;
 import ir.maktab.finalproject.data.dto.CreditDto;
 import ir.maktab.finalproject.data.dto.CustomerDto;
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.mapper.UserMapper;
+import ir.maktab.finalproject.data.predicates.CustomerPredicateBuilder;
 import ir.maktab.finalproject.service.impl.CustomerService;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/customer")
@@ -43,6 +45,11 @@ public class CustomerController {
     public String increaseCredit(@RequestBody CreditDto creditDto) {
         customerService.increaseCredit(creditDto.getCustomerEmail(), creditDto.getAmount());
         return "Credit Increased ";
+    }
+
+    @GetMapping("/filter-user")
+    public Iterable<Customer> search(@RequestParam String search) {
+        return customerService.findAll(search);
     }
 
 }
