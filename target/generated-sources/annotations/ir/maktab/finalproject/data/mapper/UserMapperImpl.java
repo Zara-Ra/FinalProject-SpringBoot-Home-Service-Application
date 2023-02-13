@@ -10,7 +10,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-02-13T21:56:33+0330",
+    date = "2023-02-13T22:17:06+0330",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 17.0.4 (Oracle Corporation)"
 )
 public class UserMapperImpl implements UserMapper {
@@ -78,6 +78,20 @@ public class UserMapperImpl implements UserMapper {
         return iterable;
     }
 
+    @Override
+    public Iterable<CustomerDto> convertCustomerIterator(Iterable<Customer> all) {
+        if ( all == null ) {
+            return null;
+        }
+
+        ArrayList<CustomerDto> iterable = new ArrayList<CustomerDto>();
+        for ( Customer customer : all ) {
+            iterable.add( customerToCustomerDto( customer ) );
+        }
+
+        return iterable;
+    }
+
     protected ExpertDto expertToExpertDto(Expert expert) {
         if ( expert == null ) {
             return null;
@@ -92,5 +106,21 @@ public class UserMapperImpl implements UserMapper {
         expertDto.setLastName( expert.getLastName() );
 
         return expertDto;
+    }
+
+    protected CustomerDto customerToCustomerDto(Customer customer) {
+        if ( customer == null ) {
+            return null;
+        }
+
+        CustomerDto customerDto = new CustomerDto();
+
+        customerDto.setId( customer.getId() );
+        customerDto.setEmail( customer.getEmail() );
+        customerDto.setPassword( customer.getPassword() );
+        customerDto.setFirstName( customer.getFirstName() );
+        customerDto.setLastName( customer.getLastName() );
+
+        return customerDto;
     }
 }

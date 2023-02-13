@@ -54,8 +54,8 @@ public class ExpertController {
         return UserMapper.INSTANCE.convertExpertList(expertService.findAllExpertByStatus(ExpertStatus.NEW));
     }
 
-    @GetMapping("/update-status")
-    public String updateStatus(@RequestParam @Min(1) Integer expertId) {
+    @GetMapping("/approve-status")
+    public String approveStatus(@RequestParam @Min(1) Integer expertId) {
         expertService.setExpertStatus(expertId, ExpertStatus.APPROVED);
         return "Expert Status Updated";
     }
