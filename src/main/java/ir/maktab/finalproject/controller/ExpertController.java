@@ -4,6 +4,7 @@ import ir.maktab.finalproject.data.dto.AccountDto;
 import ir.maktab.finalproject.data.dto.ExpertDto;
 import ir.maktab.finalproject.data.dto.PhotoInfoDto;
 import ir.maktab.finalproject.data.dto.ReviewDto;
+import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
@@ -93,4 +94,10 @@ public class ExpertController {
     public ReviewDto orderScore(@RequestParam Integer orderId, @RequestParam String expertEmail){
         return ReviewMapper.INSTANCE.convertReview(expertService.getOrderScore(orderId,expertEmail));
     }
+
+    @GetMapping("/filter")
+    public Iterable<Expert> search(@RequestParam String search) {
+        return expertService.findAll(search);
+    }
+
 }

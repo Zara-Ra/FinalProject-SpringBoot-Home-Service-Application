@@ -1,22 +1,26 @@
-package ir.maktab.finalproject.data.predicates;
+package ir.maktab.finalproject.service.predicates;
 
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.util.search.SearchCriteria;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class CustomerPredicateBuilder {
+public class UserPredicateBuilder {
     private List<SearchCriteria> params;
+    private Class aClass;
+    private String className;
 
-    public CustomerPredicateBuilder() {
+    public UserPredicateBuilder(Class aClass,String className) {
+        this.aClass = aClass;
+        this.className = className;
         params = new ArrayList<>();
     }
 
-    public CustomerPredicateBuilder with(String key, String operation, Object value) {
+    public UserPredicateBuilder with(String key, String operation, Object value) {
         params.add(new SearchCriteria(key, operation, value));
         return this;
     }
@@ -27,8 +31,8 @@ public class CustomerPredicateBuilder {
         }
 
         List<BooleanExpression> predicates = params.stream().map(param -> {
-            CustomerPredicate predicate = new CustomerPredicate(param);
-            return predicate.getPredicate();
+            UserPredicate predicate = new UserPredicate(param);
+            return predicate.getPredicate(aClass,className);
         }).filter(Objects::nonNull).toList();
 
         BooleanExpression result = Expressions.asBoolean(true).isTrue();

@@ -1,13 +1,11 @@
 package ir.maktab.finalproject.service.impl;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import ir.maktab.finalproject.data.dto.AccountDto;
 import ir.maktab.finalproject.data.entity.Credit;
 import ir.maktab.finalproject.data.entity.roles.Customer;
-import ir.maktab.finalproject.data.entity.roles.QCustomer;
 import ir.maktab.finalproject.data.entity.roles.enums.Role;
-import ir.maktab.finalproject.data.predicates.CustomerPredicateBuilder;
+import ir.maktab.finalproject.service.predicates.UserPredicateBuilder;
 import ir.maktab.finalproject.repository.CustomerRepository;
 import ir.maktab.finalproject.service.IRolesService;
 import ir.maktab.finalproject.service.exception.CreditException;
@@ -15,12 +13,9 @@ import ir.maktab.finalproject.service.exception.PasswordException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
 import ir.maktab.finalproject.service.exception.UserNotFoundException;
 import ir.maktab.finalproject.util.validation.Validation;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,9 +23,6 @@ import java.util.regex.Pattern;
 @Service
 public class CustomerService implements IRolesService<Customer>/*, CommandLineRunner*/ {
     private final CustomerRepository customerRepository;
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
@@ -111,7 +103,7 @@ public class CustomerService implements IRolesService<Customer>/*, CommandLineRu
     }
 
     public Iterable<Customer> findAll(String search) {
-        CustomerPredicateBuilder builder = new CustomerPredicateBuilder();
+        UserPredicateBuilder builder = new UserPredicateBuilder(Customer.class,"customer");
         if (search != null) {
             Pattern pattern = Pattern.compile("(\\w+?)([:<>])([\\w-_@.]+?),");
             Matcher matcher = pattern.matcher(search + ",");
@@ -122,19 +114,5 @@ public class CustomerService implements IRolesService<Customer>/*, CommandLineRu
         BooleanExpression expression = builder.build();
         return customerRepository.findAll(expression);
     }
-
-    /*public void run(String... args) throws Exception {
-        *//*var qCustomer = QCustomer.customer;
-        var query = new JPAQuery(entityManager);
-        query.from(qCustomer).where(qCustomer.firstName.eq("Customer"));
-        var fetch = query.fetch();
-        System.out.println(fetch.get(0));*//*
-
-        var qCustomer = QCustomer.customer;
-        JPAQuery<QCustomer> query1 = new JPAQuery<>(entityManager);
-        query1.from(qCustomer).where(qCustomer.firstName.eq("Zahra"));
-        System.out.println(query1.fetch().size());
-
-    }*/
 }
 
