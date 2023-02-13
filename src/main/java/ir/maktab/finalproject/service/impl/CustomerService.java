@@ -5,13 +5,13 @@ import ir.maktab.finalproject.data.dto.AccountDto;
 import ir.maktab.finalproject.data.entity.Credit;
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.enums.Role;
-import ir.maktab.finalproject.service.predicates.UserPredicateBuilder;
 import ir.maktab.finalproject.repository.CustomerRepository;
 import ir.maktab.finalproject.service.IRolesService;
 import ir.maktab.finalproject.service.exception.CreditException;
 import ir.maktab.finalproject.service.exception.PasswordException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
 import ir.maktab.finalproject.service.exception.UserNotFoundException;
+import ir.maktab.finalproject.service.predicates.UserPredicateBuilder;
 import ir.maktab.finalproject.util.validation.Validation;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -97,13 +97,13 @@ public class CustomerService implements IRolesService<Customer>/*, CommandLineRu
 
     public void increaseCredit(String customerEmail, double amount) {
         Customer customer = findByEmail(customerEmail)
-                .orElseThrow(()-> new UserNotFoundException("Customer Not Exists"));
+                .orElseThrow(() -> new UserNotFoundException("Customer Not Exists"));
         customer.getCredit().setAmount(amount);
         customerRepository.save(customer);
     }
 
     public Iterable<Customer> findAll(String search) {
-        UserPredicateBuilder builder = new UserPredicateBuilder(Customer.class,"customer");
+        UserPredicateBuilder builder = new UserPredicateBuilder();
         if (search != null) {
             Pattern pattern = Pattern.compile("(\\w+?)([:<>])([\\w-_@.]+?),");
             Matcher matcher = pattern.matcher(search + ",");
@@ -111,7 +111,7 @@ public class CustomerService implements IRolesService<Customer>/*, CommandLineRu
                 builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
             }
         }
-        BooleanExpression expression = builder.build();
+        BooleanExpression expression = builder.build(Customer.class, "customer");
         return customerRepository.findAll(expression);
     }
 }

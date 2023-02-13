@@ -96,7 +96,7 @@ public class ExpertController {
     }
 
     @GetMapping("/filter")
-    public Iterable<Expert> search(@RequestParam String search) {
-        return expertService.findAll(search);
+    public Iterable<ExpertDto> search(@RequestParam String search) {
+        return UserMapper.INSTANCE.convertExpertIterator(expertService.findAll(search));
     }
 }

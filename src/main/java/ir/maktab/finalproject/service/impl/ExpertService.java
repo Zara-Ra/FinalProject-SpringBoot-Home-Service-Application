@@ -2,10 +2,8 @@ package ir.maktab.finalproject.service.impl;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import ir.maktab.finalproject.data.dto.AccountDto;
-import ir.maktab.finalproject.data.dto.ReviewDto;
 import ir.maktab.finalproject.data.entity.Credit;
 import ir.maktab.finalproject.data.entity.Review;
-import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.roles.enums.Role;
 import ir.maktab.finalproject.data.entity.services.SubService;
@@ -16,10 +14,11 @@ import ir.maktab.finalproject.service.exception.*;
 import ir.maktab.finalproject.service.predicates.UserPredicateBuilder;
 import ir.maktab.finalproject.util.exception.PhotoValidationException;
 import ir.maktab.finalproject.util.validation.Validation;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -161,7 +160,7 @@ public class ExpertService implements IRolesService<Expert> {
     }
 
     public Iterable<Expert> findAll(String search) {
-        UserPredicateBuilder builder = new UserPredicateBuilder(Expert.class,"expert");
+        UserPredicateBuilder builder = new UserPredicateBuilder();
         if (search != null) {
             Pattern pattern = Pattern.compile("(\\w+?)([:<>])([\\w-_@.]+?),");
             Matcher matcher = pattern.matcher(search + ",");
@@ -169,7 +168,7 @@ public class ExpertService implements IRolesService<Expert> {
                 builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
             }
         }
-        BooleanExpression expression = builder.build();
+        BooleanExpression expression = builder.build(Expert.class, "expert");
         return expertRepository.findAll(expression);
     }
 }

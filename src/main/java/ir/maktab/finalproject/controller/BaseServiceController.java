@@ -34,7 +34,7 @@ public class BaseServiceController {
     @GetMapping("/find/{name}")
     public BaseServiceDto findBaseService(@PathVariable String name) {
         return ServiceMapper.INSTANCE.convertBaseService(baseServiceService.findByName(name)
-                .orElseThrow(() -> new BaseServiceException("Base Service Not Exits")));
+                .orElseThrow(() -> new BaseServiceException("Base Service Not Exists")));
     }
 
     @GetMapping("/find-all")

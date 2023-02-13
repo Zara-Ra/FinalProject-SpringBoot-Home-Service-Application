@@ -36,4 +36,5 @@ public interface UserMapper {
 
     List<ExpertDto> convertExpertList(List<Expert> allExpert);
 
+    Iterable<ExpertDto> convertExpertIterator(Iterable<Expert> all);
 }

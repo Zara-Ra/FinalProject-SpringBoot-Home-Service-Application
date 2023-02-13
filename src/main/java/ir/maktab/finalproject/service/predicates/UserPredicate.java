@@ -4,15 +4,12 @@ import com.querydsl.core.types.dsl.*;
 import ir.maktab.finalproject.data.entity.QCredit;
 import ir.maktab.finalproject.data.entity.roles.QExpert;
 import ir.maktab.finalproject.data.entity.roles.User;
-import ir.maktab.finalproject.data.entity.services.QSubService;
-import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.util.exception.ValidationException;
 import ir.maktab.finalproject.util.search.SearchCriteria;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 public class UserPredicate {
     private SearchCriteria criteria;
@@ -27,17 +24,17 @@ public class UserPredicate {
         if (criteria.getKey().contains("Date")) {
             return dateBooleanExpression(entityPath);
         }
-        if (criteria.getKey().contains("credit")) {
-            return creditBooleanExpression();
-        }
         //if (isNumeric(criteria.getValue().toString())) {
         if (criteria.getKey().contains("id")) {
             return intBooleanExpression(entityPath);
         }
-        if(criteria.getKey().contains("Score")){
+        if (criteria.getKey().contains("credit")) {
+            return creditBooleanExpression();
+        }
+        if (criteria.getKey().contains("Score")) {
             return intBooleanExpression(entityPath);
         }
-        if(criteria.getKey().contains("sub")){
+        if (criteria.getKey().contains("sub")) {
             return subServiceBooleanExpression();
         }
         StringPath path = entityPath.getString(criteria.getKey());
@@ -65,6 +62,15 @@ public class UserPredicate {
     }
 
     private BooleanExpression intBooleanExpression(PathBuilder<User> entityPath) {
+        if (!isInteger(criteria.getValue().toString())) {
+            QExpert qExpert = QExpert.expert;
+            NumberPath<Double> path = qExpert.averageScore;
+            return switch (criteria.getValue().toString()){
+                case "max"->  path.goe(4.5);
+                case "min"->  path.loe(0.5);
+                default -> null;
+            };
+        }
         NumberPath<Integer> path = entityPath.getNumber(criteria.getKey(), Integer.class);
         int value = Integer.parseInt(criteria.getValue().toString());
         return switch (criteria.getOperation()) {
@@ -93,7 +99,7 @@ public class UserPredicate {
         }
     }
 
-    public static boolean isNumeric(final String str) {
+    public static boolean isInteger(final String str) {
         try {
             Integer.parseInt(str);
         } catch (final NumberFormatException e) {

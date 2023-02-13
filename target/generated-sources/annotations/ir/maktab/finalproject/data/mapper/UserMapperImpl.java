@@ -10,7 +10,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-02-12T21:48:09+0330",
+    date = "2023-02-13T21:56:33+0330",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 17.0.4 (Oracle Corporation)"
 )
 public class UserMapperImpl implements UserMapper {
@@ -62,6 +62,20 @@ public class UserMapperImpl implements UserMapper {
         }
 
         return list;
+    }
+
+    @Override
+    public Iterable<ExpertDto> convertExpertIterator(Iterable<Expert> all) {
+        if ( all == null ) {
+            return null;
+        }
+
+        ArrayList<ExpertDto> iterable = new ArrayList<ExpertDto>();
+        for ( Expert expert : all ) {
+            iterable.add( expertToExpertDto( expert ) );
+        }
+
+        return iterable;
     }
 
     protected ExpertDto expertToExpertDto(Expert expert) {
