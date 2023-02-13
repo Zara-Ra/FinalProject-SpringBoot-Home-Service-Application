@@ -33,24 +33,24 @@ public class CustomerOrderController {
         this.customerOrderService = customerOrderService;
     }
 
-    @PostMapping("/request_order")
+    @PostMapping("/request-order")
     public String requestOrder(@Valid @RequestBody CustomerOrderDto customerOrderDto) {
         customerOrderService.requestOrder(OrderMapper.INSTANCE.convertOrder(customerOrderDto));
         return "Order Has Been Registered";
     }
 
-    @GetMapping("/all_orders_for_sub/{subName}")
+    @GetMapping("/all-orders-for-sub/{subName}")
     public List<CustomerOrderDto> findAllBySubService(@PathVariable String subName) {
         return OrderMapper.INSTANCE.convertOrderList(customerOrderService.findAllBySubServiceAndTwoStatus(subName));
     }
 
-    @GetMapping("/all_offers_for_order")
+    @GetMapping("/all-offers-for-order")
     public List<ExpertOfferDto> getAllOffersForOrder(@RequestParam @Min(1) Integer orderId) {
         return OfferMapper.INSTANCE.convertOfferList
                 (customerOrderService.getAllOffersForOrder(orderId, SortExpertOffer.SortByPriceAcs));
     }
 
-    @GetMapping("/all_offers_for_order_sort")
+    @GetMapping("/all-offers-for-order-sort")
     public List<ExpertOfferDto> getAllOffersForOrder(@RequestParam @Min(1) Integer orderId, @RequestParam String sortBy) {
         Comparator<ExpertOffer> comparator;
         try {
@@ -62,14 +62,14 @@ public class CustomerOrderController {
                 (customerOrderService.getAllOffersForOrder(orderId, comparator));
     }
 
-    @GetMapping("/find_order")
+    @GetMapping("/find-order")
     public CustomerOrderDto findOrder(@RequestParam @Min(1) Integer orderId) {
         return OrderMapper.INSTANCE.convertOrder(customerOrderService.findById(orderId).orElseThrow(
                 () -> new NotExistsException("Order Not Exists")
         ));
     }
 
-    @GetMapping("/find_accepted_order")
+    @GetMapping("/find-accepted-order")
     public AcceptedOrderDto findAcceptedOrder(@RequestParam @Min(1) Integer orderId) {
         return OrderMapper.INSTANCE.convertAcceptedOrder(customerOrderService.findById(orderId).orElseThrow(
                 () -> new NotExistsException("Order Not Exists")
@@ -77,7 +77,7 @@ public class CustomerOrderController {
     }
 
     @CrossOrigin
-    @PostMapping("/pay_online")
+    @PostMapping("/pay-online")
     public String payOnline(@Valid @ModelAttribute PaymentDto paymentDto, HttpServletRequest request) {
         try {
             Date expirationDate = new SimpleDateFormat("yyyy-MM").parse(paymentDto.getExpirationDate());
@@ -93,13 +93,13 @@ public class CustomerOrderController {
         return "Order Payed Online";
     }
 
-    @GetMapping("/pay_credit")
+    @GetMapping("/pay-credit")
     public String payFromCredit(@RequestParam @Min(1) Integer orderId){
         customerOrderService.pay(orderId,PaymentType.CREDIT);
         return "Order Payed By Credit";
     }
 
-    @PostMapping("/add_review")
+    @PostMapping("/add-review")
     public String addReview(@RequestBody ReviewDto reviewDto){
         customerOrderService.addReview(ReviewMapper.INSTANCE.convertReview(reviewDto));
         return "Review Added";

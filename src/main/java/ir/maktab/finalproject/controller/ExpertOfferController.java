@@ -21,30 +21,30 @@ public class ExpertOfferController {
         this.expertOfferService = expertOfferService;
     }
 
-    @PostMapping("/submit_offer")
+    @PostMapping("/submit-offer")
     public String submitOffer(@Valid @RequestBody ExpertOfferDto expertOfferDto) {
         expertOfferService.submitOffer(expertOfferDto.getOrderId(), OfferMapper.INSTANCE.convertOffer(expertOfferDto));
         return "Offer Has Been Submitted";
     }
 
-    @GetMapping("/chose_offer")
+    @GetMapping("/chose-offer")
     public String choseOffer(@RequestParam @Min(1) Integer orderId, @RequestParam @Min(1) Integer offerId) {
         expertOfferService.choseOffer(orderId, offerId);
         return "Offer Has Been Chosen";
     }
 
-    @GetMapping("/expert_arrived")
+    @GetMapping("/expert-arrived")
     public String expertArrived(@RequestParam @Min(1) Integer orderId, @RequestParam @Min(1) Integer offerId){
         expertOfferService.expertArrived(orderId,offerId);
         return "Expert Arrived";
     }
 
-    @GetMapping("/expert_done")
+    @GetMapping("/expert-done")
     public String expertDone(@RequestParam @Min(1) Integer orderId, @RequestParam @Min(1) Integer offerId){
         expertOfferService.expertDone(orderId,offerId);
         return "Expert Done";
     }
-    @GetMapping("/experts_orders/{expertEmail}")
+    @GetMapping("/experts-orders/{expertEmail}")
     public List<ExpertOfferDto> findAcceptedOrdersFor(@PathVariable @Email String expertEmail){
         return OfferMapper.INSTANCE.convertOfferList(expertOfferService.findAcceptedOffersFor(expertEmail));
     }

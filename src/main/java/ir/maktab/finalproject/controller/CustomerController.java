@@ -30,13 +30,13 @@ public class CustomerController {
         return "Welcome " + customer.getFirstName() + " " + customer.getLastName();
     }
 
-    @PostMapping("/change_password")
+    @PostMapping("/change-password")
     public String changePassword(@Valid @RequestBody AccountDto accountDto) {
         Customer customer = customerService.changePassword(accountDto);
         return "Password Changed For " + customer.getFirstName() + " " + customer.getLastName();
     }
 
-    @PostMapping("/increase_credit")
+    @PostMapping("/increase-credit")
     public String increaseCredit(@RequestBody CreditDto creditDto) {
         customerService.increaseCredit(creditDto.getCustomerEmail(), creditDto.getAmount());
         return "Credit Increased ";

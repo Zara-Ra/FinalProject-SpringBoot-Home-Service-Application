@@ -37,7 +37,7 @@ public class BaseServiceController {
                 .orElseThrow(() -> new BaseServiceException("Base Service Not Exits")));
     }
 
-    @GetMapping("/find_all")
+    @GetMapping("/find-all")
     public List<BaseServiceDto> findAllBaseService() {
         return ServiceMapper.INSTANCE.convertBaseServiceList(baseServiceService.findAllBaseService());
     }

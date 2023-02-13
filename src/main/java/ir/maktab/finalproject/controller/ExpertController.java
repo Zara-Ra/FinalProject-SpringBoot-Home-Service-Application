@@ -45,24 +45,24 @@ public class ExpertController {
         return "Welcome " + expert.getFirstName() + " " + expert.getLastName();
     }
 
-    @PostMapping("/change_password")
+    @PostMapping("/change-password")
     public String changePassword(@Valid @RequestBody AccountDto accountDto) {
         Expert expert = expertService.changePassword(accountDto);
         return "Password Changed For " + expert.getFirstName() + " " + expert.getLastName();
     }
 
-    @GetMapping("/new_experts")
+    @GetMapping("/new-experts")
     public List<ExpertDto> findNewExperts() {
         return UserMapper.INSTANCE.convertExpertList(expertService.findAllExpertByStatus(ExpertStatus.NEW));
     }
 
-    @GetMapping("/update_status")
+    @GetMapping("/update-status")
     public String updateStatus(@RequestParam @Min(1) Integer expertId) {
         expertService.setExpertStatus(expertId, ExpertStatus.APPROVED);
         return "Expert Status Updated";
     }
 
-    @GetMapping("/assign_subservice")
+    @GetMapping("/assign-subservice")
     public String assignSubService(@RequestParam String subServiceName, @RequestParam @Email String expertEmail) {
         Expert expert = expertService.findByEmail(expertEmail)
                 .orElseThrow(() -> new NotExistsException("Expert Not Exits"));
@@ -73,7 +73,7 @@ public class ExpertController {
         return "Sub Service Assigned To Expert";
     }
 
-    @GetMapping("/delete_subservice")
+    @GetMapping("/delete-subservice")
     public String deleteSubService(@RequestParam String subServiceName, @RequestParam @Email String expertEmail) {
         Expert expert = expertService.findByEmail(expertEmail)
                 .orElseThrow(() -> new NotExistsException("Expert Not Exits"));
@@ -84,13 +84,13 @@ public class ExpertController {
         return "Sub Service Deleted From Expert";
     }
 
-    @PostMapping("/save_photo")
+    @PostMapping("/save-photo")
     public String savePhoto(@Valid @RequestBody PhotoInfoDto photoInfoDto) {
         expertService.getExpertPhoto(photoInfoDto.getOwnerEmail(), photoInfoDto.getSavePath());
         return "Photo Saved";
     }
 
-    @GetMapping("/order_score")
+    @GetMapping("/order-score")
     public ReviewDto orderScore(@RequestParam Integer orderId, @RequestParam String expertEmail){
         return ReviewMapper.INSTANCE.convertReview(expertService.getOrderScore(orderId,expertEmail));
     }
@@ -99,5 +99,4 @@ public class ExpertController {
     public Iterable<Expert> search(@RequestParam String search) {
         return expertService.findAll(search);
     }
-
 }
