@@ -167,7 +167,7 @@ public class ExpertServiceTest {
     @Order(9)
     @Test
     void addSubServiceToExpertTest() {
-        Expert changedExpert = expertService.addSubServiceToExpert(subService, expert);
+        Expert changedExpert = expertService.addSubServiceToExpert(subService.getSubName(), expert.getEmail());
         assertEquals(expert.getSubServiceList().size(), changedExpert.getSubServiceList().size());
     }
 
@@ -175,7 +175,7 @@ public class ExpertServiceTest {
     @Test
     void invalidAddSubServiceToExpertWhenSubServiceInExpertExits() {
         SubServiceException exception = assertThrows(SubServiceException.class
-                , () -> expertService.addSubServiceToExpert(subService, expert));
+                , () -> expertService.addSubServiceToExpert(subService.getSubName(), expert.getEmail()));
         assertEquals("Sub-Service Already Assigned To Expert", exception.getMessage());
     }
 
@@ -186,14 +186,14 @@ public class ExpertServiceTest {
                 .subName("Unavailable SubService")
                 .basePrice(100).build();
         SubServiceException exception = assertThrows(SubServiceException.class
-                , () -> expertService.addSubServiceToExpert(invalidSubService, expert));
+                , () -> expertService.addSubServiceToExpert(subService.getSubName(), expert.getEmail()));
         assertEquals("Sub-Service Unavailable", exception.getMessage());
     }
 
     @Order(12)
     @Test
     void deleteSubServiceFromExpertTest() {
-        Expert changedExpert = expertService.deleteSubServiceFromExpert(subService, expert);
+        Expert changedExpert = expertService.deleteSubServiceFromExpert(subService.getSubName(), expert.getEmail());
         assertEquals(0, changedExpert.getSubServiceList().size());
     }
 
@@ -201,7 +201,7 @@ public class ExpertServiceTest {
     @Test
     void invalidDeleteSubServiceFromExpertWhenSubServiceInExpertNotExits() {
         SubServiceException exception = assertThrows(SubServiceException.class
-                , () -> expertService.deleteSubServiceFromExpert(subService, expert));
+                , () -> expertService.deleteSubServiceFromExpert(subService.getSubName(), expert.getEmail()));
         assertEquals("Expert Doesn't Have This Sub-Service", exception.getMessage());
     }
 

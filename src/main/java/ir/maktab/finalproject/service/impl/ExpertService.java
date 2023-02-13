@@ -34,6 +34,8 @@ public class ExpertService implements IRolesService<Expert> {
 
     private final SubServiceService subServiceService;
 
+
+
     public ExpertService(ExpertRepository expertRepository, SubServiceService subServiceService) {
         this.expertRepository = expertRepository;
         this.subServiceService = subServiceService;
@@ -94,21 +96,28 @@ public class ExpertService implements IRolesService<Expert> {
         return expertRepository.save(expert);
     }
 
-    public Expert addSubServiceToExpert(SubService subService, Expert expert) {
+    public Expert addSubServiceToExpert(String subServiceName, String expertEmail) {
+        Expert expert = findByEmail(expertEmail)
+                .orElseThrow(() -> new NotExistsException("Expert Not Exits"));
+        SubService subService = subServiceService.findByName(subServiceName)
+                .orElseThrow(() -> new NotExistsException("SubService Not Exits"));
+
         if (!expert.getStatus().equals(ExpertStatus.APPROVED))
             throw new NotAllowedException("Expert Is Not Approved Yet");
 
         if (expert.getSubServiceList().stream().anyMatch(s -> s.equals(subService)))
             throw new SubServiceException("Sub-Service Already Assigned To Expert");
 
-        subServiceService.findByName(subService.getSubName())
-                .orElseThrow(() -> new SubServiceException("Sub-Service Unavailable"));
-
         expert.getSubServiceList().add(subService);
         return expertRepository.save(expert);
     }
 
-    public Expert deleteSubServiceFromExpert(SubService subService, Expert expert) {
+    public Expert deleteSubServiceFromExpert(String subServiceName, String expertEmail) {
+        Expert expert = findByEmail(expertEmail)
+                .orElseThrow(() -> new NotExistsException("Expert Not Exits"));
+        SubService subService = subServiceService.findByName(subServiceName)
+                .orElseThrow(() -> new NotExistsException("SubService Not Exits"));
+
         if (expert.getSubServiceList().stream().noneMatch(s -> s.equals(subService)))
             throw new SubServiceException("Expert Doesn't Have This Sub-Service");
 

@@ -37,14 +37,14 @@ public class CustomerController {
     }
 
     @PostMapping("/increase-credit")
-    public String increaseCredit(@RequestBody CreditDto creditDto) {
+    public String increaseCredit(@Valid @RequestBody CreditDto creditDto) {
         customerService.increaseCredit(creditDto.getCustomerEmail(), creditDto.getAmount());
         return "Credit Increased ";
     }
 
     @GetMapping("/filter")
-    public Iterable<Customer> search(@RequestParam String search) {
-        return customerService.findAll(search);
+    public Iterable<CustomerDto> search(@RequestParam String search) {
+        return UserMapper.INSTANCE.convertCustomerIterator(customerService.findAll(search));
     }
 
 }

@@ -26,11 +26,9 @@ import java.util.List;
 @Validated
 public class ExpertController {
     private final ExpertService expertService;
-    private final SubServiceService subServiceService;
 
-    public ExpertController(ExpertService expertService, SubServiceService subServiceService) {
+    public ExpertController(ExpertService expertService) {
         this.expertService = expertService;
-        this.subServiceService = subServiceService;
     }
 
     @PostMapping("/register")
@@ -64,23 +62,13 @@ public class ExpertController {
 
     @GetMapping("/assign-subservice")
     public String assignSubService(@RequestParam String subServiceName, @RequestParam @Email String expertEmail) {
-        Expert expert = expertService.findByEmail(expertEmail)
-                .orElseThrow(() -> new NotExistsException("Expert Not Exits"));
-        SubService subService = subServiceService.findByName(subServiceName)
-                .orElseThrow(() -> new NotExistsException("SubService Not Exits"));
-
-        expertService.addSubServiceToExpert(subService, expert);
+        expertService.addSubServiceToExpert(subServiceName, expertEmail);
         return "Sub Service Assigned To Expert";
     }
 
     @GetMapping("/delete-subservice")
     public String deleteSubService(@RequestParam String subServiceName, @RequestParam @Email String expertEmail) {
-        Expert expert = expertService.findByEmail(expertEmail)
-                .orElseThrow(() -> new NotExistsException("Expert Not Exits"));
-        SubService subService = subServiceService.findByName(subServiceName)
-                .orElseThrow(() -> new NotExistsException("SubService Not Exits"));
-
-        expertService.deleteSubServiceFromExpert(subService, expert);
+        expertService.deleteSubServiceFromExpert(subServiceName, expertEmail);
         return "Sub Service Deleted From Expert";
     }
 
