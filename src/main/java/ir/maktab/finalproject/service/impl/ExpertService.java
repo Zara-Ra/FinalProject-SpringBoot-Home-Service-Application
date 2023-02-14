@@ -10,6 +10,7 @@ import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
 import ir.maktab.finalproject.repository.ExpertRepository;
 import ir.maktab.finalproject.service.IRolesService;
+import ir.maktab.finalproject.service.MainService;
 import ir.maktab.finalproject.service.exception.*;
 import ir.maktab.finalproject.service.predicates.user.UserPredicateBuilder;
 import ir.maktab.finalproject.util.exception.PhotoValidationException;
@@ -28,7 +29,8 @@ import java.util.regex.Pattern;
 
 @Service
 @Transactional
-public class ExpertService implements IRolesService<Expert> {
+public class ExpertService extends MainService implements IRolesService<Expert> {
+
     private final ExpertRepository expertRepository;
 
     private final SubServiceService subServiceService;
@@ -49,7 +51,7 @@ public class ExpertService implements IRolesService<Expert> {
         try {
             return expertRepository.save(expert);
         } catch (DataIntegrityViolationException e) {
-            throw new UniqueViolationException("Already Registered With This Email");
+            throw new UniqueViolationException(messageSource.getMessage("errors.message.duplicate_user"));
         }
     }
 
@@ -57,22 +59,22 @@ public class ExpertService implements IRolesService<Expert> {
     public Expert signIn(String email, String password) {
         validateAccount(email, password);
         Expert foundExpert = expertRepository.findByEmail(email).orElseThrow(() ->
-                new UserNotFoundException("No User Registered With This Email"));
+                new UserNotFoundException(messageSource.getMessage("errors.message.expert_not_exists")));
         if (!foundExpert.getPassword().equals(password))
-            throw new UserNotFoundException("Incorrect Password");
+            throw new UserNotFoundException(messageSource.getMessage("errors.message.invalid_password"));
         return foundExpert;
     }
 
     @Override
     public Expert changePassword(AccountDto accountDto) {
         if (!accountDto.getNewPassword().equals(accountDto.getRepeatPassword()))
-            throw new PasswordException("New Password And Repeat Password Don't Match");
+            throw new PasswordException(messageSource.getMessage("errors.message.password_mismatch"));
 
         Expert findCustomer = expertRepository.findByEmail(accountDto.getEmail())
-                .orElseThrow(() -> new UserNotFoundException("No Username Registered With This Email"));
+                .orElseThrow(() -> new UserNotFoundException(messageSource.getMessage("errors.message.expert_not_exists")));
 
         if (!findCustomer.getPassword().equals(accountDto.getPassword()))
-            throw new PasswordException("Incorrect Old Password");
+            throw new PasswordException(messageSource.getMessage("errors.message.incorrect_old_password"));
 
         Validation.validatePassword(accountDto.getNewPassword());
         findCustomer.setPassword(accountDto.getNewPassword());
@@ -89,22 +91,22 @@ public class ExpertService implements IRolesService<Expert> {
 
     public Expert setExpertStatus(Integer expertId, ExpertStatus status) {
         Expert expert = expertRepository.findById(expertId)
-                .orElseThrow(() -> new NotExistsException("Expert Not Exits"));
+                .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.expert_not_exists")));
         expert.setStatus(status);
         return expertRepository.save(expert);
     }
 
     public Expert addSubServiceToExpert(String subServiceName, String expertEmail) {
         Expert expert = findByEmail(expertEmail)
-                .orElseThrow(() -> new NotExistsException("Expert Not Exits"));
+                .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.expert_not_exists")));
         SubService subService = subServiceService.findByName(subServiceName)
-                .orElseThrow(() -> new NotExistsException("SubService Not Exits"));
+                .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.sub_not_exists")));
 
         if (!expert.getStatus().equals(ExpertStatus.APPROVED))
-            throw new NotAllowedException("Expert Is Not Approved Yet");
+            throw new NotAllowedException(messageSource.getMessage("errors.message.expert_not_approved"));
 
         if (expert.getSubServiceList().stream().anyMatch(s -> s.equals(subService)))
-            throw new SubServiceException("Sub-Service Already Assigned To Expert");
+            throw new SubServiceException(messageSource.getMessage("errors.message.invalid_sub_assign"));
 
         expert.getSubServiceList().add(subService);
         return expertRepository.save(expert);
@@ -112,12 +114,12 @@ public class ExpertService implements IRolesService<Expert> {
 
     public Expert deleteSubServiceFromExpert(String subServiceName, String expertEmail) {
         Expert expert = findByEmail(expertEmail)
-                .orElseThrow(() -> new NotExistsException("Expert Not Exits"));
+                .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.expert_not_exists")));
         SubService subService = subServiceService.findByName(subServiceName)
-                .orElseThrow(() -> new NotExistsException("SubService Not Exits"));
+                .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.sub_not_exists")));
 
         if (expert.getSubServiceList().stream().noneMatch(s -> s.equals(subService)))
-            throw new SubServiceException("Expert Doesn't Have This Sub-Service");
+            throw new SubServiceException(messageSource.getMessage("errors.message.invalid_sub_expert"));
 
         expert.getSubServiceList().remove(subService);
         return expertRepository.save(expert);
@@ -125,11 +127,11 @@ public class ExpertService implements IRolesService<Expert> {
 
     public void getExpertPhoto(String email, String photoPath) {
         Expert expert = expertRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("No Expert Registered With This Email"));
+                .orElseThrow(() -> new UserNotFoundException(messageSource.getMessage("errors.message.expert_not_exists")));
         try (FileOutputStream fos = new FileOutputStream(photoPath)) {
             fos.write(expert.getPhoto());
         } catch (IOException e) {
-            throw new PhotoValidationException("Unable To Save Photo");
+            throw new PhotoValidationException(messageSource.getMessage("errors.message.photo_save_error"));
         }
     }
 
@@ -157,18 +159,18 @@ public class ExpertService implements IRolesService<Expert> {
 
     public Review getOrderScore(Integer orderId, String expertEmail) {
         Expert expert = expertRepository.findByEmail(expertEmail)
-                .orElseThrow(() -> new UserNotFoundException("Expert Not Exists"));
+                .orElseThrow(() -> new UserNotFoundException(messageSource.getMessage("errors.message.expert_not_exists")));
         Review review = expert.getReviewList().stream()
                 .filter(r -> r.getCustomerOrder().getId().equals(orderId))
                 .findFirst()
-                .orElseThrow(() -> new NotExistsException("No Review For This Order"));
+                .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.no_review")));
         review.setComment("");
         return review;
     }
 
     public Iterable<Expert> findAll(String search) {
         if (search.isEmpty())
-            throw new ValidationException("Search Filter Must Not Be Null");
+            throw new ValidationException(messageSource.getMessage("errors.message.invalid_null_search"));
 
         UserPredicateBuilder builder = new UserPredicateBuilder();
         Pattern pattern = Pattern.compile("(\\w+?)([:<>])([\\w-_@.]+?),");

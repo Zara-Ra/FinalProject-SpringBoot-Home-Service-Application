@@ -7,6 +7,7 @@ import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
 import ir.maktab.finalproject.data.enums.OrderStatus;
 import ir.maktab.finalproject.repository.ExpertOfferRepository;
+import ir.maktab.finalproject.service.MainService;
 import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.exception.OfferRequirementException;
 import ir.maktab.finalproject.service.exception.OrderRequirementException;
@@ -19,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class ExpertOfferService {
+public class ExpertOfferService extends MainService {
     private final ExpertOfferRepository expertOfferRepository;
 
     private final CustomerOrderService customerOrderService;
@@ -38,27 +39,27 @@ public class ExpertOfferService {
     @Transactional
     public ExpertOffer submitOffer(Integer orderId, ExpertOffer expertOffer) {
         CustomerOrder customerOrder = customerOrderService.findById(orderId)
-                .orElseThrow(() -> new NotExistsException("Order Not Exists"));
+                .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.order_not_exists")));
 
         SubService offerSubService = subServiceService.findByName(expertOffer.getSubService().getSubName())
-                .orElseThrow(() -> new NotExistsException("Sub Service Not Exists"));
+                .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.sub_not_exists")));
 
         Expert expert = expertService.findByEmail(expertOffer.getExpert().getEmail())
-                .orElseThrow(() -> new UserNotFoundException("Expert Not Exists"));
+                .orElseThrow(() -> new UserNotFoundException(messageSource.getMessage("errors.message.expert_not_exists")));
 
         if (!customerOrder.getSubService().equals(offerSubService))
-            throw new OfferRequirementException("SubService Of Order and Offer Doesn't Match");
+            throw new OfferRequirementException(messageSource.getMessage("errors.message.sub_order_offer_mismatch"));
 
         if (expertOffer.getPrice() < offerSubService.getBasePrice())
-            throw new OfferRequirementException("Price Of Offer Should Be Greater Than Base Price Of The Sub-Service");
+            throw new OfferRequirementException(messageSource.getMessage("errors.message.invalid_price"));
 
         if (expertOffer.getPreferredDate().before(new Date())
                 || expertOffer.getPreferredDate().before(customerOrder.getPreferredDate())
                 || !expertOffer.getPreferredDate().equals(customerOrder.getPreferredDate()))
-            throw new OfferRequirementException("The Preferred Date Should Be After Now And After The Customers Preferred Date");
+            throw new OfferRequirementException(messageSource.getMessage("errors.message.invalid_preferred_date_Offer"));
 
         if (expertOffer.getDuration() == null)
-            throw new OfferRequirementException("Duration Should Not Be Empty");
+            throw new OfferRequirementException(messageSource.getMessage("errors.message.invalid_duration"));
 
         if (customerOrder.getStatus().equals(OrderStatus.WAITING_FOR_EXPERT_OFFER)) {
             customerOrder.setStatus(OrderStatus.WAITING_FOR_EXPERT_SELECTION);
@@ -78,17 +79,17 @@ public class ExpertOfferService {
     @Transactional
     public void choseOffer(Integer orderId, Integer offerId) {
         CustomerOrder customerOrder = customerOrderService.findById(orderId)
-                .orElseThrow(() -> new NotExistsException("Order Not Exists"));
+                .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.order_not_exists")));
 
         ExpertOffer expertOffer = expertOfferRepository.findById(offerId)
-                .orElseThrow(() -> new NotExistsException("Offer Not Exists"));
+                .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.offer_not_exists")));
 
         if (!customerOrder.getStatus().equals(OrderStatus.WAITING_FOR_EXPERT_OFFER)
                 || !customerOrder.getStatus().equals(OrderStatus.WAITING_FOR_EXPERT_SELECTION))
-            throw new OrderRequirementException("Order Status Mismatch");
+            throw new OrderRequirementException(messageSource.getMessage("errors.message.order_mismatch"));
 
         if (!customerOrder.getExpertOfferList().contains(expertOffer))
-            throw new NotExistsException("Offer Is Not For This Order");
+            throw new NotExistsException(messageSource.getMessage("errors.message.offer_order_mismatch"));
 
         expertOffer.setIsChosen(true);
         customerOrder.setStatus(OrderStatus.WAITING_FOR_EXPERT_ARRIVAL);
@@ -99,17 +100,17 @@ public class ExpertOfferService {
 
     public CustomerOrder expertArrived(Integer orderId, Integer offerId) {
         CustomerOrder customerOrder = customerOrderService.findById(orderId)
-                .orElseThrow(() -> new NotExistsException("Order Not Exists"));
+                .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.order_not_exists")));
 
         ExpertOffer expertOffer = expertOfferRepository.findById(offerId)
-                .orElseThrow(() -> new NotExistsException("Offer Not Exists"));
+                .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.offer_not_exists")));
 
         if (!customerOrder.getStatus().equals(OrderStatus.WAITING_FOR_EXPERT_ARRIVAL))
-            throw new OrderRequirementException("Order Status Mismatch");
+            throw new OrderRequirementException(messageSource.getMessage("errors.message.order_mismatch"));
 
         Date now = new Date();
         if (expertOffer.getPreferredDate().after(now))
-            throw new OfferRequirementException("Expert Can't Start Work Before His/Her PreferredDate");
+            throw new OfferRequirementException(messageSource.getMessage("errors.message.invalid_expert_start"));
         customerOrder.setStartDate(now);
         customerOrder.setStatus(OrderStatus.STARTED);
         return customerOrderService.updateOrder(customerOrder);
@@ -118,13 +119,13 @@ public class ExpertOfferService {
     @Transactional
     public CustomerOrder expertDone(Integer orderId, Integer offerId) {
         CustomerOrder customerOrder = customerOrderService.findById(orderId)
-                .orElseThrow(() -> new NotExistsException("Order Not Exists"));
+                .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.order_not_exists")));
 
         ExpertOffer expertOffer = expertOfferRepository.findById(offerId)
-                .orElseThrow(() -> new NotExistsException("Offer Not Exists"));
+                .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.offer_not_exists")));
 
         if (!customerOrder.getStatus().equals(OrderStatus.STARTED))
-            throw new OrderRequirementException("Order Not Started Yet");
+            throw new OrderRequirementException(messageSource.getMessage("errors.message.order_not_started"));
 
         customerOrder.setFinishDate(new Date());
         customerOrder.setStatus(OrderStatus.DONE);

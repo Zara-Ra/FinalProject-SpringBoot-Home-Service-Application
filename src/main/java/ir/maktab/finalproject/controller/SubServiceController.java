@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/sub")
-public class SubServiceController {
+public class SubServiceController extends MainController {
 
     private final SubServiceService subServiceService;
 
@@ -34,7 +34,7 @@ public class SubServiceController {
     @GetMapping("/find/{name}")
     public SubServiceDto findSubService(@PathVariable String name) {
         return ServiceMapper.INSTANCE.convertSubService(subServiceService.findByName(name)
-                .orElseThrow(() -> new SubServiceException("Sub Service Not Exits")));
+                .orElseThrow(() -> new SubServiceException(messageSource.getMessage("errors.message.sub_not_exists"))));
     }
 
     @GetMapping("/find-all/{baseName}")

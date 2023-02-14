@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/base")
-public class BaseServiceController {
+public class BaseServiceController extends MainController {
 
     private final BaseServiceService baseServiceService;
 
@@ -34,7 +34,7 @@ public class BaseServiceController {
     @GetMapping("/find/{name}")
     public BaseServiceDto findBaseService(@PathVariable String name) {
         return ServiceMapper.INSTANCE.convertBaseService(baseServiceService.findByName(name)
-                .orElseThrow(() -> new BaseServiceException("Base Service Not Exists")));
+                .orElseThrow(() -> new BaseServiceException(messageSource.getMessage("errors.message.base_not_exists"))));
     }
 
     @GetMapping("/find-all")

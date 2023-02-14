@@ -26,7 +26,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/order")
 @Validated
-public class CustomerOrderController {
+public class CustomerOrderController extends MainController{
     private final CustomerOrderService customerOrderService;
 
     public CustomerOrderController(CustomerOrderService customerOrderService) {
@@ -56,7 +56,7 @@ public class CustomerOrderController {
         try {
             comparator = SortType.valueOf(sortBy).getComparator();
         } catch (IllegalArgumentException e) {
-            throw new ValidationException("Invalid Sort Type");
+            throw new ValidationException(messageSource.getMessage("errors.message.invalid_sort"));
         }
         return OfferMapper.INSTANCE.convertOfferList
                 (customerOrderService.getAllOffersForOrder(orderId, comparator));
@@ -65,14 +65,14 @@ public class CustomerOrderController {
     @GetMapping("/find-order")
     public CustomerOrderDto findOrder(@RequestParam @Min(1) Integer orderId) {
         return OrderMapper.INSTANCE.convertOrder(customerOrderService.findById(orderId).orElseThrow(
-                () -> new NotExistsException("Order Not Exists")
+                () -> new NotExistsException(messageSource.getMessage("errors.message.order_not_exists"))
         ));
     }
 
     @GetMapping("/find-accepted-order")
     public AcceptedOrderDto findAcceptedOrder(@RequestParam @Min(1) Integer orderId) {
         return OrderMapper.INSTANCE.convertAcceptedOrder(customerOrderService.findById(orderId).orElseThrow(
-                () -> new NotExistsException("Order Not Exists")
+                () -> new NotExistsException(messageSource.getMessage("errors.message.order_not_exists"))
         ));
     }
 
@@ -82,13 +82,13 @@ public class CustomerOrderController {
         try {
             Date expirationDate = new SimpleDateFormat("yyyy-MM").parse(paymentDto.getExpirationDate());
             if (expirationDate.before(new Date())) {
-                throw new ValidationException("Card Has Expired");
+                throw new ValidationException(messageSource.getMessage("errors.message.invalid_card_date"));
             }
         } catch (ParseException e) {
-            throw new ValidationException("Invalid Date Format");
+            throw new ValidationException(messageSource.getMessage("errors.message.invalid_date"));
         }
         if (!paymentDto.getCaptcha().equals(request.getSession().getAttribute("captcha")))
-            throw new ValidationException("Captcha Mismatch");
+            throw new ValidationException(messageSource.getMessage("errors.message.invalid_captcha"));
         //call bank
         customerOrderService.pay(paymentDto.getOrderId(), PaymentType.ONLINE);
         return "Order Payed Online";

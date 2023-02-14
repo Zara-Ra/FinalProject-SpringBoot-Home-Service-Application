@@ -9,6 +9,7 @@ import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.OrderStatus;
 import ir.maktab.finalproject.data.enums.PaymentType;
 import ir.maktab.finalproject.repository.CustomerOrderRepository;
+import ir.maktab.finalproject.service.MainService;
 import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.exception.OrderRequirementException;
 import ir.maktab.finalproject.service.exception.UserNotFoundException;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CustomerOrderService {
+public class CustomerOrderService extends MainService {
     private final CustomerOrderRepository customerOrderRepository;
 
     private final CustomerService customerService;
@@ -39,11 +40,10 @@ public class CustomerOrderService {
 
     public CustomerOrder requestOrder(Customer customer, CustomerOrder customerOrder) {
         if (customerOrder.getPrice() < customerOrder.getSubService().getBasePrice())
-            throw new OrderRequirementException("Price Of Order Should Be Greater Than Base Price Of The Sub-Service:( "
-                    + customerOrder.getSubService().getSubName() + " " + customerOrder.getSubService().getBasePrice() + " )");
+            throw new OrderRequirementException(messageSource.getMessage("errors.message.invalid_price"));
 
         if (customerOrder.getPreferredDate().before(new Date()))
-            throw new OrderRequirementException("The Preferred Date Should Be After Now");
+            throw new OrderRequirementException(messageSource.getMessage("errors.message.invalid_preferred_date"));
 
         customerOrder.setStatus(OrderStatus.WAITING_FOR_EXPERT_OFFER);
         customer.getCustomerOrderList().add(customerOrder);
@@ -53,17 +53,16 @@ public class CustomerOrderService {
     public void requestOrder(CustomerOrder customerOrder) {
 
         Customer customer = customerService.findByEmail(customerOrder.getCustomer().getEmail())
-                .orElseThrow(() -> new UserNotFoundException("Customer Not Exits"));
+                .orElseThrow(() -> new UserNotFoundException(messageSource.getMessage("errors.message.customer_not_exists")));
 
         SubService subService = subServiceService.findByName(customerOrder.getSubService().getSubName())
-                .orElseThrow(() -> new NotExistsException("Sub Service Not Exits"));
+                .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.sub_not_exists")));
 
         if (customerOrder.getPrice() < customerOrder.getSubService().getBasePrice())
-            throw new OrderRequirementException("Price Of Order Should Be Greater Than Base Price Of The Sub-Service:( "
-                    + customerOrder.getSubService().getSubName() + " " + customerOrder.getSubService().getBasePrice() + " )");
+            throw new OrderRequirementException(messageSource.getMessage("errors.message.invalid_price"));
 
         if (customerOrder.getPreferredDate().before(new Date()))
-            throw new OrderRequirementException("The Preferred Date Should Be After Now");
+            throw new OrderRequirementException(messageSource.getMessage("errors.message.invalid_preferred_date"));
 
         customer.getCustomerOrderList().add(customerOrder);
         customerOrder.setCustomer(customer);
@@ -74,7 +73,7 @@ public class CustomerOrderService {
 
     public List<CustomerOrder> findAllBySubServiceAndTwoStatus(String subServiceName) {
         SubService subService = subServiceService.findByName(subServiceName)
-                .orElseThrow(() -> new NotExistsException("Sub Service Not Exits"));
+                .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.sub_not_exists")));
         return customerOrderRepository.findAllBySubServiceAndTwoStatus(subService, OrderStatus.WAITING_FOR_EXPERT_SELECTION
                 , OrderStatus.WAITING_FOR_EXPERT_OFFER);
     }
@@ -85,7 +84,7 @@ public class CustomerOrderService {
 
     public List<ExpertOffer> getAllOffersForOrder(Integer customerOrderId, Comparator<ExpertOffer> comparator) {
         CustomerOrder foundOrder = customerOrderRepository.findById(customerOrderId)
-                .orElseThrow(() -> new NotExistsException("Customer Order Not Found"));
+                .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.order_not_exists")));
         foundOrder.getExpertOfferList().sort(comparator);
         return foundOrder.getExpertOfferList();
     }
@@ -97,10 +96,10 @@ public class CustomerOrderService {
     @Transactional
     public void pay(Integer orderId, PaymentType paymentType) {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
-                .orElseThrow(() -> new NotExistsException("Order Not Exists"));
+                .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.order_not_exists")));
 
         if (!customerOrder.getStatus().equals(OrderStatus.DONE))
-            throw new OrderRequirementException("Order Not Done Yet");
+            throw new OrderRequirementException(messageSource.getMessage("errors.message.order_not_done"));
 
         double payAmount = customerOrder.getAcceptedExpertOffer().getPrice();
 
@@ -119,10 +118,10 @@ public class CustomerOrderService {
     @Transactional
     public void addReview(Review review) {
         CustomerOrder customerOrder = customerOrderRepository.findById(review.getCustomerOrder().getId())
-                .orElseThrow(() -> new NotExistsException("Order Not Exists"));
+                .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.order_not_exists")));
 
         if (!customerOrder.getStatus().equals(OrderStatus.PAYED))
-            throw new OrderRequirementException("Order Not Payed Yet");
+            throw new OrderRequirementException(messageSource.getMessage("errors.message.order_not_payed"));
 
         Expert expert = customerOrder.getAcceptedExpertOffer().getExpert();
         review.setCustomerOrder(customerOrder);

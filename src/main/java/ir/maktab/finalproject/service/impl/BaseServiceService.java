@@ -3,6 +3,7 @@ package ir.maktab.finalproject.service.impl;
 import ir.maktab.finalproject.data.entity.services.BaseService;
 import ir.maktab.finalproject.repository.BaseServiceRepository;
 import ir.maktab.finalproject.service.IService;
+import ir.maktab.finalproject.service.MainService;
 import ir.maktab.finalproject.service.exception.BaseServiceException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BaseServiceService implements IService<BaseService> {
+public class BaseServiceService extends MainService implements IService<BaseService>  {
     private final BaseServiceRepository baseServiceRepository;
 
     public BaseServiceService(BaseServiceRepository baseServiceRepository) {
@@ -24,7 +25,7 @@ public class BaseServiceService implements IService<BaseService> {
         try {
             return baseServiceRepository.save(baseService);
         } catch (DataIntegrityViolationException e) {
-            throw new UniqueViolationException("Base Service Already Exists");
+            throw new UniqueViolationException(messageSource.getMessage("errors.message.duplicate_base_service"));
         }
     }
 
@@ -32,7 +33,7 @@ public class BaseServiceService implements IService<BaseService> {
     public void delete(String baseServiceName) {
         Optional<BaseService> foundBaseService = baseServiceRepository.findByBaseName(baseServiceName);
         if (foundBaseService.isEmpty())
-            throw new BaseServiceException("Base Service Not Found");
+            throw new BaseServiceException(messageSource.getMessage("errors.message.base_not_exists"));
         baseServiceRepository.delete(foundBaseService.get());
     }
 

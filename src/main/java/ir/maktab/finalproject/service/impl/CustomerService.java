@@ -7,6 +7,7 @@ import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.enums.Role;
 import ir.maktab.finalproject.repository.CustomerRepository;
 import ir.maktab.finalproject.service.IRolesService;
+import ir.maktab.finalproject.service.MainService;
 import ir.maktab.finalproject.service.exception.CreditException;
 import ir.maktab.finalproject.service.exception.PasswordException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
@@ -22,7 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class CustomerService implements IRolesService<Customer>/*, CommandLineRunner*/ {
+public class CustomerService extends MainService implements IRolesService<Customer> {
     private final CustomerRepository customerRepository;
 
     public CustomerService(CustomerRepository customerRepository) {
@@ -37,7 +38,7 @@ public class CustomerService implements IRolesService<Customer>/*, CommandLineRu
         try {
             return customerRepository.save(customer);
         } catch (DataIntegrityViolationException e) {
-            throw new UniqueViolationException("Already Registered With This Email");
+            throw new UniqueViolationException(messageSource.getMessage("errors.message.duplicate_user"));
         }
     }
 
@@ -45,10 +46,10 @@ public class CustomerService implements IRolesService<Customer>/*, CommandLineRu
     public Customer signIn(String email, String password) {
         validateAccount(email, password);
         Customer foundCustomer = customerRepository.findByEmail(email).orElseThrow(() ->
-                new UserNotFoundException("No User Registered With This Email"));
+                new UserNotFoundException(messageSource.getMessage("errors.message.customer_not_exists")));
 
         if (!foundCustomer.getPassword().equals(password))
-            throw new UserNotFoundException("Incorrect Password");
+            throw new UserNotFoundException(messageSource.getMessage("errors.message.invalid_password"));
 
         return foundCustomer;
     }
@@ -56,13 +57,13 @@ public class CustomerService implements IRolesService<Customer>/*, CommandLineRu
     @Override
     public Customer changePassword(AccountDto accountDto) {
         if (!accountDto.getNewPassword().equals(accountDto.getRepeatPassword()))
-            throw new PasswordException("New Password And Repeat Password Don't Match");
+            throw new PasswordException(messageSource.getMessage("errors.message.password_mismatch"));
 
         Customer findCustomer = customerRepository.findByEmail(accountDto.getEmail())
-                .orElseThrow(() -> new UserNotFoundException("No Username Registered With This Email"));
+                .orElseThrow(() -> new UserNotFoundException(messageSource.getMessage("errors.message.customer_not_exists")));
 
         if (!findCustomer.getPassword().equals(accountDto.getPassword()))
-            throw new PasswordException("Incorrect Old Password");
+            throw new PasswordException(messageSource.getMessage("errors.message.incorrect_old_password"));
 
         Validation.validatePassword(accountDto.getNewPassword());
         findCustomer.setPassword(accountDto.getNewPassword());
@@ -87,21 +88,21 @@ public class CustomerService implements IRolesService<Customer>/*, CommandLineRu
     public void pay(Customer customer, double payAmount) {
         double creditAmount = customer.getCredit().getAmount();
         if (creditAmount < payAmount)
-            throw new CreditException("Credit Not Enough");
+            throw new CreditException(messageSource.getMessage("errors.message.insufficient_credit"));
         customer.getCredit().setAmount(creditAmount - payAmount);
         customerRepository.save(customer);
     }
 
     public void increaseCredit(String customerEmail, double amount) {
         Customer customer = findByEmail(customerEmail)
-                .orElseThrow(() -> new UserNotFoundException("Customer Not Exists"));
+                .orElseThrow(() -> new UserNotFoundException(messageSource.getMessage("errors.message.customer_not_exists")));
         customer.getCredit().setAmount(amount);
         customerRepository.save(customer);
     }
 
     public Iterable<Customer> findAll(String search) {
         if (search.isEmpty())
-            throw new ValidationException("Search Filter Must Not Be Null");
+            throw new ValidationException(messageSource.getMessage("errors.message.invalid_null_search"));
 
         UserPredicateBuilder builder = new UserPredicateBuilder();
         Pattern pattern = Pattern.compile("(\\w+?)([:<>])([\\w-_@.]+?),");
