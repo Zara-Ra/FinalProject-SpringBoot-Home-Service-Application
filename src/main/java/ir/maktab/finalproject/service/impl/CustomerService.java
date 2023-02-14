@@ -11,7 +11,7 @@ import ir.maktab.finalproject.service.exception.CreditException;
 import ir.maktab.finalproject.service.exception.PasswordException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
 import ir.maktab.finalproject.service.exception.UserNotFoundException;
-import ir.maktab.finalproject.service.predicates.UserPredicateBuilder;
+import ir.maktab.finalproject.service.predicates.user.UserPredicateBuilder;
 import ir.maktab.finalproject.util.exception.ValidationException;
 import ir.maktab.finalproject.util.validation.Validation;
 import org.springframework.dao.DataIntegrityViolationException;

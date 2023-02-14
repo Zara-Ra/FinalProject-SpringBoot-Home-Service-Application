@@ -11,7 +11,7 @@ import ir.maktab.finalproject.data.enums.ExpertStatus;
 import ir.maktab.finalproject.repository.ExpertRepository;
 import ir.maktab.finalproject.service.IRolesService;
 import ir.maktab.finalproject.service.exception.*;
-import ir.maktab.finalproject.service.predicates.UserPredicateBuilder;
+import ir.maktab.finalproject.service.predicates.user.UserPredicateBuilder;
 import ir.maktab.finalproject.util.exception.PhotoValidationException;
 import ir.maktab.finalproject.util.exception.ValidationException;
 import ir.maktab.finalproject.util.validation.Validation;

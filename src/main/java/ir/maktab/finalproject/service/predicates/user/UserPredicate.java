@@ -1,4 +1,4 @@
-package ir.maktab.finalproject.service.predicates;
+package ir.maktab.finalproject.service.predicates.user;
 
 import com.querydsl.core.types.dsl.*;
 import ir.maktab.finalproject.data.entity.QCredit;
@@ -24,7 +24,6 @@ public class UserPredicate {
         if (criteria.getKey().contains("Date")) {
             return dateBooleanExpression(entityPath);
         }
-        //if (isNumeric(criteria.getValue().toString())) {
         if (criteria.getKey().contains("id")) {
             return intBooleanExpression(entityPath);
         }

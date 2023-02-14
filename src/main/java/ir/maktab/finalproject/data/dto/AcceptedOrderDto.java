@@ -1,5 +1,6 @@
 package ir.maktab.finalproject.data.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import ir.maktab.finalproject.data.enums.OrderStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -8,6 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AcceptedOrderDto {
 
     private Integer id;

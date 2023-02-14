@@ -1,4 +1,4 @@
-package ir.maktab.finalproject.service.predicates;
+package ir.maktab.finalproject.service.predicates.user;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
