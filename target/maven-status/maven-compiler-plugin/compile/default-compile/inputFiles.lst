@@ -19,12 +19,14 @@ C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\service\exception\NotExistsException.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\data\dto\AccountDto.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\repository\CustomerRepository.java
+C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\service\predicates\UserPredicateBuilder.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\controller\CustomerController.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\service\IRolesService.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\repository\AdminRepository.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\service\exception\BaseServiceException.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\data\entity\Review.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\data\mapper\OfferMapper.java
+C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\service\predicates\UserPredicate.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\util\search\SearchCriteria.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\data\entity\CustomerOrder.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\data\entity\Address.java
@@ -50,11 +52,9 @@ C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\data\entity\roles\Account.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\service\impl\ExpertOfferService.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\target\generated-sources\java\ir\maktab\finalproject\data\entity\QAddress.java
-C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\data\predicates\CustomerPredicateBuilder.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\data\mapper\ServiceMapper.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\data\dto\CustomerDto.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\service\exception\SubServiceException.java
-C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\data\predicates\CustomerPredicate.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\target\generated-sources\java\ir\maktab\finalproject\data\entity\QReview.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\target\generated-sources\java\ir\maktab\finalproject\data\entity\QExpertOffer.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\data\entity\roles\Expert.java

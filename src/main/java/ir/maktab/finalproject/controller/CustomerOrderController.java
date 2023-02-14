@@ -77,7 +77,7 @@ public class CustomerOrderController {
     }
 
     @CrossOrigin
-    @PostMapping("/pay-online")
+    @PostMapping("/pay_online")
     public String payOnline(@Valid @ModelAttribute PaymentDto paymentDto, HttpServletRequest request) {
         try {
             Date expirationDate = new SimpleDateFormat("yyyy-MM").parse(paymentDto.getExpirationDate());

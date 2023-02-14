@@ -2,7 +2,6 @@ ir\maktab\finalproject\util\sort\SortExpertOffer.class
 ir\maktab\finalproject\service\exception\UpdatableViolationException.class
 ir\maktab\finalproject\controller\ExpertOfferController.class
 ir\maktab\finalproject\data\mapper\UserMapper.class
-ir\maktab\finalproject\data\predicates\CustomerPredicate.class
 ir\maktab\finalproject\controller\CustomerOrderController.class
 ir\maktab\finalproject\controller\SubServiceController.class
 ir\maktab\finalproject\data\entity\services\QSubService.class
@@ -11,6 +10,7 @@ ir\maktab\finalproject\repository\CustomerRepository.class
 ir\maktab\finalproject\service\impl\AdminService.class
 ir\maktab\finalproject\data\entity\Credit$CreditBuilder.class
 ir\maktab\finalproject\data\entity\QReview.class
+ir\maktab\finalproject\service\predicates\UserPredicate.class
 ir\maktab\finalproject\service\exception\NotExistsException.class
 ir\maktab\finalproject\data\entity\services\SubService.class
 ir\maktab\finalproject\controller\ExpertController.class
@@ -58,6 +58,7 @@ ir\maktab\finalproject\service\impl\SubServiceService.class
 ir\maktab\finalproject\data\entity\roles\Expert$ExpertBuilderImpl.class
 ir\maktab\finalproject\data\dto\BaseServiceDto.class
 ir\maktab\finalproject\service\exception\CreditException.class
+ir\maktab\finalproject\service\predicates\UserPredicateBuilder.class
 ir\maktab\finalproject\data\entity\roles\enums\Role.class
 ir\maktab\finalproject\data\entity\Credit.class
 ir\maktab\finalproject\data\entity\roles\QUser.class
@@ -80,7 +81,6 @@ ir\maktab\finalproject\data\entity\services\BaseService.class
 ir\maktab\finalproject\data\dto\ReviewDto.class
 ir\maktab\finalproject\util\exception\ValidationException.class
 ir\maktab\finalproject\service\exception\SubServiceException.class
-ir\maktab\finalproject\data\predicates\CustomerPredicateBuilder.class
 ir\maktab\finalproject\data\entity\Review.class
 ir\maktab\finalproject\util\validation\TriConsumer.class
 ir\maktab\finalproject\service\IService.class

@@ -13,9 +13,8 @@ import ir.maktab.finalproject.service.IRolesService;
 import ir.maktab.finalproject.service.exception.*;
 import ir.maktab.finalproject.service.predicates.UserPredicateBuilder;
 import ir.maktab.finalproject.util.exception.PhotoValidationException;
+import ir.maktab.finalproject.util.exception.ValidationException;
 import ir.maktab.finalproject.util.validation.Validation;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -33,7 +32,6 @@ public class ExpertService implements IRolesService<Expert> {
     private final ExpertRepository expertRepository;
 
     private final SubServiceService subServiceService;
-
 
 
     public ExpertService(ExpertRepository expertRepository, SubServiceService subServiceService) {
@@ -169,13 +167,14 @@ public class ExpertService implements IRolesService<Expert> {
     }
 
     public Iterable<Expert> findAll(String search) {
+        if (search.isEmpty())
+            throw new ValidationException("Search Filter Must Not Be Null");
+
         UserPredicateBuilder builder = new UserPredicateBuilder();
-        if (search != null) {
-            Pattern pattern = Pattern.compile("(\\w+?)([:<>])([\\w-_@.]+?),");
-            Matcher matcher = pattern.matcher(search + ",");
-            while (matcher.find()) {
-                builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
-            }
+        Pattern pattern = Pattern.compile("(\\w+?)([:<>])([\\w-_@.]+?),");
+        Matcher matcher = pattern.matcher(search + ",");
+        while (matcher.find()) {
+            builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
         }
         BooleanExpression expression = builder.build(Expert.class, "expert");
         return expertRepository.findAll(expression);

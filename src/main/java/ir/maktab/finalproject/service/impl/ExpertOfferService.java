@@ -9,6 +9,7 @@ import ir.maktab.finalproject.data.enums.OrderStatus;
 import ir.maktab.finalproject.repository.ExpertOfferRepository;
 import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.exception.OfferRequirementException;
+import ir.maktab.finalproject.service.exception.OrderRequirementException;
 import ir.maktab.finalproject.service.exception.UserNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +53,8 @@ public class ExpertOfferService {
             throw new OfferRequirementException("Price Of Offer Should Be Greater Than Base Price Of The Sub-Service");
 
         if (expertOffer.getPreferredDate().before(new Date())
-                || expertOffer.getPreferredDate().before(customerOrder.getPreferredDate()))
+                || expertOffer.getPreferredDate().before(customerOrder.getPreferredDate())
+                || !expertOffer.getPreferredDate().equals(customerOrder.getPreferredDate()))
             throw new OfferRequirementException("The Preferred Date Should Be After Now And After The Customers Preferred Date");
 
         if (expertOffer.getDuration() == null)
@@ -81,6 +83,10 @@ public class ExpertOfferService {
         ExpertOffer expertOffer = expertOfferRepository.findById(offerId)
                 .orElseThrow(() -> new NotExistsException("Offer Not Exists"));
 
+        if (!customerOrder.getStatus().equals(OrderStatus.WAITING_FOR_EXPERT_OFFER)
+                || !customerOrder.getStatus().equals(OrderStatus.WAITING_FOR_EXPERT_SELECTION))
+            throw new OrderRequirementException("Order Status Mismatch");
+
         if (!customerOrder.getExpertOfferList().contains(expertOffer))
             throw new NotExistsException("Offer Is Not For This Order");
 
@@ -98,6 +104,9 @@ public class ExpertOfferService {
         ExpertOffer expertOffer = expertOfferRepository.findById(offerId)
                 .orElseThrow(() -> new NotExistsException("Offer Not Exists"));
 
+        if(!customerOrder.getStatus().equals(OrderStatus.WAITING_FOR_EXPERT_ARRIVAL))
+            throw new OrderRequirementException("Order Status Mismatch");
+
         Date now = new Date();
         if (expertOffer.getPreferredDate().after(now))
             throw new OfferRequirementException("Expert Can't Start Work Before His/Her PreferredDate");
@@ -113,6 +122,9 @@ public class ExpertOfferService {
 
         ExpertOffer expertOffer = expertOfferRepository.findById(offerId)
                 .orElseThrow(() -> new NotExistsException("Offer Not Exists"));
+
+        if(!customerOrder.getStatus().equals(OrderStatus.STARTED))
+            throw new OrderRequirementException("Order Not Started Yet");
 
         customerOrder.setFinishDate(new Date());
         customerOrder.setStatus(OrderStatus.DONE);

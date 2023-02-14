@@ -18,10 +18,9 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> ,
         QuerydslPredicateExecutor<Customer>, QuerydslBinderCustomizer<QCustomer> {
     Optional<Customer> findByEmail(String email);
     @Override
-    default public void customize(
+    default void customize(
             QuerydslBindings bindings, QCustomer root) {
         bindings.bind(String.class)
                 .first((SingleValueBinding<StringPath, String>) StringExpression::containsIgnoreCase);
-        //bindings.excluding(root.email);
     }
 }

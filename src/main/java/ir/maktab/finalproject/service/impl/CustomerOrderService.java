@@ -102,6 +102,10 @@ public class CustomerOrderService {
     public void pay(Integer orderId, PaymentType paymentType) {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
                 .orElseThrow(() -> new NotExistsException("Order Not Exists"));
+
+        if(!customerOrder.getStatus().equals(OrderStatus.DONE))
+            throw new OrderRequirementException("Order Not Done Yet");
+
         double payAmount = customerOrder.getAcceptedExpertOffer().getPrice();
 
         if(paymentType.equals(PaymentType.CREDIT)) {
@@ -120,6 +124,7 @@ public class CustomerOrderService {
     public void addReview(Review review) {
         CustomerOrder customerOrder = customerOrderRepository.findById(review.getCustomerOrder().getId())
                 .orElseThrow(() -> new NotExistsException("Order Not Exists"));
+
         if(!customerOrder.getStatus().equals(OrderStatus.PAYED))
             throw new OrderRequirementException("Order Not Payed Yet");
 

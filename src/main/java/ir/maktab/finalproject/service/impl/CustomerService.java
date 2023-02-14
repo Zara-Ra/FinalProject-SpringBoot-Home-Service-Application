@@ -12,6 +12,7 @@ import ir.maktab.finalproject.service.exception.PasswordException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
 import ir.maktab.finalproject.service.exception.UserNotFoundException;
 import ir.maktab.finalproject.service.predicates.UserPredicateBuilder;
+import ir.maktab.finalproject.util.exception.ValidationException;
 import ir.maktab.finalproject.util.validation.Validation;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -103,13 +104,14 @@ public class CustomerService implements IRolesService<Customer>/*, CommandLineRu
     }
 
     public Iterable<Customer> findAll(String search) {
+        if (search.isEmpty())
+            throw new ValidationException("Search Filter Must Not Be Null");
+
         UserPredicateBuilder builder = new UserPredicateBuilder();
-        if (search != null) {
-            Pattern pattern = Pattern.compile("(\\w+?)([:<>])([\\w-_@.]+?),");
-            Matcher matcher = pattern.matcher(search + ",");
-            while (matcher.find()) {
-                builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
-            }
+        Pattern pattern = Pattern.compile("(\\w+?)([:<>])([\\w-_@.]+?),");
+        Matcher matcher = pattern.matcher(search + ",");
+        while (matcher.find()) {
+            builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
         }
         BooleanExpression expression = builder.build(Customer.class, "customer");
         return customerRepository.findAll(expression);
