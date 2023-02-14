@@ -16,12 +16,12 @@ public class AccountDto {
     @Email
     private String email;
 
-    @Pattern(regexp = "^([0-9a-zA-Z]){8,}$")
+    @Pattern(regexp = "^([\\da-zA-Z]){8,}$")
     private String password;
 
-    @Pattern(regexp = "^([0-9a-zA-Z]){8,}$")
+    @Pattern(regexp = "^([\\da-zA-Z]){8,}$")
     private String newPassword;
 
-    @Pattern(regexp = "^([0-9a-zA-Z]){8,}$")
+    @Pattern(regexp = "^([\\da-zA-Z]){8,}$")
     private String repeatPassword;
 }

@@ -17,42 +17,43 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> badRequestExceptionHandler(MethodArgumentNotValidException e) {
-        CustomExcpetion exception = new CustomExcpetion(HttpStatus.BAD_REQUEST, e.getDetailMessageArguments()[1].toString());
+        CustomException exception = new CustomException(HttpStatus.BAD_REQUEST, e.getDetailMessageArguments()[1].toString());
         return new ResponseEntity<>(exception, exception.httpStatus());
     }
+
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<?> badRequestExceptionHandler(ConstraintViolationException e) {
-        CustomExcpetion exception = new CustomExcpetion(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+        CustomException exception = new CustomException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
         return new ResponseEntity<>(exception, exception.httpStatus());
     }
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<?> badRequestExceptionHandler(ValidationException e) {
-        CustomExcpetion exception = new CustomExcpetion(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+        CustomException exception = new CustomException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
         return new ResponseEntity<>(exception, exception.httpStatus());
     }
 
     @ExceptionHandler(NotExistsException.class)
     public ResponseEntity<?> badRequestExceptionHandler(NotExistsException e) {
-        CustomExcpetion exception = new CustomExcpetion(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+        CustomException exception = new CustomException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
         return new ResponseEntity<>(exception, exception.httpStatus());
     }
 
     @ExceptionHandler(NotAllowedException.class)
     public ResponseEntity<?> badRequestExceptionHandler(NotAllowedException e) {
-        CustomExcpetion exception = new CustomExcpetion(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+        CustomException exception = new CustomException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
         return new ResponseEntity<>(exception, exception.httpStatus());
     }
 
     @ExceptionHandler(OrderRequirementException.class)
     public ResponseEntity<?> badRequestExceptionHandler(OrderRequirementException e) {
-        CustomExcpetion exception = new CustomExcpetion(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+        CustomException exception = new CustomException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
         return new ResponseEntity<>(exception, exception.httpStatus());
     }
 
     @ExceptionHandler(OfferRequirementException.class)
     public ResponseEntity<?> badRequestExceptionHandler(OfferRequirementException e) {
-        CustomExcpetion exception = new CustomExcpetion(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+        CustomException exception = new CustomException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
         return new ResponseEntity<>(exception, exception.httpStatus());
     }
 

@@ -1,16 +1,16 @@
 var myseconds = 600;//600
 var mycolor = 'rgb(117,217,193)';
 //alert('You will have ' + Math.floor(myseconds / 60) + ' minutes and ' + myseconds % 60 + ' seconds to finish. Press “OK” to begin.');
-$(function() {
+$(function () {
     $('div#pie_to_be').pietimer({
         seconds: myseconds,
         color: mycolor
-    }, function() {
+    }, function () {
         $('#caspioform').submit();
     });
 });
-(function($) {
-    jQuery.fn.pietimer = function(options, callback) {
+(function ($) {
+    jQuery.fn.pietimer = function (options, callback) {
         var settings = {
             'seconds': 10,
             'color': 'rgba(255, 255, 255, 0.8)',
@@ -50,6 +50,7 @@ $(function() {
                 }
             }
         }
+
         return this;
     };
 })(jQuery);
@@ -59,8 +60,10 @@ if (isMSIE) {
         document.getElementById('pie_to_be')
             .innerHTML = parseInt(document.getElementById('pie_to_be').innerHTML) - 1;
     }
+
     setInterval("ticker()", 1000);
     setTimeout(pageReload(), myseconds * 1000);
+
     function pageReload() {
         window.location.reload(true);
     }

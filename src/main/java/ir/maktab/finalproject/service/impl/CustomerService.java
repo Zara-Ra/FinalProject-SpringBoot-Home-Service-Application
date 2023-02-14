@@ -84,10 +84,6 @@ public class CustomerService implements IRolesService<Customer>/*, CommandLineRu
         return customerRepository.findByEmail(email);
     }
 
-    public Customer updateCustomer(Customer customer) {
-        return customerRepository.save(customer);
-    }
-
     public void pay(Customer customer, double payAmount) {
         double creditAmount = customer.getCredit().getAmount();
         if (creditAmount < payAmount)

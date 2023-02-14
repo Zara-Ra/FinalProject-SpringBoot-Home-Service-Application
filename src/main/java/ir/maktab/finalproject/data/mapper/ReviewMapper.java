@@ -14,6 +14,6 @@ public interface ReviewMapper {
     @Mapping(source = "orderId", target = "customerOrder.id")
     Review convertReview(ReviewDto reviewDto);
 
-    @Mapping(source = "customerOrder.id",target = "orderId")
+    @Mapping(source = "customerOrder.id", target = "orderId")
     ReviewDto convertReview(Review review);
 }

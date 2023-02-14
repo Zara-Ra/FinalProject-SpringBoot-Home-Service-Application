@@ -4,15 +4,11 @@ import ir.maktab.finalproject.data.dto.AccountDto;
 import ir.maktab.finalproject.data.dto.ExpertDto;
 import ir.maktab.finalproject.data.dto.PhotoInfoDto;
 import ir.maktab.finalproject.data.dto.ReviewDto;
-import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.Expert;
-import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
 import ir.maktab.finalproject.data.mapper.ReviewMapper;
 import ir.maktab.finalproject.data.mapper.UserMapper;
-import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.impl.ExpertService;
-import ir.maktab.finalproject.service.impl.SubServiceService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
@@ -60,13 +56,13 @@ public class ExpertController {
         return "Expert Status Updated";
     }
 
-    @GetMapping("/assign-subservice")
+    @GetMapping("/assign-sub-service")
     public String assignSubService(@RequestParam String subServiceName, @RequestParam @Email String expertEmail) {
         expertService.addSubServiceToExpert(subServiceName, expertEmail);
         return "Sub Service Assigned To Expert";
     }
 
-    @GetMapping("/delete-subservice")
+    @GetMapping("/delete-sub-service")
     public String deleteSubService(@RequestParam String subServiceName, @RequestParam @Email String expertEmail) {
         expertService.deleteSubServiceFromExpert(subServiceName, expertEmail);
         return "Sub Service Deleted From Expert";
@@ -79,8 +75,8 @@ public class ExpertController {
     }
 
     @GetMapping("/order-score")
-    public ReviewDto orderScore(@RequestParam Integer orderId, @RequestParam String expertEmail){
-        return ReviewMapper.INSTANCE.convertReview(expertService.getOrderScore(orderId,expertEmail));
+    public ReviewDto orderScore(@RequestParam Integer orderId, @RequestParam String expertEmail) {
+        return ReviewMapper.INSTANCE.convertReview(expertService.getOrderScore(orderId, expertEmail));
     }
 
     @GetMapping("/filter")

@@ -19,7 +19,7 @@ import java.util.List;
 public interface UserMapper {
 
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
-    
+
     Customer convertCustomer(CustomerDto customerDto);
 
     @Mapping(source = "photoPath", target = "photo", qualifiedByName = "pathToBytes")

@@ -50,7 +50,7 @@ public class CustomerOrderService {
         return customerOrderRepository.save(customerOrder);
     }
 
-    public CustomerOrder requestOrder(CustomerOrder customerOrder) {
+    public void requestOrder(CustomerOrder customerOrder) {
 
         Customer customer = customerService.findByEmail(customerOrder.getCustomer().getEmail())
                 .orElseThrow(() -> new UserNotFoundException("Customer Not Exits"));
@@ -69,7 +69,7 @@ public class CustomerOrderService {
         customerOrder.setCustomer(customer);
         customerOrder.setSubService(subService);
         customerOrder.setStatus(OrderStatus.WAITING_FOR_EXPERT_OFFER);
-        return customerOrderRepository.save(customerOrder);
+        customerOrderRepository.save(customerOrder);
     }
 
     public List<CustomerOrder> findAllBySubServiceAndTwoStatus(String subServiceName) {
@@ -90,10 +90,6 @@ public class CustomerOrderService {
         return foundOrder.getExpertOfferList();
     }
 
-    public Optional<CustomerOrder> getOrderForAcceptedOffer(ExpertOffer expertOffer) {//todo not used
-        return customerOrderRepository.findByAcceptedExpertOffer(expertOffer);
-    }
-
     public Optional<CustomerOrder> findById(Integer orderId) {
         return customerOrderRepository.findById(orderId);
     }
@@ -103,18 +99,18 @@ public class CustomerOrderService {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
                 .orElseThrow(() -> new NotExistsException("Order Not Exists"));
 
-        if(!customerOrder.getStatus().equals(OrderStatus.DONE))
+        if (!customerOrder.getStatus().equals(OrderStatus.DONE))
             throw new OrderRequirementException("Order Not Done Yet");
 
         double payAmount = customerOrder.getAcceptedExpertOffer().getPrice();
 
-        if(paymentType.equals(PaymentType.CREDIT)) {
+        if (paymentType.equals(PaymentType.CREDIT)) {
             Customer customer = customerOrder.getCustomer();
             customerService.pay(customer, payAmount);
         }
 
         Expert expert = customerOrder.getAcceptedExpertOffer().getExpert();
-        expertService.pay(expert,payAmount);
+        expertService.pay(expert, payAmount);
 
         customerOrder.setStatus(OrderStatus.PAYED);
         customerOrderRepository.save(customerOrder);
@@ -125,13 +121,13 @@ public class CustomerOrderService {
         CustomerOrder customerOrder = customerOrderRepository.findById(review.getCustomerOrder().getId())
                 .orElseThrow(() -> new NotExistsException("Order Not Exists"));
 
-        if(!customerOrder.getStatus().equals(OrderStatus.PAYED))
+        if (!customerOrder.getStatus().equals(OrderStatus.PAYED))
             throw new OrderRequirementException("Order Not Payed Yet");
 
         Expert expert = customerOrder.getAcceptedExpertOffer().getExpert();
         review.setCustomerOrder(customerOrder);
         expert.getReviewList().add(review);
-        double averageScore = expert.getReviewList().stream().mapToInt(r->r.getScore()).average().getAsDouble();
+        double averageScore = expert.getReviewList().stream().mapToInt(Review::getScore).average().getAsDouble();
         expert.setAverageScore(averageScore);
         expertService.updateExpert(expert);
     }

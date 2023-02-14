@@ -13,23 +13,23 @@ import java.util.List;
 public interface OrderMapper {
 
     OrderMapper INSTANCE = Mappers.getMapper(OrderMapper.class);
-    
+
     @Mapping(source = "customerEmail", target = "customer.email")
     @Mapping(source = "subServiceName", target = "subService.subName")
     @Mapping(target = "preferredDate", source = "preferredDate", dateFormat = "yyyy-MM-dd HH:mm")
     CustomerOrder convertOrder(CustomerOrderDto customerOrderDto);
 
-    @Mapping(source = "customer.email" , target = "customerEmail")
-    @Mapping(source = "subService.subName" , target = "subServiceName")
+    @Mapping(source = "customer.email", target = "customerEmail")
+    @Mapping(source = "subService.subName", target = "subServiceName")
     @Mapping(target = "preferredDate", source = "preferredDate", dateFormat = "yyyy-MM-dd HH:mm")
     CustomerOrderDto convertOrder(CustomerOrder customerOrder);
 
     List<CustomerOrderDto> convertOrderList(List<CustomerOrder> orders);
 
-    @Mapping(source ="customer.email" , target="customerEmail")
-    @Mapping(source = "subService.subName", target="subServiceName")
-    @Mapping(source = "acceptedExpertOffer.price", target="offerPrice")
-    @Mapping(source = "acceptedExpertOffer.id" , target="offerId")
+    @Mapping(source = "customer.email", target = "customerEmail")
+    @Mapping(source = "subService.subName", target = "subServiceName")
+    @Mapping(source = "acceptedExpertOffer.price", target = "offerPrice")
+    @Mapping(source = "acceptedExpertOffer.id", target = "offerId")
     @Mapping(target = "startDate", source = "startDate", dateFormat = "yyyy-MM-dd HH:mm")
     @Mapping(target = "finishDate", source = "finishDate", dateFormat = "yyyy-MM-dd HH:mm")
     AcceptedOrderDto convertAcceptedOrder(CustomerOrder order);

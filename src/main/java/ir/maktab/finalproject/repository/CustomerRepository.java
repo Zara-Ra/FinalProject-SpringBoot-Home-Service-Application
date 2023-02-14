@@ -14,9 +14,10 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface CustomerRepository extends JpaRepository<Customer, Integer> ,
+public interface CustomerRepository extends JpaRepository<Customer, Integer>,
         QuerydslPredicateExecutor<Customer>, QuerydslBinderCustomizer<QCustomer> {
     Optional<Customer> findByEmail(String email);
+
     @Override
     default void customize(
             QuerydslBindings bindings, QCustomer root) {

@@ -104,7 +104,7 @@ public class ExpertOfferService {
         ExpertOffer expertOffer = expertOfferRepository.findById(offerId)
                 .orElseThrow(() -> new NotExistsException("Offer Not Exists"));
 
-        if(!customerOrder.getStatus().equals(OrderStatus.WAITING_FOR_EXPERT_ARRIVAL))
+        if (!customerOrder.getStatus().equals(OrderStatus.WAITING_FOR_EXPERT_ARRIVAL))
             throw new OrderRequirementException("Order Status Mismatch");
 
         Date now = new Date();
@@ -123,7 +123,7 @@ public class ExpertOfferService {
         ExpertOffer expertOffer = expertOfferRepository.findById(offerId)
                 .orElseThrow(() -> new NotExistsException("Offer Not Exists"));
 
-        if(!customerOrder.getStatus().equals(OrderStatus.STARTED))
+        if (!customerOrder.getStatus().equals(OrderStatus.STARTED))
             throw new OrderRequirementException("Order Not Started Yet");
 
         customerOrder.setFinishDate(new Date());

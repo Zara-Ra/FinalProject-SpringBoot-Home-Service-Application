@@ -81,8 +81,9 @@ public class CustomerOrderController {
     public String payOnline(@Valid @ModelAttribute PaymentDto paymentDto, HttpServletRequest request) {
         try {
             Date expirationDate = new SimpleDateFormat("yyyy-MM").parse(paymentDto.getExpirationDate());
-            if(expirationDate.before(new Date())){
-                throw new ValidationException("Card Has Expired");}
+            if (expirationDate.before(new Date())) {
+                throw new ValidationException("Card Has Expired");
+            }
         } catch (ParseException e) {
             throw new ValidationException("Invalid Date Format");
         }
@@ -94,13 +95,13 @@ public class CustomerOrderController {
     }
 
     @GetMapping("/pay-credit")
-    public String payFromCredit(@RequestParam @Min(1) Integer orderId){
-        customerOrderService.pay(orderId,PaymentType.CREDIT);
+    public String payFromCredit(@RequestParam @Min(1) Integer orderId) {
+        customerOrderService.pay(orderId, PaymentType.CREDIT);
         return "Order Payed By Credit";
     }
 
     @PostMapping("/add-review")
-    public String addReview(@RequestBody ReviewDto reviewDto){
+    public String addReview(@RequestBody ReviewDto reviewDto) {
         customerOrderService.addReview(ReviewMapper.INSTANCE.convertReview(reviewDto));
         return "Review Added";
     }

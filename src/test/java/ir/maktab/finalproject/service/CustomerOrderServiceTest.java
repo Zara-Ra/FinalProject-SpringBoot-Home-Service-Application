@@ -6,7 +6,6 @@ import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.services.BaseService;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.OrderStatus;
-import ir.maktab.finalproject.service.exception.OfferRequirementException;
 import ir.maktab.finalproject.service.exception.OrderRequirementException;
 import ir.maktab.finalproject.service.impl.CustomerOrderService;
 import ir.maktab.finalproject.util.sort.SortExpertOffer;
@@ -19,7 +18,6 @@ import org.springframework.jdbc.datasource.init.ScriptUtils;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -140,7 +138,7 @@ public class CustomerOrderServiceTest {
     @Order(5)
     @Test
     void getAllOffersTest() {
-        List<ExpertOffer> defaultSortedOffers = customerOrderService.getAllOffersForOrder(orderForSortTest.getId(),SortExpertOffer.SortByPriceAcs);
+        List<ExpertOffer> defaultSortedOffers = customerOrderService.getAllOffersForOrder(orderForSortTest.getId(), SortExpertOffer.SortByPriceAcs);
         orderForSortTest.setExpertOfferList(defaultSortedOffers);
         assertEquals(200, defaultSortedOffers.get(0).getPrice());
     }

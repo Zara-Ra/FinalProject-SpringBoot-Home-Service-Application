@@ -5,10 +5,6 @@ import ir.maktab.finalproject.util.exception.ValidationException;
 import lombok.experimental.UtilityClass;
 import net.sf.jmimemagic.*;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 @UtilityClass
 public class Validation {
     private static final int ONE_KILOBYTE = 1024;

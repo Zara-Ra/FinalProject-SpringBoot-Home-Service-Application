@@ -12,7 +12,7 @@ import java.util.List;
 public interface OfferMapper {
 
     OfferMapper INSTANCE = Mappers.getMapper(OfferMapper.class);
-    
+
     @Mapping(source = "expertEmail", target = "expert.email")
     @Mapping(source = "subServiceName", target = "subService.subName")
     @Mapping(source = "orderId", target = "customerOrder.id")

@@ -11,7 +11,7 @@ $("#submit").on('click', function (e) {
     form.append("expirationDate", expirationDate.value);
     form.append("cvv2", cvv2.value);
     form.append("captcha", captcha.value);
-    form.append("orderId",orderId.value);
+    form.append("orderId", orderId.value);
 
     $.ajax({
         type: "POST",

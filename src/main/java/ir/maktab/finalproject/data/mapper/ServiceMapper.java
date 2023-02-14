@@ -12,7 +12,7 @@ import java.util.List;
 
 @Mapper
 public interface ServiceMapper {
-    
+
     ServiceMapper INSTANCE = Mappers.getMapper(ServiceMapper.class);
 
     BaseService convertBaseService(BaseServiceDto baseServiceDto);

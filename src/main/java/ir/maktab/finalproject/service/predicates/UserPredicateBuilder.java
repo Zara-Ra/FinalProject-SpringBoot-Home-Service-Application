@@ -15,9 +15,8 @@ public class UserPredicateBuilder {
         params = new ArrayList<>();
     }
 
-    public UserPredicateBuilder with(String key, String operation, Object value) {
+    public void with(String key, String operation, Object value) {
         params.add(new SearchCriteria(key, operation, value));
-        return this;
     }
 
     public BooleanExpression build(Class aClass, String className) {

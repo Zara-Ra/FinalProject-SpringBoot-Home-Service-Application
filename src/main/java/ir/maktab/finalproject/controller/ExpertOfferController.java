@@ -34,18 +34,19 @@ public class ExpertOfferController {
     }
 
     @GetMapping("/expert-arrived")
-    public String expertArrived(@RequestParam @Min(1) Integer orderId, @RequestParam @Min(1) Integer offerId){
-        expertOfferService.expertArrived(orderId,offerId);
+    public String expertArrived(@RequestParam @Min(1) Integer orderId, @RequestParam @Min(1) Integer offerId) {
+        expertOfferService.expertArrived(orderId, offerId);
         return "Expert Arrived";
     }
 
     @GetMapping("/expert-done")
-    public String expertDone(@RequestParam @Min(1) Integer orderId, @RequestParam @Min(1) Integer offerId){
-        expertOfferService.expertDone(orderId,offerId);
+    public String expertDone(@RequestParam @Min(1) Integer orderId, @RequestParam @Min(1) Integer offerId) {
+        expertOfferService.expertDone(orderId, offerId);
         return "Expert Done";
     }
+
     @GetMapping("/experts-orders/{expertEmail}")
-    public List<ExpertOfferDto> findAcceptedOrdersFor(@PathVariable @Email String expertEmail){
+    public List<ExpertOfferDto> findAcceptedOrdersFor(@PathVariable @Email String expertEmail) {
         return OfferMapper.INSTANCE.convertOfferList(expertOfferService.findAcceptedOffersFor(expertEmail));
     }
 

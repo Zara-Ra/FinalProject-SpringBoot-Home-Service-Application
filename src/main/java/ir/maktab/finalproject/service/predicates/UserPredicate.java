@@ -65,9 +65,9 @@ public class UserPredicate {
         if (!isInteger(criteria.getValue().toString())) {
             QExpert qExpert = QExpert.expert;
             NumberPath<Double> path = qExpert.averageScore;
-            return switch (criteria.getValue().toString()){
-                case "max"->  path.goe(4.5);
-                case "min"->  path.loe(0.5);
+            return switch (criteria.getValue().toString()) {
+                case "max" -> path.goe(4.5);
+                case "min" -> path.loe(0.5);
                 default -> null;
             };
         }

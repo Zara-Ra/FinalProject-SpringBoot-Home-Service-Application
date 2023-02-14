@@ -17,7 +17,7 @@ public class ExpertDto {
     private String email;
 
     @NotNull
-    @Pattern(regexp = "^([0-9a-zA-Z]){8,}$")
+    @Pattern(regexp = "^([\\da-zA-Z]){8,}$")
     private String password;
 
     @NotNull
