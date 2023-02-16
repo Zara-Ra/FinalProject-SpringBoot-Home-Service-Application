@@ -35,25 +35,25 @@ public class ExpertOfferController {
 
     @GetMapping("/chose-offer")
     public String choseOffer(@RequestParam @Min(1) Integer orderId, @RequestParam @Min(1) Integer offerId) {
-        log.info("*** Chose Offer {} For Order {} ***",offerId,orderId);
+        log.info("*** Chose Offer {} For Order {} ***", offerId, orderId);
         expertOfferService.choseOffer(orderId, offerId);
-        log.info("*** Offer {} Chosen For Order {} ***",offerId,orderId);
+        log.info("*** Offer {} Chosen For Order {} ***", offerId, orderId);
         return "Offer Has Been Chosen";
     }
 
     @GetMapping("/expert-arrived")
     public String expertArrived(@RequestParam @Min(1) Integer orderId, @RequestParam @Min(1) Integer offerId) {
-        log.info("*** Set Expert Status ARRIVED, Order {}, Offer {} ***",orderId,offerId);
+        log.info("*** Set Expert Status ARRIVED, Order {}, Offer {} ***", orderId, offerId);
         expertOfferService.expertArrived(orderId, offerId);
-        log.info("*** Expert ARRIVED, Order {}, Offer {} ***",orderId,offerId);
+        log.info("*** Expert ARRIVED, Order {}, Offer {} ***", orderId, offerId);
         return "Expert Arrived";
     }
 
     @GetMapping("/expert-done")
     public String expertDone(@RequestParam @Min(1) Integer orderId, @RequestParam @Min(1) Integer offerId) {
-        log.info("*** Set Expert Done, Order {}, Offer {} ***",orderId,offerId);
+        log.info("*** Set Expert Done, Order {}, Offer {} ***", orderId, offerId);
         expertOfferService.expertDone(orderId, offerId);
-        log.info("*** Expert Done, Order {}, Offer {} ***",orderId,offerId);
+        log.info("*** Expert Done, Order {}, Offer {} ***", orderId, offerId);
         return "Expert Done";
     }
 
@@ -62,7 +62,7 @@ public class ExpertOfferController {
         log.info("*** Find Order FOr Expert: {} ***", expertEmail);
         List<ExpertOfferDto> expertOfferDtos = OfferMapper.INSTANCE
                 .convertOfferList(expertOfferService.findAcceptedOffersFor(expertEmail));
-        log.info("*** Orders For Expert: {}, {} ***",expertEmail,expertOfferDtos);
+        log.info("*** Orders For Expert: {}, {} ***", expertEmail, expertOfferDtos);
         return expertOfferDtos;
     }
 

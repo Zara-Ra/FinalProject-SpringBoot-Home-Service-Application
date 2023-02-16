@@ -62,7 +62,7 @@ public class GlobalExceptionHandler {
 
     private ResponseEntity<?> badRequestHandler(Exception e) {
         CustomException exception = new CustomException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
-        log.error("*** " + e.getLocalizedMessage()+" ***");
+        log.error("*** " + e.getLocalizedMessage() + " ***");
         return new ResponseEntity<>(exception, exception.httpStatus());
     }
 

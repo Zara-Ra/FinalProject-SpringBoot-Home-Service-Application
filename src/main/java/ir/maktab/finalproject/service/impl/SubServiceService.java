@@ -8,7 +8,6 @@ import ir.maktab.finalproject.service.MainService;
 import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.exception.SubServiceException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
-import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BaseServiceService extends MainService implements IService<BaseService>  {
+public class BaseServiceService extends MainService implements IService<BaseService> {
     private final BaseServiceRepository baseServiceRepository;
 
     public BaseServiceService(BaseServiceRepository baseServiceRepository) {

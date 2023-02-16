@@ -38,25 +38,25 @@ public class CustomerController {
 
     @PostMapping("/change-password")
     public String changePassword(@Valid @RequestBody AccountDto accountDto) {
-        log.info("*** Change Password for: {} ***",accountDto);
+        log.info("*** Change Password for: {} ***", accountDto);
         Customer customer = customerService.changePassword(accountDto);
-        log.info("*** Password Changed for: {} ***",customer);
+        log.info("*** Password Changed for: {} ***", customer);
         return "Password Changed For " + customer.getFirstName() + " " + customer.getLastName();
     }
 
     @PostMapping("/increase-credit")
     public String increaseCredit(@Valid @RequestBody CreditDto creditDto) {
-        log.info("*** Increase Credit for: {} ***",creditDto);
+        log.info("*** Increase Credit for: {} ***", creditDto);
         customerService.increaseCredit(creditDto.getCustomerEmail(), creditDto.getAmount());
-        log.info("*** Credit Increased for: {} ***",creditDto);
+        log.info("*** Credit Increased for: {} ***", creditDto);
         return "Credit Increased ";
     }
 
     @GetMapping("/filter")
     public Iterable<CustomerDto> search(@RequestParam String search) {
-        log.info("*** Search for: {} ***",search);
+        log.info("*** Search for: {} ***", search);
         Iterable<CustomerDto> customerDtos = UserMapper.INSTANCE.convertCustomerIterator(customerService.findAll(search));
-        log.info("*** : Search Results: {} ***",customerDtos);
+        log.info("*** : Search Results: {} ***", customerDtos);
         return customerDtos;
     }
 
