@@ -5,10 +5,12 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.validation.annotation.Validated;
 
 @Getter
 @Setter
+@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Validated
 public class ReviewDto {

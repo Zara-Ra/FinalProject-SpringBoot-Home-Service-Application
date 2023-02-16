@@ -1,5 +1,6 @@
 package ir.maktab.finalproject.util.validation;
 
+import ir.maktab.finalproject.configuration.MessageSourceConfiguration;
 import ir.maktab.finalproject.util.exception.PhotoValidationException;
 import ir.maktab.finalproject.util.exception.ValidationException;
 import lombok.experimental.UtilityClass;

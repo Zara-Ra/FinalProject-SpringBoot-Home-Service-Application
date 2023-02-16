@@ -50,7 +50,7 @@ public class CustomerOrderService extends MainService {
         return customerOrderRepository.save(customerOrder);
     }
 
-    public void requestOrder(CustomerOrder customerOrder) {
+    public CustomerOrder requestOrder(CustomerOrder customerOrder) {
 
         Customer customer = customerService.findByEmail(customerOrder.getCustomer().getEmail())
                 .orElseThrow(() -> new UserNotFoundException(messageSource.getMessage("errors.message.customer_not_exists")));
@@ -68,7 +68,7 @@ public class CustomerOrderService extends MainService {
         customerOrder.setCustomer(customer);
         customerOrder.setSubService(subService);
         customerOrder.setStatus(OrderStatus.WAITING_FOR_EXPERT_OFFER);
-        customerOrderRepository.save(customerOrder);
+        return customerOrderRepository.save(customerOrder);
     }
 
     public List<CustomerOrder> findAllBySubServiceAndTwoStatus(String subServiceName) {
