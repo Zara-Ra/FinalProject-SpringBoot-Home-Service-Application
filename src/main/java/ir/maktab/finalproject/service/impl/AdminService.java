@@ -21,7 +21,7 @@ public class AdminService {
         this.adminRepository = adminRepository;
     }
 
-    @PostConstruct
+    //@PostConstruct
     public Admin assignAdmin() {
         Admin admin = new Admin();
         admin.setEmail(email);
