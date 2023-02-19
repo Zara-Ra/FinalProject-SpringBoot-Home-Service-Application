@@ -5,12 +5,13 @@ import ir.maktab.finalproject.data.dto.ExpertDto;
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-02-17T10:13:11+0330",
+    date = "2023-02-19T11:19:33+0330",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 17.0.4 (Oracle Corporation)"
 )
 public class UserMapperImpl implements UserMapper {
@@ -40,12 +41,15 @@ public class UserMapperImpl implements UserMapper {
 
         Expert.ExpertBuilder<?, ?> expert = Expert.builder();
 
-        expert.photo( UserMapper.convertPathToBytes( expertDto.getPhotoPath() ) );
         expert.id( expertDto.getId() );
         expert.email( expertDto.getEmail() );
         expert.password( expertDto.getPassword() );
         expert.firstName( expertDto.getFirstName() );
         expert.lastName( expertDto.getLastName() );
+        byte[] photo = expertDto.getPhoto();
+        if ( photo != null ) {
+            expert.photo( Arrays.copyOf( photo, photo.length ) );
+        }
 
         return expert.build();
     }
@@ -104,6 +108,10 @@ public class UserMapperImpl implements UserMapper {
         expertDto.setPassword( expert.getPassword() );
         expertDto.setFirstName( expert.getFirstName() );
         expertDto.setLastName( expert.getLastName() );
+        byte[] photo = expert.getPhoto();
+        if ( photo != null ) {
+            expertDto.setPhoto( Arrays.copyOf( photo, photo.length ) );
+        }
 
         return expertDto;
     }

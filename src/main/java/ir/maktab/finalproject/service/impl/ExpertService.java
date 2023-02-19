@@ -18,6 +18,7 @@ import ir.maktab.finalproject.util.exception.ValidationException;
 import ir.maktab.finalproject.util.validation.Validation;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
@@ -35,19 +36,23 @@ public class ExpertService extends MainService implements IRolesService<Expert> 
 
     private final SubServiceService subServiceService;
 
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public ExpertService(ExpertRepository expertRepository, SubServiceService subServiceService) {
+
+    public ExpertService(ExpertRepository expertRepository, SubServiceService subServiceService, BCryptPasswordEncoder passwordEncoder) {
         this.expertRepository = expertRepository;
         this.subServiceService = subServiceService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public Expert signUp(Expert expert) {
+    public Expert register(Expert expert) {
         validateNewExpert(expert);
         expert.setStatus(ExpertStatus.NEW);
         expert.setCredit(Credit.builder().amount(0).build());
         expert.setAverageScore(0);
         expert.setRole(Role.ROLE_EXPERT);
+        expert.setPassword(passwordEncoder.encode(expert.getPassword()));
         try {
             return expertRepository.save(expert);
         } catch (DataIntegrityViolationException e) {
@@ -56,29 +61,19 @@ public class ExpertService extends MainService implements IRolesService<Expert> 
     }
 
     @Override
-    public Expert signIn(String email, String password) {
-        validateAccount(email, password);
-        Expert foundExpert = expertRepository.findByEmail(email).orElseThrow(() ->
-                new UserNotFoundException(messageSource.getMessage("errors.message.expert_not_exists")));
-        if (!foundExpert.getPassword().equals(password))
-            throw new UserNotFoundException(messageSource.getMessage("errors.message.invalid_password"));
-        return foundExpert;
-    }
-
-    @Override
     public Expert changePassword(AccountDto accountDto) {
         if (!accountDto.getNewPassword().equals(accountDto.getRepeatPassword()))
             throw new PasswordException(messageSource.getMessage("errors.message.password_mismatch"));
 
-        Expert findCustomer = expertRepository.findByEmail(accountDto.getEmail())
+        Expert findExpert = expertRepository.findByEmail(accountDto.getEmail())
                 .orElseThrow(() -> new UserNotFoundException(messageSource.getMessage("errors.message.expert_not_exists")));
 
-        if (!findCustomer.getPassword().equals(accountDto.getPassword()))
+        if(!passwordEncoder.matches(accountDto.getOldPassword(), findExpert.getPassword()))
             throw new PasswordException(messageSource.getMessage("errors.message.incorrect_old_password"));
 
         Validation.validatePassword(accountDto.getNewPassword());
-        findCustomer.setPassword(accountDto.getNewPassword());
-        return expertRepository.save(findCustomer);
+        findExpert.setPassword(accountDto.getNewPassword());
+        return expertRepository.save(findExpert);
     }
 
     public Optional<Expert> findByEmail(String email) {

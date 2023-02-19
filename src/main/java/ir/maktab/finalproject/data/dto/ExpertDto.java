@@ -32,5 +32,5 @@ public class ExpertDto {
     @Pattern(regexp = "^[a-zA-Z ]{2,}")
     private String lastName;
 
-    private String photoPath;
+    private byte[] photo;
 }

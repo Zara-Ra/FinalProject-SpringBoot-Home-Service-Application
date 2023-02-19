@@ -41,6 +41,7 @@ ir\maktab\finalproject\data\entity\roles\QCustomer.class
 ir\maktab\finalproject\service\exception\OfferRequirementException.class
 ir\maktab\finalproject\data\entity\Address.class
 ir\maktab\finalproject\data\mapper\OfferMapper.class
+ir\maktab\finalproject\configuration\PasswordConfig.class
 ir\maktab\finalproject\service\exception\OrderRequirementException.class
 ir\maktab\finalproject\data\dto\CustomerOrderDto.class
 ir\maktab\finalproject\configuration\MessageSourceConfiguration.class
@@ -89,6 +90,7 @@ ir\maktab\finalproject\service\IService.class
 ir\maktab\finalproject\util\validation\Validation.class
 ir\maktab\finalproject\data\entity\roles\QAccount.class
 ir\maktab\finalproject\service\exception\UniqueViolationException.class
+ir\maktab\finalproject\configuration\SecurityConfig.class
 ir\maktab\finalproject\data\dto\PaymentDto.class
 ir\maktab\finalproject\data\mapper\ServiceMapperImpl.class
 ir\maktab\finalproject\service\impl\ExpertService.class

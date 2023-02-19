@@ -26,6 +26,12 @@ public class Customer extends User {
         super(email, password, firstName, lastName);
     }
 
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

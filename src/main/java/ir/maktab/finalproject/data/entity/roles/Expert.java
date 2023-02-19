@@ -38,6 +38,12 @@ public class Expert extends User {
         super(email, password, firstName, lastName);
     }
 
+
+    @Override
+    public boolean isEnabled() {
+        return !status.equals(ExpertStatus.SUSPEND);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

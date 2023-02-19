@@ -67,7 +67,7 @@ public class ExpertServiceTest {
     void signUpTest() {
         byte[] photo = UserMapper.convertPathToBytes(photoPath);
         expert.setPhoto(photo);
-        Expert newExpert = expertService.signUp(expert);
+        Expert newExpert = expertService.register(expert);
         assertAll(
                 () -> assertEquals(expert.getEmail(), newExpert.getEmail()),
                 () -> assertEquals(expert.getPassword(), newExpert.getPassword()),
@@ -103,7 +103,7 @@ public class ExpertServiceTest {
                 .photo(photo).build();
 
         ValidationException exception = assertThrows(ValidationException.class,
-                () -> expertService.signUp(invalidExpert));
+                () -> expertService.register(invalidExpert));
         assertEquals(exceptionMsg, exception.getMessage());
     }
 

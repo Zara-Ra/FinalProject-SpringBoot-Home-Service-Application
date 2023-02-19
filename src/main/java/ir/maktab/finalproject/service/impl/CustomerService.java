@@ -16,6 +16,7 @@ import ir.maktab.finalproject.service.predicates.user.UserPredicateBuilder;
 import ir.maktab.finalproject.util.exception.ValidationException;
 import ir.maktab.finalproject.util.validation.Validation;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -26,15 +27,19 @@ import java.util.regex.Pattern;
 public class CustomerService extends MainService implements IRolesService<Customer> {
     private final CustomerRepository customerRepository;
 
-    public CustomerService(CustomerRepository customerRepository) {
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    public CustomerService(CustomerRepository customerRepository, BCryptPasswordEncoder passwordEncoder) {
         this.customerRepository = customerRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public Customer signUp(Customer customer) {
+    public Customer register(Customer customer) {
         validateNewCustomer(customer);
         customer.setCredit(Credit.builder().amount(0).build());
         customer.setRole(Role.ROLE_CUSTOMER);
+        customer.setPassword(passwordEncoder.encode(customer.getPassword()));
         try {
             return customerRepository.save(customer);
         } catch (DataIntegrityViolationException e) {
@@ -42,7 +47,7 @@ public class CustomerService extends MainService implements IRolesService<Custom
         }
     }
 
-    @Override
+    /*@Override
     public Customer signIn(String email, String password) {
         validateAccount(email, password);
         Customer foundCustomer = customerRepository.findByEmail(email).orElseThrow(() ->
@@ -53,7 +58,7 @@ public class CustomerService extends MainService implements IRolesService<Custom
 
         return foundCustomer;
     }
-
+*/
     @Override
     public Customer changePassword(AccountDto accountDto) {
         if (!accountDto.getNewPassword().equals(accountDto.getRepeatPassword()))
@@ -62,11 +67,11 @@ public class CustomerService extends MainService implements IRolesService<Custom
         Customer findCustomer = customerRepository.findByEmail(accountDto.getEmail())
                 .orElseThrow(() -> new UserNotFoundException(messageSource.getMessage("errors.message.customer_not_exists")));
 
-        if (!findCustomer.getPassword().equals(accountDto.getPassword()))
+        if(!passwordEncoder.matches(accountDto.getOldPassword(), findCustomer.getPassword()))
             throw new PasswordException(messageSource.getMessage("errors.message.incorrect_old_password"));
 
         Validation.validatePassword(accountDto.getNewPassword());
-        findCustomer.setPassword(accountDto.getNewPassword());
+        findCustomer.setPassword(passwordEncoder.encode(accountDto.getNewPassword()));
         return customerRepository.save(findCustomer);
     }
 

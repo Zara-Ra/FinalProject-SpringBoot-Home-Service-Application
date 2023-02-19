@@ -50,7 +50,7 @@ public class CustomerServiceTest {
     @Order(1)
     @Test
     void signUpTest() {
-        Customer newCustomer = customerService.signUp(customer);
+        Customer newCustomer = customerService.register(customer);
         assertAll(
                 () -> assertEquals(customer.getEmail(), newCustomer.getEmail()),
                 () -> assertEquals(customer.getPassword(), newCustomer.getPassword()),
@@ -80,7 +80,7 @@ public class CustomerServiceTest {
                 .lastName(lastName).build();
 
         ValidationException exception = assertThrows(ValidationException.class,
-                () -> customerService.signUp(invalidCustomer));
+                () -> customerService.register(invalidCustomer));
         assertEquals(exceptionMsg, exception.getMessage());
     }
 

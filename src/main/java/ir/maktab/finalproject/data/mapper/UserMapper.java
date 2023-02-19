@@ -22,7 +22,7 @@ public interface UserMapper {
 
     Customer convertCustomer(CustomerDto customerDto);
 
-    @Mapping(source = "photoPath", target = "photo", qualifiedByName = "pathToBytes")
+    //@Mapping(source = "photoPath", target = "photo", qualifiedByName = "pathToBytes")
     Expert convertExpert(ExpertDto expertDto);
 
     @Named("pathToBytes")

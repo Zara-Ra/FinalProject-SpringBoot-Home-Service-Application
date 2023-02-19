@@ -9,10 +9,12 @@ import ir.maktab.finalproject.data.enums.ExpertStatus;
 import ir.maktab.finalproject.data.mapper.ReviewMapper;
 import ir.maktab.finalproject.data.mapper.UserMapper;
 import ir.maktab.finalproject.service.impl.ExpertService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,22 +32,16 @@ public class ExpertController {
     }
 
     @PostMapping("/register")
+    //@PermitAll
     public String register(@Valid @RequestBody ExpertDto expertDto) {
         log.info("*** Add New Expert: {} ***", expertDto);
-        Expert expert = expertService.signUp(UserMapper.INSTANCE.convertExpert(expertDto));
+        Expert expert = expertService.register(UserMapper.INSTANCE.convertExpert(expertDto));
         log.info("*** New Expert Added : {} ***", expert);
         return "Expert Registered";
     }
 
-    @PostMapping("/login")
-    public String login(@Valid @RequestBody AccountDto accountDto) {
-        log.info("*** Sign-in Expert: {} ***", accountDto);
-        Expert expert = expertService.signIn(accountDto.getEmail(), accountDto.getPassword());
-        log.info("*** Expert Signed-in: {} ***", expert);
-        return "Welcome " + expert.getFirstName() + " " + expert.getLastName();
-    }
-
     @PostMapping("/change-password")
+    @PreAuthorize("hasRole('EXPERT')")
     public String changePassword(@Valid @RequestBody AccountDto accountDto) {
         log.info("*** Change Password for: {} ***", accountDto);
         Expert expert = expertService.changePassword(accountDto);

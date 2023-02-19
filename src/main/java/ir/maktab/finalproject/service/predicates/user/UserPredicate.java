@@ -21,31 +21,31 @@ public class UserPredicate {
     public BooleanExpression getPredicate(Class classType, String className) {
         PathBuilder<User> entityPath = new PathBuilder<>(classType, className);
 
-        if (criteria.getKey().contains("Date")) {
+        if (criteria.getKey().equals("registerDate")) {
             return dateBooleanExpression(entityPath);
         }
-        if (criteria.getKey().contains("id")) {
+        if (criteria.getKey().equals("id")) {
             return intBooleanExpression(entityPath);
         }
-        if (criteria.getKey().contains("credit")) {
+        if (criteria.getKey().equals("credit")) {
             return creditBooleanExpression();
         }
-        if (criteria.getKey().contains("Score")) {
+        if (criteria.getKey().equals("averageScore")) {
             return intBooleanExpression(entityPath);
         }
-        if (criteria.getKey().contains("sub")) {
+        if (criteria.getKey().equals("subService")) {
             return subServiceBooleanExpression();
         }
         StringPath path = entityPath.getString(criteria.getKey());
         if (criteria.getOperation().equalsIgnoreCase(":")) {
-            return path.containsIgnoreCase(criteria.getValue().toString());
+            return path.eq(criteria.getValue().toString());
         }
         return null;
     }
 
     private BooleanExpression subServiceBooleanExpression() {
         StringPath path = QExpert.expert.subServiceList.any().subName;
-        return path.contains(criteria.getValue().toString());
+        return path.eq(criteria.getValue().toString());
     }
 
     private BooleanExpression creditBooleanExpression() {

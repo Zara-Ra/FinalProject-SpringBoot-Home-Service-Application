@@ -21,7 +21,7 @@ public class AccountDto {
     private String email;
 
     @Pattern(regexp = "^([\\da-zA-Z]){8,}$")
-    private String password;
+    private String oldPassword;
 
     @Pattern(regexp = "^([\\da-zA-Z]){8,}$")
     private String newPassword;
