@@ -32,7 +32,7 @@ public class ExpertController {
     }
 
     @PostMapping(value="/register",consumes = { MediaType.MULTIPART_FORM_DATA_VALUE})
-    public String register(@ModelAttribute ExpertDto expertDto) {
+    public String register(@Valid @ModelAttribute ExpertDto expertDto) {
         log.info("*** Add New Expert: {} ***", expertDto);
         Expert expert = expertService.register(UserMapper.INSTANCE.convertExpert(expertDto));
         log.info("*** New Expert Added : {} ***", expert);
@@ -50,6 +50,7 @@ public class ExpertController {
     }
 
     @GetMapping("/new-experts")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<ExpertDto> findNewExperts() {
         log.info("*** Find New Experts ***");
         List<ExpertDto> expertDtos = UserMapper.INSTANCE
@@ -59,6 +60,7 @@ public class ExpertController {
     }
 
     @GetMapping("/approve-status")
+    @PreAuthorize("hasRole('ADMIN')")
     public String approveStatus(@RequestParam @Min(1) Integer expertId) {
         log.info("*** Approve New Expert: {} ***", expertId);
         expertService.setExpertStatus(expertId, ExpertStatus.APPROVED);
@@ -67,6 +69,7 @@ public class ExpertController {
     }
 
     @GetMapping("/assign-sub-service")
+    @PreAuthorize("hasRole('ADMIN')")
     public String assignSubService(@RequestParam String subServiceName, @RequestParam @Email String expertEmail) {
         log.info("*** Assign Sub Service: {},To Expert: {} ***", subServiceName, expertEmail);
         expertService.addSubServiceToExpert(subServiceName, expertEmail);
@@ -75,6 +78,7 @@ public class ExpertController {
     }
 
     @GetMapping("/delete-sub-service")
+    @PreAuthorize("hasRole('ADMIN')")
     public String deleteSubService(@RequestParam String subServiceName, @RequestParam @Email String expertEmail) {
         log.info("*** Delete Sub Service: {},From Expert: {} ***", subServiceName, expertEmail);
         expertService.deleteSubServiceFromExpert(subServiceName, expertEmail);
@@ -83,6 +87,7 @@ public class ExpertController {
     }
 
     @PostMapping("/save-photo")
+    @PreAuthorize("hasAnyRole('ADMIN','EXPERT')")
     public String savePhoto(@Valid @RequestBody PhotoInfoDto photoInfoDto) {
         log.info("*** Save Expert Photo: {} ***", photoInfoDto);
         expertService.getExpertPhoto(photoInfoDto.getOwnerEmail(), photoInfoDto.getSavePath());
@@ -91,6 +96,7 @@ public class ExpertController {
     }
 
     @GetMapping("/order-score")
+    @PreAuthorize("hasAnyRole('ADMIN','EXPERT')")
     public ReviewDto orderScore(@RequestParam Integer orderId, @RequestParam String expertEmail) {
         log.info("*** Show Score For Expert: {}, Order: {} ***", expertEmail, orderId);
         ReviewDto reviewDto = ReviewMapper.INSTANCE.convertReview(expertService.getOrderScore(orderId, expertEmail));
@@ -99,6 +105,7 @@ public class ExpertController {
     }
 
     @GetMapping("/filter")
+    @PreAuthorize("hasRole('ADMIN')")
     public Iterable<ExpertDto> search(@RequestParam String search) {
         log.info("*** Search for: {} ***", search);
         Iterable<ExpertDto> expertDtos = UserMapper.INSTANCE.convertExpertIterator(expertService.findAll(search));

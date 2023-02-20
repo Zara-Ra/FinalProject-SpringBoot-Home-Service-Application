@@ -3,6 +3,8 @@ package ir.maktab.finalproject.data.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,6 +21,7 @@ public class ReviewDto {
 
     @Min(1)
     @Max(5)
+    @NotNull
     private int score;
 
     private String comment;

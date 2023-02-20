@@ -7,6 +7,7 @@ import ir.maktab.finalproject.service.exception.SubServiceException;
 import ir.maktab.finalproject.service.impl.SubServiceService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class SubServiceController extends MainController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasRole('ADMIN')")
     public String addSubService(@Valid @RequestBody SubServiceDto subServiceDto) {
         log.info("*** Add New Sub Service: {} ***", subServiceDto);
         SubService subService = subServiceService.add(ServiceMapper.INSTANCE.convertSubService(subServiceDto));
@@ -30,38 +32,40 @@ public class SubServiceController extends MainController {
         return "Sub Service Added";
     }
 
-    @DeleteMapping("/delete/{name}")
-    public String deleteSubService(@PathVariable String name) {
-        log.info("*** Delete Sub Service: {} ***", name);
-        subServiceService.delete(name);
-        log.info("*** Sub Service {} Deleted Successfully ***", name);
+    @DeleteMapping("/delete")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String deleteSubService(@RequestParam String subServiceName) {
+        log.info("*** Delete Sub Service: {} ***", subServiceName);
+        subServiceService.delete(subServiceName);
+        log.info("*** Sub Service {} Deleted Successfully ***", subServiceName);
         return "Sub Service Deleted";
     }
 
-    @GetMapping("/find/{name}")
-    public SubServiceDto findSubService(@PathVariable String name) {
-        log.info("*** Find Sub Service: {} ***", name);
-        SubServiceDto subServiceDto = ServiceMapper.INSTANCE.convertSubService(subServiceService.findByName(name)
-                .orElseThrow(() -> new SubServiceException(messageSource.getMessage("errors.message.sub_not_exists"))));
-        log.info("*** Found Sub Service: {} ***", subServiceDto);
-        return subServiceDto;
-    }
-
-    @GetMapping("/find-all/{baseName}")
-    public List<SubServiceDto> findAllSubServiceForBaseService(@PathVariable String baseName) {
-        log.info("*** Find All Sub Services For Base Service: {}  ***", baseName);
-        List<SubServiceDto> subServiceDtos = ServiceMapper.INSTANCE
-                .convertSubServiceList(subServiceService.findAllByBaseService(baseName));
-        log.info("*** All Sub Services For Base Service {} : {} ***", baseName, subServiceDtos);
-        return subServiceDtos;
-
-    }
-
     @PutMapping("/edit")
+    @PreAuthorize("hasRole('ADMIN')")
     public String editSubService(@Valid @RequestBody SubServiceDto subServiceDto) {
         log.info("*** Edit Sub Service: {} ***", subServiceDto);
         SubService subService = subServiceService.editSubService(ServiceMapper.INSTANCE.convertSubService(subServiceDto));
         log.info("*** Sub Service Edited: {} ***", subService);
         return "Sub Service Edited";
+    }
+
+    @GetMapping("/find")
+    public SubServiceDto findSubService(@RequestParam String subServiceName) {
+        log.info("*** Find Sub Service: {} ***", subServiceName);
+        SubServiceDto subServiceDto = ServiceMapper.INSTANCE.convertSubService(subServiceService.findByName(subServiceName)
+                .orElseThrow(() -> new SubServiceException(messageSource.getMessage("errors.message.sub_not_exists"))));
+        log.info("*** Found Sub Service: {} ***", subServiceDto);
+        return subServiceDto;
+    }
+
+    @GetMapping("/find-all")
+    public List<SubServiceDto> findAllSubServiceForBaseService(@RequestParam String baseServiceName) {
+        log.info("*** Find All Sub Services For Base Service: {}  ***", baseServiceName);
+        List<SubServiceDto> subServiceDtos = ServiceMapper.INSTANCE
+                .convertSubServiceList(subServiceService.findAllByBaseService(baseServiceName));
+        log.info("*** All Sub Services For Base Service {} : {} ***", baseServiceName, subServiceDtos);
+        return subServiceDtos;
+
     }
 }

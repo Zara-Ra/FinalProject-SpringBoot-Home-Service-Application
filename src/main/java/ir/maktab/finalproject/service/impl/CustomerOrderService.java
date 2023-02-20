@@ -128,6 +128,8 @@ public class CustomerOrderService extends MainService {
         expert.getReviewList().add(review);
         double averageScore = expert.getReviewList().stream().mapToInt(Review::getScore).average().getAsDouble();
         expert.setAverageScore(averageScore);
+        customerOrder.setStatus(OrderStatus.SCORED);
+        customerOrderRepository.save(customerOrder);
         expertService.updateExpert(expert);
     }
 }

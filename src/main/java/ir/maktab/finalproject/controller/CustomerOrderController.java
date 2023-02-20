@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +38,7 @@ public class CustomerOrderController extends MainController {
     }
 
     @PostMapping("/request-order")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public String requestOrder(@Valid @RequestBody CustomerOrderDto customerOrderDto) {
         log.info("*** Request Order for: {} ***", customerOrderDto);
         CustomerOrder customerOrder = customerOrderService.requestOrder(OrderMapper.INSTANCE.convertOrder(customerOrderDto));
@@ -45,6 +47,7 @@ public class CustomerOrderController extends MainController {
     }
 
     @GetMapping("/all-orders-for-sub/{subName}")
+    @PreAuthorize("hasAnyRole('EXPERT','ADMIN')")
     public List<CustomerOrderDto> findAllBySubService(@PathVariable String subName) {
         log.info("*** Find All Orders For Sub Service: {} ***", subName);
         List<CustomerOrderDto> customerOrderDtos = OrderMapper.INSTANCE
@@ -54,6 +57,7 @@ public class CustomerOrderController extends MainController {
     }
 
     @GetMapping("/all-offers-for-order")
+    @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN')")
     public List<ExpertOfferDto> getAllOffersForOrder(@RequestParam @Min(1) Integer orderId) {
         log.info("*** Find All Offers For Order: {} ***", orderId);
         List<ExpertOfferDto> expertOfferDtos = OfferMapper.INSTANCE.convertOfferList
@@ -63,6 +67,7 @@ public class CustomerOrderController extends MainController {
     }
 
     @GetMapping("/all-offers-for-order-sort")
+    @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN')")
     public List<ExpertOfferDto> getAllOffersForOrder(@RequestParam @Min(1) Integer orderId, @RequestParam String sortBy) {
         log.info("*** Find All Offers For Order {}, Sorted By {} ***", orderId, sortBy);
         Comparator<ExpertOffer> comparator;
@@ -79,6 +84,7 @@ public class CustomerOrderController extends MainController {
     }
 
     @GetMapping("/find-order")
+    @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN','EXPERT')")
     public CustomerOrderDto findOrder(@RequestParam @Min(1) Integer orderId) {
         log.info("*** Find Order: {} ***", orderId);
         CustomerOrderDto customerOrderDto = OrderMapper.INSTANCE.convertOrder(customerOrderService.findById(orderId).orElseThrow(
@@ -88,7 +94,7 @@ public class CustomerOrderController extends MainController {
         return customerOrderDto;
     }
 
-    @GetMapping("/find-accepted-order")
+    @GetMapping("/find-accepted-order") //TODO REMOVE
     public AcceptedOrderDto findAcceptedOrder(@RequestParam @Min(1) Integer orderId) {
         log.info("*** Find Accepted Order: {} ***", orderId);
         AcceptedOrderDto acceptedOrderDto = OrderMapper.INSTANCE.convertAcceptedOrder(customerOrderService.findById(orderId).orElseThrow(
@@ -99,7 +105,8 @@ public class CustomerOrderController extends MainController {
     }
 
     @CrossOrigin
-    @PostMapping("/pay_online")
+    @PostMapping("/pay-online")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public String payOnline(@Valid @ModelAttribute PaymentDto paymentDto, HttpServletRequest request) {
         log.info("*** Pay Online For: {} ***", paymentDto);
         try {
@@ -121,6 +128,7 @@ public class CustomerOrderController extends MainController {
     }
 
     @GetMapping("/pay-credit")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public String payFromCredit(@RequestParam @Min(1) Integer orderId) {
         log.info("*** Pay Online For: {} ***", orderId);
         customerOrderService.pay(orderId, PaymentType.CREDIT);
@@ -129,7 +137,8 @@ public class CustomerOrderController extends MainController {
     }
 
     @PostMapping("/add-review")
-    public String addReview(@RequestBody ReviewDto reviewDto) {
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public String addReview(@Valid @RequestBody ReviewDto reviewDto) {
         log.info("*** Add Review For Order: {} ,Review: {} ***", reviewDto.getOrderId(), reviewDto);
         customerOrderService.addReview(ReviewMapper.INSTANCE.convertReview(reviewDto));
         log.info("*** Review Added");

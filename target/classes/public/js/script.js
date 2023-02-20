@@ -15,7 +15,7 @@ $("#submit").on('click', function (e) {
 
     $.ajax({
         type: "POST",
-        url: "http://localhost:8080/order/pay_online",
+        url: "http://localhost:8080/order/pay-online",
         data: form,
         processData: false,
         contentType: false,

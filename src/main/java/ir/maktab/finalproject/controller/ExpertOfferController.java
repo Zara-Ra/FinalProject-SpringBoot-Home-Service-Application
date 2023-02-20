@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +26,7 @@ public class ExpertOfferController {
     }
 
     @PostMapping("/submit-offer")
+    @PreAuthorize("hasRole('EXPERT')")
     public String submitOffer(@Valid @RequestBody ExpertOfferDto expertOfferDto) {
         log.info("*** Submit Offer: {} ***", expertOfferDto);
         ExpertOffer expertOffer = expertOfferService.submitOffer(expertOfferDto.getOrderId()
@@ -34,6 +36,7 @@ public class ExpertOfferController {
     }
 
     @GetMapping("/chose-offer")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public String choseOffer(@RequestParam @Min(1) Integer orderId, @RequestParam @Min(1) Integer offerId) {
         log.info("*** Chose Offer {} For Order {} ***", offerId, orderId);
         expertOfferService.choseOffer(orderId, offerId);
@@ -42,6 +45,7 @@ public class ExpertOfferController {
     }
 
     @GetMapping("/expert-arrived")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public String expertArrived(@RequestParam @Min(1) Integer orderId, @RequestParam @Min(1) Integer offerId) {
         log.info("*** Set Expert Status ARRIVED, Order {}, Offer {} ***", orderId, offerId);
         expertOfferService.expertArrived(orderId, offerId);
@@ -50,6 +54,7 @@ public class ExpertOfferController {
     }
 
     @GetMapping("/expert-done")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public String expertDone(@RequestParam @Min(1) Integer orderId, @RequestParam @Min(1) Integer offerId) {
         log.info("*** Set Expert Done, Order {}, Offer {} ***", orderId, offerId);
         expertOfferService.expertDone(orderId, offerId);
@@ -57,8 +62,9 @@ public class ExpertOfferController {
         return "Expert Done";
     }
 
-    @GetMapping("/experts-orders/{expertEmail}")
-    public List<ExpertOfferDto> findAcceptedOrdersFor(@PathVariable @Email String expertEmail) {
+    @GetMapping("/experts-orders")
+    @PreAuthorize("hasRole('EXPERT')")
+    public List<ExpertOfferDto> findAcceptedOrdersFor(@RequestParam @Email String expertEmail) {
         log.info("*** Find Order FOr Expert: {} ***", expertEmail);
         List<ExpertOfferDto> expertOfferDtos = OfferMapper.INSTANCE
                 .convertOfferList(expertOfferService.findAcceptedOffersFor(expertEmail));

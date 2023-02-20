@@ -45,8 +45,10 @@ public class SubServiceService extends MainService implements IService<SubServic
     public SubService editSubService(SubService subService) {
         SubService foundSubService = subServiceRepository.findBySubName(subService.getSubName())
                 .orElseThrow(() -> new SubServiceException(messageSource.getMessage("errors.message.sub_not_exists")));
-        foundSubService.setBasePrice(subService.getBasePrice());
-        foundSubService.setDescription(subService.getDescription());
+        if (subService.getBasePrice() != 0)
+            foundSubService.setBasePrice(subService.getBasePrice());
+        if (subService.getDescription() != null && subService.getDescription().length() != 0)
+            foundSubService.setDescription(subService.getDescription());
         return subServiceRepository.save(foundSubService);
     }
 

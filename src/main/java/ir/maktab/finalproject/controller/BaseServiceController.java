@@ -7,6 +7,7 @@ import ir.maktab.finalproject.service.exception.BaseServiceException;
 import ir.maktab.finalproject.service.impl.BaseServiceService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class BaseServiceController extends MainController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasRole('ADMIN')")
     public String addBaseService(@Valid @RequestBody BaseServiceDto baseServiceDto) {
         log.info("*** Add New Base Service: {} ***", baseServiceDto);
         BaseService baseService = baseServiceService.add(ServiceMapper.INSTANCE.convertBaseService(baseServiceDto));
@@ -30,18 +32,19 @@ public class BaseServiceController extends MainController {
         return "Base Service Added";
     }
 
-    @DeleteMapping("/delete/{name}")
-    public String deleteBaseService(@PathVariable String name) {
-        log.info("*** Delete Base Service: {} ***", name);
-        baseServiceService.delete(name);
-        log.info("*** Base Service {} Deleted Successfully ***", name);
+    @DeleteMapping("/delete")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String deleteBaseService(@RequestParam String baseServiceName) {
+        log.info("*** Delete Base Service: {} ***", baseServiceName);
+        baseServiceService.delete(baseServiceName);
+        log.info("*** Base Service {} Deleted Successfully ***", baseServiceName);
         return "Base Service Deleted";
     }
 
-    @GetMapping("/find/{name}")
-    public BaseServiceDto findBaseService(@PathVariable String name) {
-        log.info("*** Find Base Service: {} ***", name);
-        BaseServiceDto baseServiceDto = ServiceMapper.INSTANCE.convertBaseService(baseServiceService.findByName(name)
+    @GetMapping("/find")
+    public BaseServiceDto findBaseService(@RequestParam String baseServiceName) {
+        log.info("*** Find Base Service: {} ***", baseServiceName);
+        BaseServiceDto baseServiceDto = ServiceMapper.INSTANCE.convertBaseService(baseServiceService.findByName(baseServiceName)
                 .orElseThrow(() -> new BaseServiceException(messageSource.getMessage("errors.message.base_not_exists"))));
         log.info("*** Found Base Service: {} ***", baseServiceDto);
         return baseServiceDto;

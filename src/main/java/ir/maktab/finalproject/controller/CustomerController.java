@@ -23,7 +23,6 @@ public class CustomerController {
     }
 
     @PostMapping("/register")
-    //@PermitAll
     public String register(@Valid @RequestBody CustomerDto customerDto) {
         log.info("*** Add New Customer: {} ***", customerDto);
         Customer customer = customerService.register(UserMapper.INSTANCE.convertCustomer(customerDto));
@@ -41,6 +40,7 @@ public class CustomerController {
     }
 
     @PostMapping("/increase-credit")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public String increaseCredit(@Valid @RequestBody CreditDto creditDto) {
         log.info("*** Increase Credit for: {} ***", creditDto);
         customerService.increaseCredit(creditDto.getCustomerEmail(), creditDto.getAmount());
@@ -49,6 +49,7 @@ public class CustomerController {
     }
 
     @GetMapping("/filter")
+    @PreAuthorize("hasRole('ADMIN')")
     public Iterable<CustomerDto> search(@RequestParam String search) {
         log.info("*** Search for: {} ***", search);
         Iterable<CustomerDto> customerDtos = UserMapper.INSTANCE.convertCustomerIterator(customerService.findAll(search));
