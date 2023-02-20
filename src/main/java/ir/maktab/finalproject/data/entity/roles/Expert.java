@@ -23,6 +23,7 @@ public class Expert extends User {
     @Enumerated(value = EnumType.STRING)
     private ExpertStatus status;
 
+    @ToString.Exclude
     @Lob
     private byte[] photo;
 
@@ -41,7 +42,8 @@ public class Expert extends User {
 
     @Override
     public boolean isEnabled() {
-        return !status.equals(ExpertStatus.SUSPEND);
+        return true;
+                //!status.equals(ExpertStatus.SUSPEND);
     }
 
     @Override

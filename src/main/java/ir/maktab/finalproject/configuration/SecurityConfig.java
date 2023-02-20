@@ -39,10 +39,11 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers( "/expert/register").permitAll()
                 .requestMatchers( "/customer/register").permitAll()
+                .requestMatchers( "/expert/register").permitAll()
                 .anyRequest().authenticated()
                 .and()
+                //.formLogin();
                 .httpBasic();
         return http.build();
     }
@@ -55,6 +56,7 @@ public class SecurityConfig {
                         .orElseThrow(() -> new UsernameNotFoundException(String
                                 .format("%s Not Found", email))))
                 .passwordEncoder(passwordEncoder).and()
+
                 .userDetailsService(email -> customerRepository
                         .findByEmail(email)
                         .orElseThrow(() -> new UsernameNotFoundException(String

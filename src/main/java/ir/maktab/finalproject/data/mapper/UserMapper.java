@@ -9,6 +9,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,16 +23,24 @@ public interface UserMapper {
 
     Customer convertCustomer(CustomerDto customerDto);
 
-    //@Mapping(source = "photoPath", target = "photo", qualifiedByName = "pathToBytes")
+    @Mapping(source = "photo", target = "photo", qualifiedByName = "FileToBytes")
     Expert convertExpert(ExpertDto expertDto);
 
-    @Named("pathToBytes")
-    static byte[] convertPathToBytes(String filePath) {
+    @Named("FileToBytes")
+    static byte[] map(MultipartFile filePath) {
         try {
-            return Files.readAllBytes(Path.of(filePath));
-        } catch (NullPointerException | IOException e) {
-            throw new PhotoValidationException("Photo Not Found");
+            return filePath.getBytes();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    @Mapping(source = "photo", target = "photo", qualifiedByName = "ByteToNull")
+    ExpertDto convertExpert(Expert expert);
+
+    @Named("ByteToNull")
+    static MultipartFile map(byte[] file){
+        return null;
     }
 
     List<ExpertDto> convertExpertList(List<Expert> allExpert);

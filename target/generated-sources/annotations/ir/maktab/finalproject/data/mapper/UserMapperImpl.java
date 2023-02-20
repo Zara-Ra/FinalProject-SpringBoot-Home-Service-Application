@@ -5,13 +5,12 @@ import ir.maktab.finalproject.data.dto.ExpertDto;
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-02-19T11:19:33+0330",
+    date = "2023-02-20T07:33:52+0330",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 17.0.4 (Oracle Corporation)"
 )
 public class UserMapperImpl implements UserMapper {
@@ -41,17 +40,32 @@ public class UserMapperImpl implements UserMapper {
 
         Expert.ExpertBuilder<?, ?> expert = Expert.builder();
 
+        expert.photo( UserMapper.map( expertDto.getPhoto() ) );
         expert.id( expertDto.getId() );
         expert.email( expertDto.getEmail() );
         expert.password( expertDto.getPassword() );
         expert.firstName( expertDto.getFirstName() );
         expert.lastName( expertDto.getLastName() );
-        byte[] photo = expertDto.getPhoto();
-        if ( photo != null ) {
-            expert.photo( Arrays.copyOf( photo, photo.length ) );
-        }
 
         return expert.build();
+    }
+
+    @Override
+    public ExpertDto convertExpert(Expert expert) {
+        if ( expert == null ) {
+            return null;
+        }
+
+        ExpertDto expertDto = new ExpertDto();
+
+        expertDto.setPhoto( UserMapper.map( expert.getPhoto() ) );
+        expertDto.setId( expert.getId() );
+        expertDto.setEmail( expert.getEmail() );
+        expertDto.setPassword( expert.getPassword() );
+        expertDto.setFirstName( expert.getFirstName() );
+        expertDto.setLastName( expert.getLastName() );
+
+        return expertDto;
     }
 
     @Override
@@ -62,7 +76,7 @@ public class UserMapperImpl implements UserMapper {
 
         List<ExpertDto> list = new ArrayList<ExpertDto>( allExpert.size() );
         for ( Expert expert : allExpert ) {
-            list.add( expertToExpertDto( expert ) );
+            list.add( convertExpert( expert ) );
         }
 
         return list;
@@ -76,7 +90,7 @@ public class UserMapperImpl implements UserMapper {
 
         ArrayList<ExpertDto> iterable = new ArrayList<ExpertDto>();
         for ( Expert expert : all ) {
-            iterable.add( expertToExpertDto( expert ) );
+            iterable.add( convertExpert( expert ) );
         }
 
         return iterable;
@@ -94,26 +108,6 @@ public class UserMapperImpl implements UserMapper {
         }
 
         return iterable;
-    }
-
-    protected ExpertDto expertToExpertDto(Expert expert) {
-        if ( expert == null ) {
-            return null;
-        }
-
-        ExpertDto expertDto = new ExpertDto();
-
-        expertDto.setId( expert.getId() );
-        expertDto.setEmail( expert.getEmail() );
-        expertDto.setPassword( expert.getPassword() );
-        expertDto.setFirstName( expert.getFirstName() );
-        expertDto.setLastName( expert.getLastName() );
-        byte[] photo = expert.getPhoto();
-        if ( photo != null ) {
-            expertDto.setPhoto( Arrays.copyOf( photo, photo.length ) );
-        }
-
-        return expertDto;
     }
 
     protected CustomerDto customerToCustomerDto(Customer customer) {

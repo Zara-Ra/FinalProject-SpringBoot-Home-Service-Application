@@ -14,12 +14,12 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
 @Slf4j
 @RequestMapping("/expert")
@@ -31,12 +31,12 @@ public class ExpertController {
         this.expertService = expertService;
     }
 
-    @PostMapping("/register")
-    //@PermitAll
-    public String register(@Valid @RequestBody ExpertDto expertDto) {
+    @PostMapping(value="/register",consumes = { MediaType.MULTIPART_FORM_DATA_VALUE})
+    public String register(@ModelAttribute ExpertDto expertDto) {
         log.info("*** Add New Expert: {} ***", expertDto);
         Expert expert = expertService.register(UserMapper.INSTANCE.convertExpert(expertDto));
         log.info("*** New Expert Added : {} ***", expert);
+        System.out.println(expertDto);
         return "Expert Registered";
     }
 

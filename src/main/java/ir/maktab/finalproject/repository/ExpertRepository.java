@@ -11,11 +11,13 @@ import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;
 import org.springframework.data.querydsl.binding.SingleValueBinding;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Transactional
 public interface ExpertRepository extends JpaRepository<Expert, Integer>,
         QuerydslPredicateExecutor<Expert>, QuerydslBinderCustomizer<QExpert> {
     Optional<Expert> findByEmail(String email);

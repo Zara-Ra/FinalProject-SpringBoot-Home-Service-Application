@@ -72,7 +72,7 @@ public class ExpertService extends MainService implements IRolesService<Expert> 
             throw new PasswordException(messageSource.getMessage("errors.message.incorrect_old_password"));
 
         Validation.validatePassword(accountDto.getNewPassword());
-        findExpert.setPassword(accountDto.getNewPassword());
+        findExpert.setPassword(passwordEncoder.encode(accountDto.getNewPassword()));
         return expertRepository.save(findExpert);
     }
 

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -32,5 +33,5 @@ public class ExpertDto {
     @Pattern(regexp = "^[a-zA-Z ]{2,}")
     private String lastName;
 
-    private byte[] photo;
+    private MultipartFile photo;
 }

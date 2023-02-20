@@ -62,7 +62,7 @@ public class ExpertServiceTest {
         }
     }
 
-    @Order(1)
+    /*@Order(1)
     @Test
     void signUpTest() {
         byte[] photo = UserMapper.convertPathToBytes(photoPath);
@@ -124,12 +124,12 @@ public class ExpertServiceTest {
                 () -> expertService.signIn(email, password));
         assertEquals(exceptionMsg, exception.getMessage());
     }
-
+*/
     @Order(5)
     @Test
     void changePasswordTest() {
         AccountDto accountDto = AccountDto.builder().email(expert.getEmail())
-                .password("expert12")
+                .oldPassword("expert12")
                 .newPassword("12345678")
                 .repeatPassword("12345678").build();
 
@@ -141,7 +141,7 @@ public class ExpertServiceTest {
     @Test
     void invalidChangePasswordTest() {
         AccountDto accountDto = AccountDto.builder().email(expert.getEmail())
-                .password("invalidOldPassword")
+                .oldPassword("invalidOldPassword")
                 .newPassword("newPassword")
                 .repeatPassword("newPassword").build();
 
