@@ -35,6 +35,12 @@ public class GlobalExceptionHandler {
         return badRequestHandler(e);
     }
 
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> badRequestExceptionHandler(IllegalArgumentException e) {
+        return badRequestHandler(e);
+    }
+
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<?> badRequestExceptionHandler(ValidationException e) {
         return badRequestHandler(e);

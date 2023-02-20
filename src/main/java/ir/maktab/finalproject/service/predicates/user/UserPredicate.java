@@ -40,10 +40,6 @@ public class UserPredicate {
                 return statusBooleanExperssion();
             }
         }
-        /*StringPath path = entityPath.getString(criteria.getKey());
-        if (criteria.getOperation().equalsIgnoreCase(":")) {
-            return path.eq(criteria.getValue().toString());
-        }*/
         return null;
     }
 
