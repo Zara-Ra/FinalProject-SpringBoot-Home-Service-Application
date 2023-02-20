@@ -21,8 +21,9 @@ public class ReviewDto {
 
     @Min(1)
     @Max(5)
-    @NotNull
     private int score;
 
     private String comment;
+
+    private String customerEmail;
 }

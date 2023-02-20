@@ -1,5 +1,6 @@
 package ir.maktab.finalproject.service.impl;
 
+import ir.maktab.finalproject.data.dto.PaymentUserDto;
 import ir.maktab.finalproject.data.entity.CustomerOrder;
 import ir.maktab.finalproject.data.entity.ExpertOffer;
 import ir.maktab.finalproject.data.entity.Review;
@@ -94,8 +95,8 @@ public class CustomerOrderService extends MainService {
     }
 
     @Transactional
-    public void pay(Integer orderId, PaymentType paymentType) {
-        CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
+    public void pay(PaymentUserDto paymentDto) {
+        CustomerOrder customerOrder = customerOrderRepository.findById(paymentDto.getOrderId())
                 .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.order_not_exists")));
 
         if (!customerOrder.getStatus().equals(OrderStatus.DONE))
@@ -103,7 +104,7 @@ public class CustomerOrderService extends MainService {
 
         double payAmount = customerOrder.getAcceptedExpertOffer().getPrice();
 
-        if (paymentType.equals(PaymentType.CREDIT)) {
+        if (paymentDto.getPaymentType().equals(PaymentType.CREDIT)) {
             Customer customer = customerOrder.getCustomer();
             customerService.pay(customer, payAmount);
         }
@@ -119,6 +120,9 @@ public class CustomerOrderService extends MainService {
     public void addReview(Review review) {
         CustomerOrder customerOrder = customerOrderRepository.findById(review.getCustomerOrder().getId())
                 .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.order_not_exists")));
+
+        if(!review.getCustomerOrder().getCustomer().getEmail().equals(customerOrder.getCustomer().getEmail()))
+            throw new OrderRequirementException(messageSource.getMessage("errors.message.order_customer_mismatch"));
 
         if (!customerOrder.getStatus().equals(OrderStatus.PAYED))
             throw new OrderRequirementException(messageSource.getMessage("errors.message.order_not_payed"));

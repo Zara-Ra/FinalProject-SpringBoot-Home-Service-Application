@@ -12,8 +12,10 @@ public interface ReviewMapper {
     ReviewMapper INSTANCE = Mappers.getMapper(ReviewMapper.class);
 
     @Mapping(source = "orderId", target = "customerOrder.id")
+    @Mapping(source = "customerEmail", target = "customerOrder.customer.email")
     Review convertReview(ReviewDto reviewDto);
 
     @Mapping(source = "customerOrder.id", target = "orderId")
+    @Mapping(target = "customerEmail", source = "customerOrder.customer.email")
     ReviewDto convertReview(Review review);
 }

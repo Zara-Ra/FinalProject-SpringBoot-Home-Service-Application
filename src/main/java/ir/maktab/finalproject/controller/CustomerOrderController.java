@@ -20,6 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
@@ -39,8 +40,9 @@ public class CustomerOrderController extends MainController {
 
     @PostMapping("/request-order")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public String requestOrder(@Valid @RequestBody CustomerOrderDto customerOrderDto) {
+    public String requestOrder(@Valid @RequestBody CustomerOrderDto customerOrderDto, Principal principal) {
         log.info("*** Request Order for: {} ***", customerOrderDto);
+        customerOrderDto.setCustomerEmail(principal.getName());
         CustomerOrder customerOrder = customerOrderService.requestOrder(OrderMapper.INSTANCE.convertOrder(customerOrderDto));
         log.info("*** Order Saved: {} ***", customerOrder);
         return "Order Has Been Saved";
@@ -109,6 +111,11 @@ public class CustomerOrderController extends MainController {
     @PreAuthorize("hasRole('CUSTOMER')")
     public String payOnline(@Valid @ModelAttribute PaymentDto paymentDto, HttpServletRequest request) {
         log.info("*** Pay Online For: {} ***", paymentDto);
+        PaymentUserDto paymentUserDto = new PaymentUserDto();
+        paymentUserDto.setCustomerEmail(request.getUserPrincipal().getName());
+        paymentUserDto.setOrderId(paymentDto.getOrderId());
+        paymentUserDto.setPaymentType(PaymentType.ONLINE);
+
         try {
             Date expirationDate = new SimpleDateFormat("yyyy-MM").parse(paymentDto.getExpirationDate());
             if (expirationDate.before(new Date())) {
@@ -122,24 +129,27 @@ public class CustomerOrderController extends MainController {
         if (!paymentDto.getCaptcha().equals(request.getSession().getAttribute("captcha")))
             throw new ValidationException(messageSource.getMessage("errors.message.invalid_captcha"));
         //call bank
-        customerOrderService.pay(paymentDto.getOrderId(), PaymentType.ONLINE);
+        customerOrderService.pay(paymentUserDto);
         log.info("*** Paid Online for: {} ***", paymentDto.getOrderId());
         return "Order Payed Online";
     }
 
     @GetMapping("/pay-credit")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public String payFromCredit(@RequestParam @Min(1) Integer orderId) {
-        log.info("*** Pay Online For: {} ***", orderId);
-        customerOrderService.pay(orderId, PaymentType.CREDIT);
-        log.info("*** Paid From Credit for: {} ***", orderId);
+    public String payFromCredit(@RequestBody PaymentUserDto paymentUserDto,Principal principal) {
+        log.info("*** Pay Online For: {} ***", paymentUserDto.getOrderId());
+        paymentUserDto.setCustomerEmail(principal.getName());
+        paymentUserDto.setPaymentType(PaymentType.CREDIT);
+        customerOrderService.pay(paymentUserDto);
+        log.info("*** Paid From Credit for: {} ***", paymentUserDto.getOrderId());
         return "Order Payed By Credit";
     }
 
     @PostMapping("/add-review")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public String addReview(@Valid @RequestBody ReviewDto reviewDto) {
+    public String addReview(@Valid @RequestBody ReviewDto reviewDto,Principal principal) {
         log.info("*** Add Review For Order: {} ,Review: {} ***", reviewDto.getOrderId(), reviewDto);
+        reviewDto.setCustomerEmail(principal.getName());
         customerOrderService.addReview(ReviewMapper.INSTANCE.convertReview(reviewDto));
         log.info("*** Review Added");
         return "Review Added";

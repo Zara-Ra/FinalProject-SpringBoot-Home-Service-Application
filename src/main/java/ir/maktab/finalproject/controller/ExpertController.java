@@ -19,6 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 @RestController
 @Slf4j
@@ -42,8 +43,9 @@ public class ExpertController {
 
     @PostMapping("/change-password")
     @PreAuthorize("hasRole('EXPERT')")
-    public String changePassword(@Valid @RequestBody AccountDto accountDto) {
+    public String changePassword(@Valid @RequestBody AccountDto accountDto, Principal principal) {
         log.info("*** Change Password for: {} ***", accountDto);
+        accountDto.setEmail(principal.getName());
         Expert expert = expertService.changePassword(accountDto);
         log.info("*** Password Changed for: {} ***", expert);
         return "Password Changed For " + expert.getFirstName() + " " + expert.getLastName();
@@ -88,8 +90,9 @@ public class ExpertController {
 
     @PostMapping("/save-photo")
     @PreAuthorize("hasAnyRole('ADMIN','EXPERT')")
-    public String savePhoto(@Valid @RequestBody PhotoInfoDto photoInfoDto) {
+    public String savePhoto(@Valid @RequestBody PhotoInfoDto photoInfoDto,Principal principal) {
         log.info("*** Save Expert Photo: {} ***", photoInfoDto);
+        photoInfoDto.setOwnerEmail(principal.getName());
         expertService.getExpertPhoto(photoInfoDto.getOwnerEmail(), photoInfoDto.getSavePath());
         log.info("*** Expert Photo Saved: {} ***", photoInfoDto);
         return "Photo Saved";
@@ -97,8 +100,9 @@ public class ExpertController {
 
     @GetMapping("/order-score")
     @PreAuthorize("hasAnyRole('ADMIN','EXPERT')")
-    public ReviewDto orderScore(@RequestParam Integer orderId, @RequestParam String expertEmail) {
-        log.info("*** Show Score For Expert: {}, Order: {} ***", expertEmail, orderId);
+    public ReviewDto orderScore(@RequestParam Integer orderId, Principal principal) {
+        log.info("*** Show Score For Order: {} ***", orderId);
+        String expertEmail = principal.getName();
         ReviewDto reviewDto = ReviewMapper.INSTANCE.convertReview(expertService.getOrderScore(orderId, expertEmail));
         log.info("*** Score For Expert {}, Order: {} is {} ***", expertEmail, orderId, reviewDto);
         return reviewDto;

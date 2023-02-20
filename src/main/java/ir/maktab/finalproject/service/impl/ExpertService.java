@@ -159,7 +159,7 @@ public class ExpertService extends MainService implements IRolesService<Expert> 
                 .filter(r -> r.getCustomerOrder().getId().equals(orderId))
                 .findFirst()
                 .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.no_review")));
-        review.setComment("");
+        review.setComment(null);
         return review;
     }
 

@@ -35,6 +35,7 @@ ir\maktab\finalproject\repository\SubServiceRepository.class
 ir\maktab\finalproject\data\mapper\UserMapperImpl.class
 ir\maktab\finalproject\data\entity\roles\Customer$CustomerBuilderImpl.class
 ir\maktab\finalproject\util\captcha\CaptchaUtil.class
+ir\maktab\finalproject\data\dto\PaymentUserDto.class
 ir\maktab\finalproject\data\entity\roles\Account$AccountBuilder.class
 ir\maktab\finalproject\service\exception\NotAllowedException.class
 ir\maktab\finalproject\data\entity\roles\QCustomer.class

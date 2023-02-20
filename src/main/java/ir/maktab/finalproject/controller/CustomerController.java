@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @Slf4j
 @RequestMapping("/customer")
@@ -32,8 +34,9 @@ public class CustomerController {
 
     @PostMapping("/change-password")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public String changePassword(@Valid @RequestBody AccountDto accountDto) {
+    public String changePassword(@Valid @RequestBody AccountDto accountDto, Principal principal) {
         log.info("*** Change Password for: {} ***", accountDto);
+        accountDto.setEmail(principal.getName());
         Customer customer = customerService.changePassword(accountDto);
         log.info("*** Password Changed for: {} ***", customer);
         return "Password Changed For " + customer.getFirstName() + " " + customer.getLastName();
@@ -41,8 +44,9 @@ public class CustomerController {
 
     @PostMapping("/increase-credit")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public String increaseCredit(@Valid @RequestBody CreditDto creditDto) {
+    public String increaseCredit(@Valid @RequestBody CreditDto creditDto,Principal principal) {
         log.info("*** Increase Credit for: {} ***", creditDto);
+        creditDto.setCustomerEmail(principal.getName());
         customerService.increaseCredit(creditDto.getCustomerEmail(), creditDto.getAmount());
         log.info("*** Credit Increased for: {} ***", creditDto);
         return "Credit Increased ";

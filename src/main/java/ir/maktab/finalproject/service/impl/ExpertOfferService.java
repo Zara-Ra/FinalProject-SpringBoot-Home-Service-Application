@@ -83,14 +83,19 @@ public class ExpertOfferService extends MainService {
         ExpertOffer expertOffer = expertOfferRepository.findById(offerId)
                 .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.offer_not_exists")));
 
-        if (customerOrder.getStatus().equals(OrderStatus.WAITING_FOR_EXPERT_ARRIVAL)
+        /*if (customerOrder.getStatus().equals(OrderStatus.WAITING_FOR_EXPERT_ARRIVAL)
                 || customerOrder.getStatus().equals(OrderStatus.STARTED)
                 || customerOrder.getStatus().equals(OrderStatus.DONE)
                 || customerOrder.getStatus().equals(OrderStatus.PAYED))
             throw new OrderRequirementException(messageSource.getMessage("errors.message.order_mismatch"));
+*/
+        if (!(customerOrder.getStatus().equals(OrderStatus.WAITING_FOR_EXPERT_OFFER)
+                || customerOrder.getStatus().equals(OrderStatus.WAITING_FOR_EXPERT_SELECTION)))
+            throw new OrderRequirementException(messageSource.getMessage("errors.message.order_mismatch"));
 
         if (!customerOrder.getExpertOfferList().contains(expertOffer))
             throw new NotExistsException(messageSource.getMessage("errors.message.offer_order_mismatch"));
+
         expertOffer.setIsChosen(true);
         customerOrder.setStatus(OrderStatus.WAITING_FOR_EXPERT_ARRIVAL);
         customerOrder.setAcceptedExpertOffer(expertOffer);
