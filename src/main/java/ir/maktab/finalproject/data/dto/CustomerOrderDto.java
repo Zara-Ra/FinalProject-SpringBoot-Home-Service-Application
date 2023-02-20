@@ -15,7 +15,6 @@ public class CustomerOrderDto {
 
     private Integer id;
 
-    @NotNull
     @Email
     private String customerEmail;
 

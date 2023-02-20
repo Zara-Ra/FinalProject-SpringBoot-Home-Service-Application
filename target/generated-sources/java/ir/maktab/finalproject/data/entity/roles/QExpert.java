@@ -52,7 +52,7 @@ public class QExpert extends EntityPathBase<Expert> {
     public final ListPath<ir.maktab.finalproject.data.entity.Review, ir.maktab.finalproject.data.entity.QReview> reviewList = this.<ir.maktab.finalproject.data.entity.Review, ir.maktab.finalproject.data.entity.QReview>createList("reviewList", ir.maktab.finalproject.data.entity.Review.class, ir.maktab.finalproject.data.entity.QReview.class, PathInits.DIRECT2);
 
     //inherited
-    public final EnumPath<ir.maktab.finalproject.data.entity.roles.enums.Role> role;
+    public final EnumPath<ir.maktab.finalproject.data.enums.Role> role;
 
     public final EnumPath<ir.maktab.finalproject.data.enums.ExpertStatus> status = createEnum("status", ir.maktab.finalproject.data.enums.ExpertStatus.class);
 

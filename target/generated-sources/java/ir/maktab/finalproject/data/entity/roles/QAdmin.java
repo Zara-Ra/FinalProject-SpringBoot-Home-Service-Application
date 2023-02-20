@@ -33,7 +33,7 @@ public class QAdmin extends EntityPathBase<Admin> {
     public final StringPath password = _super.password;
 
     //inherited
-    public final EnumPath<ir.maktab.finalproject.data.entity.roles.enums.Role> role = _super.role;
+    public final EnumPath<ir.maktab.finalproject.data.enums.Role> role = _super.role;
 
     public QAdmin(String variable) {
         super(Admin.class, forVariable(variable));

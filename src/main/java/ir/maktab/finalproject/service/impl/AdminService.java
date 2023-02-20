@@ -1,7 +1,7 @@
 package ir.maktab.finalproject.service.impl;
 
 import ir.maktab.finalproject.data.entity.roles.Admin;
-import ir.maktab.finalproject.data.entity.roles.enums.Role;
+import ir.maktab.finalproject.data.enums.Role;
 import ir.maktab.finalproject.repository.AdminRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +24,7 @@ public class AdminService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @PostConstruct
+    //@PostConstruct
     public Admin assignAdmin() {
         Admin admin = new Admin();
         admin.setEmail(email);

@@ -2,8 +2,12 @@ package ir.maktab.finalproject.service.predicates.user;
 
 import com.querydsl.core.types.dsl.*;
 import ir.maktab.finalproject.data.entity.QCredit;
+import ir.maktab.finalproject.data.entity.roles.Customer;
+import ir.maktab.finalproject.data.entity.roles.QCustomer;
 import ir.maktab.finalproject.data.entity.roles.QExpert;
 import ir.maktab.finalproject.data.entity.roles.User;
+import ir.maktab.finalproject.data.enums.ExpertStatus;
+import ir.maktab.finalproject.data.enums.Role;
 import ir.maktab.finalproject.util.exception.ValidationException;
 import ir.maktab.finalproject.util.search.SearchCriteria;
 
@@ -20,7 +24,30 @@ public class UserPredicate {
 
     public BooleanExpression getPredicate(Class classType, String className) {
         PathBuilder<User> entityPath = new PathBuilder<>(classType, className);
+        if (className.equals("customer")) {
+            return userExpressions(entityPath);
+        } else if (className.equals("expert")) {
+            BooleanExpression booleanExpression = userExpressions(entityPath);
+            if (booleanExpression != null)
+                return booleanExpression;
+            if (criteria.getKey().equals("averageScore")) {
+                return intBooleanExpression(entityPath);
+            }
+            if (criteria.getKey().equals("subService")) {
+                return subServiceBooleanExpression();
+            }
+            if (criteria.getKey().equals("status")) {
+                return statusBooleanExperssion();
+            }
+        }
+        /*StringPath path = entityPath.getString(criteria.getKey());
+        if (criteria.getOperation().equalsIgnoreCase(":")) {
+            return path.eq(criteria.getValue().toString());
+        }*/
+        return null;
+    }
 
+    private BooleanExpression userExpressions(PathBuilder<User> entityPath) {
         if (criteria.getKey().equals("registerDate")) {
             return dateBooleanExpression(entityPath);
         }
@@ -30,17 +57,28 @@ public class UserPredicate {
         if (criteria.getKey().equals("credit")) {
             return creditBooleanExpression();
         }
-        if (criteria.getKey().equals("averageScore")) {
-            return intBooleanExpression(entityPath);
-        }
-        if (criteria.getKey().equals("subService")) {
-            return subServiceBooleanExpression();
-        }
-        StringPath path = entityPath.getString(criteria.getKey());
-        if (criteria.getOperation().equalsIgnoreCase(":")) {
-            return path.eq(criteria.getValue().toString());
+        if (criteria.getKey().equals("role")) {
+            if (entityPath.getType().equals(Customer.class))
+                return customerRoleExpression();
+            else if (entityPath.getType().equals(Customer.class))
+                return expertRoleExpression();
         }
         return null;
+    }
+
+    private BooleanExpression statusBooleanExperssion() {
+        EnumPath<ExpertStatus> path = QExpert.expert.status;
+        return path.eq(ExpertStatus.valueOf(criteria.getValue().toString()));
+    }
+
+    private BooleanExpression customerRoleExpression() {
+        EnumPath<Role> path = QCustomer.customer.role;
+        return path.eq(Role.valueOf(criteria.getValue().toString()));
+    }
+
+    private BooleanExpression expertRoleExpression() {
+        EnumPath<Role> path = QExpert.expert.role;
+        return path.eq(Role.valueOf(criteria.getValue().toString()));
     }
 
     private BooleanExpression subServiceBooleanExpression() {

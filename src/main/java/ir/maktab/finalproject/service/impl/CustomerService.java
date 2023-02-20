@@ -4,7 +4,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import ir.maktab.finalproject.data.dto.AccountDto;
 import ir.maktab.finalproject.data.entity.Credit;
 import ir.maktab.finalproject.data.entity.roles.Customer;
-import ir.maktab.finalproject.data.entity.roles.enums.Role;
+import ir.maktab.finalproject.data.enums.Role;
 import ir.maktab.finalproject.repository.CustomerRepository;
 import ir.maktab.finalproject.service.IRolesService;
 import ir.maktab.finalproject.service.MainService;
@@ -47,18 +47,6 @@ public class CustomerService extends MainService implements IRolesService<Custom
         }
     }
 
-    /*@Override
-    public Customer signIn(String email, String password) {
-        validateAccount(email, password);
-        Customer foundCustomer = customerRepository.findByEmail(email).orElseThrow(() ->
-                new UserNotFoundException(messageSource.getMessage("errors.message.customer_not_exists")));
-
-        if (!foundCustomer.getPassword().equals(password))
-            throw new UserNotFoundException(messageSource.getMessage("errors.message.invalid_password"));
-
-        return foundCustomer;
-    }
-*/
     @Override
     public Customer changePassword(AccountDto accountDto) {
         if (!accountDto.getNewPassword().equals(accountDto.getRepeatPassword()))
@@ -93,7 +81,7 @@ public class CustomerService extends MainService implements IRolesService<Custom
     public void pay(Customer customer, double payAmount) {
         double creditAmount = customer.getCredit().getAmount();
         if (creditAmount < payAmount)
-            throw new CreditException(messageSource.getMessage("errors.message.insufficient_credit"));
+            throw new CreditException(messageSource.getMessage("errors.message.not_enough_credit"));
         customer.getCredit().setAmount(creditAmount - payAmount);
         customerRepository.save(customer);
     }

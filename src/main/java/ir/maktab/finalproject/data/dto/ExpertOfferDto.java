@@ -20,7 +20,6 @@ public class ExpertOfferDto {
     private Integer orderId;
 
     @Email
-    @NotNull
     private String expertEmail;
 
     @NotNull

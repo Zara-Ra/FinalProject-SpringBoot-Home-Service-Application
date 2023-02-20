@@ -42,7 +42,7 @@ public class QUser extends EntityPathBase<User> {
     public final DatePath<java.util.Date> registerDate = createDate("registerDate", java.util.Date.class);
 
     //inherited
-    public final EnumPath<ir.maktab.finalproject.data.entity.roles.enums.Role> role = _super.role;
+    public final EnumPath<ir.maktab.finalproject.data.enums.Role> role = _super.role;
 
     public QUser(String variable) {
         this(User.class, forVariable(variable), INITS);

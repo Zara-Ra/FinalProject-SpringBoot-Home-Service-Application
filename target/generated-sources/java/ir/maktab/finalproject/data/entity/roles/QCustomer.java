@@ -48,7 +48,7 @@ public class QCustomer extends EntityPathBase<Customer> {
     public final DatePath<java.util.Date> registerDate;
 
     //inherited
-    public final EnumPath<ir.maktab.finalproject.data.entity.roles.enums.Role> role;
+    public final EnumPath<ir.maktab.finalproject.data.enums.Role> role;
 
     public QCustomer(String variable) {
         this(Customer.class, forVariable(variable), INITS);

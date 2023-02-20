@@ -1,6 +1,6 @@
 package ir.maktab.finalproject.data.entity.roles;
 
-import ir.maktab.finalproject.data.entity.roles.enums.Role;
+import ir.maktab.finalproject.data.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

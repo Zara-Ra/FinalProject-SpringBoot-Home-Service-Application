@@ -48,13 +48,13 @@ public class CustomerOrderController extends MainController {
         return "Order Has Been Saved";
     }
 
-    @GetMapping("/all-orders-for-sub/{subName}")
+    @GetMapping("/all-orders-for-sub")
     @PreAuthorize("hasAnyRole('EXPERT','ADMIN')")
-    public List<CustomerOrderDto> findAllBySubService(@PathVariable String subName) {
-        log.info("*** Find All Orders For Sub Service: {} ***", subName);
+    public List<CustomerOrderDto> findAllBySubService(@RequestParam String subServiceName) {
+        log.info("*** Find All Orders For Sub Service: {} ***", subServiceName);
         List<CustomerOrderDto> customerOrderDtos = OrderMapper.INSTANCE
-                .convertOrderList(customerOrderService.findAllBySubServiceAndTwoStatus(subName));
-        log.info("*** All Orders For {} : {}***", subName, customerOrderDtos);
+                .convertOrderList(customerOrderService.findAllBySubServiceAndTwoStatus(subServiceName));
+        log.info("*** All Orders For {} : {}***", subServiceName, customerOrderDtos);
         return customerOrderDtos;
     }
 
@@ -151,7 +151,7 @@ public class CustomerOrderController extends MainController {
         log.info("*** Add Review For Order: {} ,Review: {} ***", reviewDto.getOrderId(), reviewDto);
         reviewDto.setCustomerEmail(principal.getName());
         customerOrderService.addReview(ReviewMapper.INSTANCE.convertReview(reviewDto));
-        log.info("*** Review Added");
+        log.info("*** Review Added ***");
         return "Review Added";
     }
 }

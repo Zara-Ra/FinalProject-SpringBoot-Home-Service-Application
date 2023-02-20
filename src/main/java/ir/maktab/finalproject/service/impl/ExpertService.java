@@ -5,7 +5,7 @@ import ir.maktab.finalproject.data.dto.AccountDto;
 import ir.maktab.finalproject.data.entity.Credit;
 import ir.maktab.finalproject.data.entity.Review;
 import ir.maktab.finalproject.data.entity.roles.Expert;
-import ir.maktab.finalproject.data.entity.roles.enums.Role;
+import ir.maktab.finalproject.data.enums.Role;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
 import ir.maktab.finalproject.repository.ExpertRepository;

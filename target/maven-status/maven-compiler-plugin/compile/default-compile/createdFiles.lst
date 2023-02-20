@@ -62,7 +62,6 @@ ir\maktab\finalproject\service\impl\SubServiceService.class
 ir\maktab\finalproject\data\entity\roles\Expert$ExpertBuilderImpl.class
 ir\maktab\finalproject\data\dto\BaseServiceDto.class
 ir\maktab\finalproject\service\exception\CreditException.class
-ir\maktab\finalproject\data\entity\roles\enums\Role.class
 ir\maktab\finalproject\data\entity\Credit.class
 ir\maktab\finalproject\data\entity\roles\QUser.class
 ir\maktab\finalproject\data\entity\services\BaseService$BaseServiceBuilder.class
@@ -74,6 +73,7 @@ ir\maktab\finalproject\repository\CustomerOrderRepository.class
 ir\maktab\finalproject\data\dto\CustomerDto.class
 ir\maktab\finalproject\data\entity\roles\User$UserBuilder.class
 ir\maktab\finalproject\service\exception\PasswordException.class
+ir\maktab\finalproject\data\enums\Role.class
 ir\maktab\finalproject\data\dto\ExpertDto.class
 ir\maktab\finalproject\FinalProjectApplication.class
 ir\maktab\finalproject\data\mapper\OrderMapperImpl.class
