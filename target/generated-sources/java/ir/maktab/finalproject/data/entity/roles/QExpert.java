@@ -39,6 +39,9 @@ public class QExpert extends EntityPathBase<Expert> {
     public final NumberPath<Integer> id;
 
     //inherited
+    public final BooleanPath isEnabled;
+
+    //inherited
     public final StringPath lastName;
 
     //inherited
@@ -81,6 +84,7 @@ public class QExpert extends EntityPathBase<Expert> {
         this.email = _super.email;
         this.firstName = _super.firstName;
         this.id = _super.id;
+        this.isEnabled = _super.isEnabled;
         this.lastName = _super.lastName;
         this.password = _super.password;
         this.registerDate = _super.registerDate;

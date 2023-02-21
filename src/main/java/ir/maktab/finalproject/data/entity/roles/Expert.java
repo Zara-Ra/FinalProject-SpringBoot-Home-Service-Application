@@ -35,6 +35,10 @@ public class Expert extends User {
 
     private double averageScore;
 
+
+    @Column(length = 64)
+    private String verificationCode;
+
     public Expert(String email, String password, String firstName, String lastName) {
         super(email, password, firstName, lastName);
     }
@@ -42,8 +46,7 @@ public class Expert extends User {
 
     @Override
     public boolean isEnabled() {
-        return true;
-                //!status.equals(ExpertStatus.SUSPEND);
+        return enabled;
     }
 
     @Override

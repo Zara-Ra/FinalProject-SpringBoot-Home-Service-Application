@@ -2,6 +2,7 @@ package ir.maktab.finalproject.data.entity.roles;
 
 import ir.maktab.finalproject.data.entity.CustomerOrder;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.*;
@@ -22,6 +23,9 @@ public class Customer extends User {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.MERGE)
     private List<CustomerOrder> customerOrderList = new ArrayList<>();
 
+    @Column(length = 64)
+    private String verificationCode;
+
     public Customer(String email, String password, String firstName, String lastName) {
         super(email, password, firstName, lastName);
     }
@@ -29,7 +33,7 @@ public class Customer extends User {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     @Override

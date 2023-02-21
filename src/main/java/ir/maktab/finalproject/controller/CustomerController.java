@@ -6,7 +6,7 @@ import ir.maktab.finalproject.data.dto.CustomerDto;
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.mapper.UserMapper;
 import ir.maktab.finalproject.service.impl.CustomerService;
-import jakarta.annotation.security.PermitAll;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,7 +27,8 @@ public class CustomerController {
     @PostMapping("/register")
     public String register(@Valid @RequestBody CustomerDto customerDto) {
         log.info("*** Add New Customer: {} ***", customerDto);
-        Customer customer = customerService.register(UserMapper.INSTANCE.convertCustomer(customerDto));
+        Customer customer = customerService.register(UserMapper.INSTANCE.convertCustomer(customerDto)
+                ,"");
         log.info("*** New Customer Added : {} ***", customer);
         return "Customer Registered Successfully";
     }
@@ -44,7 +45,7 @@ public class CustomerController {
 
     @PostMapping("/increase-credit")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public String increaseCredit(@Valid @RequestBody CreditDto creditDto,Principal principal) {
+    public String increaseCredit(@Valid @RequestBody CreditDto creditDto, Principal principal) {
         log.info("*** Increase Credit for: {} ***", creditDto);
         creditDto.setCustomerEmail(principal.getName());
         customerService.increaseCredit(creditDto.getCustomerEmail(), creditDto.getAmount());

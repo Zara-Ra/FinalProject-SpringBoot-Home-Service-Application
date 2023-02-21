@@ -2,6 +2,7 @@ package ir.maktab.finalproject.repository;
 
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.core.types.dsl.StringPath;
+import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.roles.QExpert;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
@@ -21,6 +22,8 @@ import java.util.Optional;
 public interface ExpertRepository extends JpaRepository<Expert, Integer>,
         QuerydslPredicateExecutor<Expert>, QuerydslBinderCustomizer<QExpert> {
     Optional<Expert> findByEmail(String email);
+
+    Optional<Expert> findByVerificationCode(String verificationCode);
 
     List<Expert> findAllByStatus(ExpertStatus status);
 

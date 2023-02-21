@@ -1,9 +1,6 @@
 package ir.maktab.finalproject.controller.exception;
 
-import ir.maktab.finalproject.service.exception.NotAllowedException;
-import ir.maktab.finalproject.service.exception.NotExistsException;
-import ir.maktab.finalproject.service.exception.OfferRequirementException;
-import ir.maktab.finalproject.service.exception.OrderRequirementException;
+import ir.maktab.finalproject.service.exception.*;
 import ir.maktab.finalproject.util.exception.ValidationException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +35,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> badRequestExceptionHandler(IllegalArgumentException e) {
+        return badRequestHandler(e);
+    }
+
+    @ExceptionHandler(EmailVerificationException.class)
+    public ResponseEntity<?> badRequestExceptionHandler(EmailVerificationException e) {
         return badRequestHandler(e);
     }
 

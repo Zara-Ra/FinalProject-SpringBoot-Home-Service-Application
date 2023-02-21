@@ -33,6 +33,8 @@ public abstract class Account implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     protected Role role;
 
+    protected boolean enabled;
+
     public Account(String email, String password) {
         this.email = email;
         this.password = password;

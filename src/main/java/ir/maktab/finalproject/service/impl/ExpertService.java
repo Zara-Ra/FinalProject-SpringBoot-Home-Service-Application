@@ -4,6 +4,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import ir.maktab.finalproject.data.dto.AccountDto;
 import ir.maktab.finalproject.data.entity.Credit;
 import ir.maktab.finalproject.data.entity.Review;
+import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.enums.Role;
 import ir.maktab.finalproject.data.entity.services.SubService;
@@ -16,13 +17,20 @@ import ir.maktab.finalproject.service.predicates.user.UserPredicateBuilder;
 import ir.maktab.finalproject.util.exception.PhotoValidationException;
 import ir.maktab.finalproject.util.exception.ValidationException;
 import ir.maktab.finalproject.util.validation.Validation;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -38,27 +46,83 @@ public class ExpertService extends MainService implements IRolesService<Expert> 
 
     private final BCryptPasswordEncoder passwordEncoder;
 
+    private final JavaMailSender mailSender;
 
-    public ExpertService(ExpertRepository expertRepository, SubServiceService subServiceService, BCryptPasswordEncoder passwordEncoder) {
+    @Value(value = "${spring.mail.username}")
+    private String senderEmail;
+
+
+    public ExpertService(ExpertRepository expertRepository, SubServiceService subServiceService, BCryptPasswordEncoder passwordEncoder, JavaMailSender mailSender) {
         this.expertRepository = expertRepository;
         this.subServiceService = subServiceService;
         this.passwordEncoder = passwordEncoder;
+        this.mailSender = mailSender;
     }
 
     @Override
-    public Expert register(Expert expert) {
+    public Expert register(Expert expert,String siteURL) {
         validateNewExpert(expert);
         expert.setStatus(ExpertStatus.NEW);
         expert.setCredit(Credit.builder().amount(0).build());
         expert.setAverageScore(0);
         expert.setRole(Role.ROLE_EXPERT);
         expert.setPassword(passwordEncoder.encode(expert.getPassword()));
+
+        String randomCode = RandomStringUtils.random(64, true, true);
+        expert.setVerificationCode(randomCode);
+        expert.setEnabled(false);
         try {
-            return expertRepository.save(expert);
+            Expert saveExpert = expertRepository.save(expert);
+            sendVerificationEmail(expert, siteURL);
+            return saveExpert;
         } catch (DataIntegrityViolationException e) {
             throw new UniqueViolationException(messageSource.getMessage("errors.message.duplicate_user"));
+        }  catch (MessagingException | UnsupportedEncodingException e) {
+            throw new EmailVerificationException(messageSource.getMessage("errors.message.email_verification_error"));
         }
     }
+    private void sendVerificationEmail(Expert expert, String siteURL)
+            throws MessagingException, UnsupportedEncodingException {
+        String toAddress = expert.getEmail();
+        String fromAddress = senderEmail;
+        String senderName = "Homser: Home Service Application";
+        String subject = "Please verify your registration";
+        String content = "Dear [[name]],<br>"
+                + "Please click the link below to verify your registration:<br>"
+                + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
+                + "Thank you,<br>"
+                + "Homser Application";
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setFrom(fromAddress, senderName);
+        helper.setTo(toAddress);
+        helper.setSubject(subject);
+
+        content = content.replace("[[name]]", expert.getFirstName() + " " + expert.getLastName());
+        String verifyURL = siteURL + "/expert/verify?code=" + expert.getVerificationCode();
+
+        content = content.replace("[[URL]]", verifyURL);
+
+        helper.setText(content, true);
+
+        mailSender.send(message);
+
+    }
+
+    public boolean verify(String verificationCode) {
+        Optional<Expert> user = expertRepository.findByVerificationCode(verificationCode);
+        if (user.isEmpty() || user.get().isEnabled())
+            return false;
+        else {
+            user.get().setVerificationCode(null);
+            user.get().setEnabled(true);
+            expertRepository.save(user.get());
+            return true;
+        }
+    }
+
 
     @Override
     public Expert changePassword(AccountDto accountDto) {

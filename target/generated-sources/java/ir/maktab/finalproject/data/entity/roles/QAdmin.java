@@ -30,6 +30,9 @@ public class QAdmin extends EntityPathBase<Admin> {
     public final NumberPath<Integer> id = _super.id;
 
     //inherited
+    public final BooleanPath isEnabled = _super.isEnabled;
+
+    //inherited
     public final StringPath password = _super.password;
 
     //inherited

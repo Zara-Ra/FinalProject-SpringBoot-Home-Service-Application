@@ -145,7 +145,7 @@ public class ExpertOfferService extends MainService {
         double averageScore = expertOffer.getExpert().getAverageScore() - Math.abs(hours);
         expertOffer.getExpert().setAverageScore(averageScore);
         if (averageScore < 0)
-            expertOffer.getExpert().setStatus(ExpertStatus.SUSPEND);
+            expertOffer.getExpert().setEnabled(false);
 
         expertService.updateExpert(expertOffer.getExpert());
     }

@@ -10,6 +10,7 @@ import ir.maktab.finalproject.data.mapper.ReviewMapper;
 import ir.maktab.finalproject.data.mapper.UserMapper;
 import ir.maktab.finalproject.service.impl.ExpertService;
 import jakarta.annotation.security.PermitAll;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
@@ -33,13 +34,26 @@ public class ExpertController {
     }
 
     @PostMapping(value="/register",consumes = { MediaType.MULTIPART_FORM_DATA_VALUE})
-    public String register(@Valid @ModelAttribute ExpertDto expertDto) {
+    public String register(@Valid @ModelAttribute ExpertDto expertDto, HttpServletRequest request) {
         log.info("*** Add New Expert: {} ***", expertDto);
-        Expert expert = expertService.register(UserMapper.INSTANCE.convertExpert(expertDto));
+        Expert expert = expertService.register(UserMapper.INSTANCE.convertExpert(expertDto),getSiteURL(request));
         log.info("*** New Expert Added : {} ***", expert);
-        System.out.println(expertDto);
-        return "Expert Registered";
+        return "Expert Registered Successfully, Check Your Email For Verification";
     }
+
+    private String getSiteURL(HttpServletRequest request) {
+        String siteURL = request.getRequestURL().toString();
+        return siteURL.replace(request.getServletPath(), "");
+    }
+
+    @GetMapping("/verify")
+    public String verifyUser(@RequestParam String code) {
+        if (expertService.verify(code))
+            return "Successfully Verified";
+        else
+            return "Verification Failed";
+    }
+
 
     @PostMapping("/change-password")
     @PreAuthorize("hasRole('EXPERT')")

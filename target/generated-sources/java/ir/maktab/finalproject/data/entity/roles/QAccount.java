@@ -23,6 +23,8 @@ public class QAccount extends EntityPathBase<Account> {
 
     public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
+    public final BooleanPath isEnabled = createBoolean("isEnabled");
+
     public final StringPath password = createString("password");
 
     public final EnumPath<ir.maktab.finalproject.data.enums.Role> role = createEnum("role", ir.maktab.finalproject.data.enums.Role.class);

@@ -8,17 +8,21 @@ import ir.maktab.finalproject.data.enums.Role;
 import ir.maktab.finalproject.repository.CustomerRepository;
 import ir.maktab.finalproject.service.IRolesService;
 import ir.maktab.finalproject.service.MainService;
-import ir.maktab.finalproject.service.exception.CreditException;
-import ir.maktab.finalproject.service.exception.PasswordException;
-import ir.maktab.finalproject.service.exception.UniqueViolationException;
-import ir.maktab.finalproject.service.exception.UserNotFoundException;
+import ir.maktab.finalproject.service.exception.*;
 import ir.maktab.finalproject.service.predicates.user.UserPredicateBuilder;
 import ir.maktab.finalproject.util.exception.ValidationException;
 import ir.maktab.finalproject.util.validation.Validation;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,12 +38,13 @@ public class CustomerService extends MainService implements IRolesService<Custom
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Override
-    public Customer register(Customer customer) {
+
+    public Customer register(Customer customer,String siteURL) {
         validateNewCustomer(customer);
         customer.setCredit(Credit.builder().amount(0).build());
         customer.setRole(Role.ROLE_CUSTOMER);
         customer.setPassword(passwordEncoder.encode(customer.getPassword()));
+
         try {
             return customerRepository.save(customer);
         } catch (DataIntegrityViolationException e) {
@@ -55,7 +60,7 @@ public class CustomerService extends MainService implements IRolesService<Custom
         Customer findCustomer = customerRepository.findByEmail(accountDto.getEmail())
                 .orElseThrow(() -> new UserNotFoundException(messageSource.getMessage("errors.message.customer_not_exists")));
 
-        if(!passwordEncoder.matches(accountDto.getOldPassword(), findCustomer.getPassword()))
+        if (!passwordEncoder.matches(accountDto.getOldPassword(), findCustomer.getPassword()))
             throw new PasswordException(messageSource.getMessage("errors.message.incorrect_old_password"));
 
         Validation.validatePassword(accountDto.getNewPassword());

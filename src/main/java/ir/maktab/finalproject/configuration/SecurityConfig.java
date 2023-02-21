@@ -45,6 +45,8 @@ public class SecurityConfig {
                 .requestMatchers("/base/find-all").permitAll()
                 .requestMatchers("/sub/find-all").permitAll()
                 .requestMatchers("/sub/find").permitAll()
+                .requestMatchers("/expert/verify").permitAll()
+
                 .anyRequest().authenticated()
                 .and()
                 //.formLogin();
