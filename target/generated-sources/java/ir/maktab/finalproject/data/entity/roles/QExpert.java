@@ -24,6 +24,8 @@ public class QExpert extends EntityPathBase<Expert> {
 
     public final QUser _super;
 
+    public final ListPath<ir.maktab.finalproject.data.entity.ExpertOffer, ir.maktab.finalproject.data.entity.QExpertOffer> acceptedOfferList = this.<ir.maktab.finalproject.data.entity.ExpertOffer, ir.maktab.finalproject.data.entity.QExpertOffer>createList("acceptedOfferList", ir.maktab.finalproject.data.entity.ExpertOffer.class, ir.maktab.finalproject.data.entity.QExpertOffer.class, PathInits.DIRECT2);
+
     public final NumberPath<Double> averageScore = createNumber("averageScore", Double.class);
 
     // inherited

@@ -93,6 +93,8 @@ public class ExpertOfferService extends MainService {
         expertOffer.setIsChosen(true);
         customerOrder.setStatus(OrderStatus.WAITING_FOR_EXPERT_ARRIVAL);
         customerOrder.setAcceptedExpertOffer(expertOffer);
+        expertOffer.getExpert().getAcceptedOfferList().add(expertOffer);
+        expertService.updateExpert(expertOffer.getExpert());
         customerOrderService.updateOrder(customerOrder);
         expertOfferRepository.save(expertOffer);
     }

@@ -136,7 +136,7 @@ public class CustomerOrderController extends MainController {
         return "Order Payed Online";
     }
 
-    @GetMapping("/pay-credit")
+    @PostMapping("/pay-credit")
     @PreAuthorize("hasRole('CUSTOMER')")
     public String payFromCredit(@RequestBody PaymentUserDto paymentUserDto,Principal principal) {
         log.info("*** Pay Online For: {} ***", paymentUserDto.getOrderId());

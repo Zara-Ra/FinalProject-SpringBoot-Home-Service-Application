@@ -22,6 +22,9 @@ public class OrderPredicate {
             StringPath path = QCustomerOrder.customerOrder.customer.email;
             return path.eq(criteria.getValue().toString());
         }
+        if (criteria.getKey().equals("baseServiceName")) {
+            return baseServiceBooleanExpression();
+        }
         if (criteria.getKey().equals("subServiceName")) {
             return subServiceBooleanExpression();
         }
@@ -57,6 +60,10 @@ public class OrderPredicate {
         return path.eq(OrderStatus.valueOf(criteria.getValue().toString()));
     }
 
+    private BooleanExpression baseServiceBooleanExpression() {
+        StringPath path = QCustomerOrder.customerOrder.subService.baseService.baseName;
+        return path.eq(criteria.getValue().toString());
+    }
     private BooleanExpression subServiceBooleanExpression() {
         StringPath path = QCustomerOrder.customerOrder.subService.subName;
         return path.eq(criteria.getValue().toString());
@@ -66,8 +73,8 @@ public class OrderPredicate {
         int value = Integer.parseInt(criteria.getValue().toString());
         return switch (criteria.getOperation()) {
             case ":" -> path.eq(value);
-            case ">" -> path.goe(value);
-            case "<" -> path.loe(value);
+            case ">" -> path.gt(value);
+            case "<" -> path.lt(value);
             default -> null;
         };
     }
@@ -76,8 +83,8 @@ public class OrderPredicate {
         double value = Double.parseDouble(criteria.getValue().toString());
         return switch (criteria.getOperation()) {
             case ":" -> path.eq(value);
-            case ">" -> path.goe(value);
-            case "<" -> path.loe(value);
+            case ">" -> path.gt(value);
+            case "<" -> path.lt(value);
             default -> null;
         };
     }

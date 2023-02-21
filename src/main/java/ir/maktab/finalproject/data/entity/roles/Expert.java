@@ -1,5 +1,6 @@
 package ir.maktab.finalproject.data.entity.roles;
 
+import ir.maktab.finalproject.data.entity.ExpertOffer;
 import ir.maktab.finalproject.data.entity.Review;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
@@ -34,6 +35,9 @@ public class Expert extends User {
     private List<Review> reviewList = new ArrayList<>();
 
     private double averageScore;
+
+    @OneToMany
+    private List<ExpertOffer> acceptedOfferList = new ArrayList<>();
 
 
     @Column(length = 64)

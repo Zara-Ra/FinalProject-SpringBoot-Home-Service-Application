@@ -25,13 +25,26 @@ public class UserPredicate {
     public BooleanExpression getPredicate(Class classType, String className) {
         PathBuilder<User> entityPath = new PathBuilder<>(classType, className);
         if (className.equals("customer")) {
-            return userExpressions(entityPath);
+                BooleanExpression booleanExpression = userExpressions(entityPath);
+                if(booleanExpression != null)
+                    return booleanExpression;
+                if(criteria.getKey().equals("numberOfOrders")){
+                    NumberExpression<Integer> path = QCustomer.customer.customerOrderList.size();
+                    int value = Integer.parseInt(criteria.getValue().toString());
+                    return switch (criteria.getOperation()) {
+                        case ":" -> path.eq(value);
+                        case ">" -> path.gt(value);
+                        case "<" -> path.lt(value);
+                        default -> null;
+                    };
+                }
+
         } else if (className.equals("expert")) {
             BooleanExpression booleanExpression = userExpressions(entityPath);
             if (booleanExpression != null)
                 return booleanExpression;
             if (criteria.getKey().equals("averageScore")) {
-                return intBooleanExpression(entityPath);
+                return scoreBooleanExpression(entityPath);
             }
             if (criteria.getKey().equals("subService")) {
                 return subServiceBooleanExpression();
@@ -39,8 +52,22 @@ public class UserPredicate {
             if (criteria.getKey().equals("status")) {
                 return statusBooleanExpression();
             }
+            if(criteria.getKey().equals("numberOfOrders")){
+                NumberExpression<Integer> path = QExpert.expert.acceptedOfferList.size();
+                return integerBooleanExpression(path);
+            }
         }
         return null;
+    }
+
+    private BooleanExpression integerBooleanExpression(NumberExpression<Integer> path) {
+        int value = Integer.parseInt(criteria.getValue().toString());
+        return switch (criteria.getOperation()) {
+            case ":" -> path.eq(value);
+            case ">" -> path.gt(value);
+            case "<" -> path.lt(value);
+            default -> null;
+        };
     }
 
     private BooleanExpression userExpressions(PathBuilder<User> entityPath) {
@@ -48,7 +75,7 @@ public class UserPredicate {
             return dateBooleanExpression(entityPath);
         }
         if (criteria.getKey().equals("id")) {
-            return intBooleanExpression(entityPath);
+            return scoreBooleanExpression(entityPath);
         }
         if (criteria.getKey().equals("credit")) {
             return creditBooleanExpression();
@@ -88,16 +115,15 @@ public class UserPredicate {
         double value = Double.parseDouble(criteria.getValue().toString());
         return switch (criteria.getOperation()) {
             case ":" -> path.eq(value);
-            case ">" -> path.goe(value);
-            case "<" -> path.loe(value);
+            case ">" -> path.gt(value);
+            case "<" -> path.lt(value);
             default -> null;
         };
     }
 
-    private BooleanExpression intBooleanExpression(PathBuilder<User> entityPath) {
+    private BooleanExpression scoreBooleanExpression(PathBuilder<User> entityPath) {
         if (!isInteger(criteria.getValue().toString())) {
-            QExpert qExpert = QExpert.expert;
-            NumberPath<Double> path = qExpert.averageScore;
+            NumberPath<Double> path = QExpert.expert.averageScore;
             return switch (criteria.getValue().toString()) {
                 case "max" -> path.goe(4.5);
                 case "min" -> path.loe(0.5);
@@ -108,8 +134,8 @@ public class UserPredicate {
         int value = Integer.parseInt(criteria.getValue().toString());
         return switch (criteria.getOperation()) {
             case ":" -> path.eq(value);
-            case ">" -> path.goe(value);
-            case "<" -> path.loe(value);
+            case ">" -> path.gt(value);
+            case "<" -> path.lt(value);
             default -> null;
         };
     }

@@ -78,6 +78,7 @@ public class CustomerOrderService extends MainService {
         return customerOrderRepository.save(customerOrder);
     }
 
+    @Transactional
     public List<CustomerOrder> findAllBySubServiceAndTwoStatus(String subServiceName) {
         SubService subService = subServiceService.findByName(subServiceName)
                 .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.sub_not_exists")));
