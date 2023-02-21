@@ -14,8 +14,4 @@ import java.util.Collection;
 @Entity
 public class Admin extends Account {
 
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

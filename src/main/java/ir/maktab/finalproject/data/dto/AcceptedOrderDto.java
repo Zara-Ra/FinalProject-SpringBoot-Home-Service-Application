@@ -24,6 +24,12 @@ public class AcceptedOrderDto {
     private String subServiceName;
 
     @NotNull
+    @Email
+    private String expertEmail;
+
+    private Integer offerId;
+
+    @NotNull
     private String offerPrice;
 
     private String description;
@@ -33,7 +39,6 @@ public class AcceptedOrderDto {
     @NotNull
     private AddressDto address;
 
-    private Integer offerId;
 
     private String startDate;
 

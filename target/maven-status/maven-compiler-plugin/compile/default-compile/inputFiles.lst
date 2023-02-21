@@ -21,6 +21,7 @@ C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\service\impl\BaseServiceService.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\repository\BaseServiceRepository.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\service\exception\OrderRequirementException.java
+C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\service\predicates\order\OrderPredicate.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\data\dto\PaymentUserDto.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\controller\exception\GlobalExceptionHandler.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\data\dto\AcceptedOrderDto.java
@@ -42,9 +43,11 @@ C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject
 C:\Users\Hosseini\IdeaProjects\FinalProject\target\generated-sources\java\ir\maktab\finalproject\data\entity\roles\QAccount.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\data\enums\ExpertStatus.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\util\validation\TriConsumer.java
+C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\service\exception\EmailVerificationException.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\service\IService.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\data\dto\AddressDto.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\data\mapper\ReviewMapper.java
+C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\service\predicates\order\OrderPredicateBuilder.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\target\generated-sources\java\ir\maktab\finalproject\data\entity\roles\QCustomer.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\data\dto\PaymentDto.java
 C:\Users\Hosseini\IdeaProjects\FinalProject\src\main\java\ir\maktab\finalproject\data\entity\roles\Admin.java

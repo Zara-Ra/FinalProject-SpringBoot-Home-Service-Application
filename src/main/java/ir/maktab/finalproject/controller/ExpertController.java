@@ -74,8 +74,17 @@ public class ExpertController {
         log.info("*** Found Experts With NEW Status: {} ***", expertDtos);
         return expertDtos;
     }
+    @GetMapping("/unapproved-experts")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<ExpertDto> findUnApprovedExperts() {
+        log.info("*** Find Unapproved Experts ***");
+        List<ExpertDto> expertDtos = UserMapper.INSTANCE
+                .convertExpertList(expertService.findAllExpertByStatus(ExpertStatus.WAITING_FOR_APPROVAL));
+        log.info("*** Found Experts With WAITING_FOR_APPROVAL Status: {} ***", expertDtos);
+        return expertDtos;
+    }
 
-    @GetMapping("/approve-status")
+    @GetMapping("/approve-expert")
     @PreAuthorize("hasRole('ADMIN')")
     public String approveStatus(@RequestParam @Min(1) Integer expertId) {
         log.info("*** Approve New Expert: {} ***", expertId);

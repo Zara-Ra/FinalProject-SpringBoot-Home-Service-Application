@@ -13,7 +13,6 @@ import lombok.ToString;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ExpertOfferDto {
 
-    @NotNull
     private Integer id;
 
     @NotNull

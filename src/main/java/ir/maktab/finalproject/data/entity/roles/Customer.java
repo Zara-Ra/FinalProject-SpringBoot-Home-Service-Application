@@ -23,17 +23,8 @@ public class Customer extends User {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.MERGE)
     private List<CustomerOrder> customerOrderList = new ArrayList<>();
 
-    @Column(length = 64)
-    private String verificationCode;
-
     public Customer(String email, String password, String firstName, String lastName) {
         super(email, password, firstName, lastName);
-    }
-
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
     }
 
     @Override

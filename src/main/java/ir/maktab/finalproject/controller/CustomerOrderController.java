@@ -8,6 +8,7 @@ import ir.maktab.finalproject.data.enums.PaymentType;
 import ir.maktab.finalproject.data.mapper.OfferMapper;
 import ir.maktab.finalproject.data.mapper.OrderMapper;
 import ir.maktab.finalproject.data.mapper.ReviewMapper;
+import ir.maktab.finalproject.data.mapper.UserMapper;
 import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.impl.CustomerOrderService;
 import ir.maktab.finalproject.util.exception.ValidationException;
@@ -97,6 +98,7 @@ public class CustomerOrderController extends MainController {
     }
 
     @GetMapping("/find-accepted-order") //TODO REMOVE
+    @PreAuthorize("hasRole('CUSTOMER')")
     public AcceptedOrderDto findAcceptedOrder(@RequestParam @Min(1) Integer orderId) {
         log.info("*** Find Accepted Order: {} ***", orderId);
         AcceptedOrderDto acceptedOrderDto = OrderMapper.INSTANCE.convertAcceptedOrder(customerOrderService.findById(orderId).orElseThrow(
@@ -153,5 +155,14 @@ public class CustomerOrderController extends MainController {
         customerOrderService.addReview(ReviewMapper.INSTANCE.convertReview(reviewDto));
         log.info("*** Review Added ***");
         return "Review Added";
+    }
+
+    @GetMapping("/filter")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Iterable<AcceptedOrderDto> search(@RequestParam String search) {
+        log.info("*** Search for: {} ***", search);
+        Iterable<AcceptedOrderDto> customerOrderDtos = OrderMapper.INSTANCE.convertCustomerOrderIterator(customerOrderService.findAll(search));
+        log.info("*** : Search Results: {} ***", customerOrderDtos);
+        return customerOrderDtos;
     }
 }

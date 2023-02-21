@@ -118,6 +118,7 @@ public class ExpertService extends MainService implements IRolesService<Expert> 
         else {
             user.get().setVerificationCode(null);
             user.get().setEnabled(true);
+            user.get().setStatus(ExpertStatus.WAITING_FOR_APPROVAL);
             expertRepository.save(user.get());
             return true;
         }

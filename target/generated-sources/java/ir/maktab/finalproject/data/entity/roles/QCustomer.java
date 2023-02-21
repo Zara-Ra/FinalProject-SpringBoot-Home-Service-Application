@@ -33,13 +33,13 @@ public class QCustomer extends EntityPathBase<Customer> {
     public final StringPath email;
 
     //inherited
+    public final BooleanPath enabled;
+
+    //inherited
     public final StringPath firstName;
 
     //inherited
     public final NumberPath<Integer> id;
-
-    //inherited
-    public final BooleanPath isEnabled;
 
     //inherited
     public final StringPath lastName;
@@ -74,9 +74,9 @@ public class QCustomer extends EntityPathBase<Customer> {
         this._super = new QUser(type, metadata, inits);
         this.credit = _super.credit;
         this.email = _super.email;
+        this.enabled = _super.enabled;
         this.firstName = _super.firstName;
         this.id = _super.id;
-        this.isEnabled = _super.isEnabled;
         this.lastName = _super.lastName;
         this.password = _super.password;
         this.registerDate = _super.registerDate;

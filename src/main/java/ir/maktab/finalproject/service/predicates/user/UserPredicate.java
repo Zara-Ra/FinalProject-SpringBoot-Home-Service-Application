@@ -37,7 +37,7 @@ public class UserPredicate {
                 return subServiceBooleanExpression();
             }
             if (criteria.getKey().equals("status")) {
-                return statusBooleanExperssion();
+                return statusBooleanExpression();
             }
         }
         return null;
@@ -62,7 +62,7 @@ public class UserPredicate {
         return null;
     }
 
-    private BooleanExpression statusBooleanExperssion() {
+    private BooleanExpression statusBooleanExpression() {
         EnumPath<ExpertStatus> path = QExpert.expert.status;
         return path.eq(ExpertStatus.valueOf(criteria.getValue().toString()));
     }

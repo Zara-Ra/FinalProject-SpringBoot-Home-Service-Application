@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -27,8 +28,9 @@ public class ExpertOfferController {
 
     @PostMapping("/submit-offer")
     @PreAuthorize("hasRole('EXPERT')")
-    public String submitOffer(@Valid @RequestBody ExpertOfferDto expertOfferDto) {
+    public String submitOffer(@Valid @RequestBody ExpertOfferDto expertOfferDto, Principal principal) {
         log.info("*** Submit Offer: {} ***", expertOfferDto);
+        expertOfferDto.setExpertEmail(principal.getName());
         ExpertOffer expertOffer = expertOfferService.submitOffer(expertOfferDto.getOrderId()
                 , OfferMapper.INSTANCE.convertOffer(expertOfferDto));
         log.info("*** Offer Submitted: {} ***", expertOffer);
@@ -64,11 +66,11 @@ public class ExpertOfferController {
 
     @GetMapping("/experts-orders")
     @PreAuthorize("hasRole('EXPERT')")
-    public List<ExpertOfferDto> findAcceptedOrdersFor(@RequestParam @Email String expertEmail) {
-        log.info("*** Find Order FOr Expert: {} ***", expertEmail);
+    public List<ExpertOfferDto> findAcceptedOrders(Principal principal) {
+        log.info("*** Find Order FOr Expert: {} ***", principal.getName());
         List<ExpertOfferDto> expertOfferDtos = OfferMapper.INSTANCE
-                .convertOfferList(expertOfferService.findAcceptedOffersFor(expertEmail));
-        log.info("*** Orders For Expert: {}, {} ***", expertEmail, expertOfferDtos);
+                .convertOfferList(expertOfferService.findAcceptedOffersFor(principal.getName()));
+        log.info("*** Orders For Expert: {}, {} ***", principal.getName(), expertOfferDtos);
         return expertOfferDtos;
     }
 

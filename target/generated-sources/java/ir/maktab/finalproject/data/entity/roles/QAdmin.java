@@ -24,13 +24,11 @@ public class QAdmin extends EntityPathBase<Admin> {
     //inherited
     public final StringPath email = _super.email;
 
-    public final BooleanPath enabled = createBoolean("enabled");
+    //inherited
+    public final BooleanPath enabled = _super.enabled;
 
     //inherited
     public final NumberPath<Integer> id = _super.id;
-
-    //inherited
-    public final BooleanPath isEnabled = _super.isEnabled;
 
     //inherited
     public final StringPath password = _super.password;

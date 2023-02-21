@@ -1,5 +1,6 @@
 package ir.maktab.finalproject.service.impl;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import ir.maktab.finalproject.data.dto.PaymentUserDto;
 import ir.maktab.finalproject.data.entity.CustomerOrder;
 import ir.maktab.finalproject.data.entity.ExpertOffer;
@@ -14,6 +15,9 @@ import ir.maktab.finalproject.service.MainService;
 import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.exception.OrderRequirementException;
 import ir.maktab.finalproject.service.exception.UserNotFoundException;
+import ir.maktab.finalproject.service.predicates.order.OrderPredicateBuilder;
+import ir.maktab.finalproject.service.predicates.user.UserPredicateBuilder;
+import ir.maktab.finalproject.util.exception.ValidationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +25,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class CustomerOrderService extends MainService {
@@ -135,5 +141,20 @@ public class CustomerOrderService extends MainService {
         customerOrder.setStatus(OrderStatus.SCORED);
         customerOrderRepository.save(customerOrder);
         expertService.updateExpert(expert);
+    }
+
+    @Transactional
+    public Iterable<CustomerOrder> findAll(String search) {
+        if (search.isEmpty())
+            throw new ValidationException(messageSource.getMessage("errors.message.invalid_null_search"));
+
+        OrderPredicateBuilder builder = new OrderPredicateBuilder();
+        Pattern pattern = Pattern.compile("(\\w+?)([:<>])([\\w-_@.]+?),");
+        Matcher matcher = pattern.matcher(search + ",");
+        while (matcher.find()) {
+            builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
+        }
+        BooleanExpression expression = builder.build();
+        return customerOrderRepository.findAll(expression);
     }
 }

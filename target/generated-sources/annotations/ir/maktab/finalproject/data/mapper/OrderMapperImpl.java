@@ -7,6 +7,7 @@ import ir.maktab.finalproject.data.entity.Address;
 import ir.maktab.finalproject.data.entity.CustomerOrder;
 import ir.maktab.finalproject.data.entity.ExpertOffer;
 import ir.maktab.finalproject.data.entity.roles.Customer;
+import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.SubService;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,7 +17,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-02-20T21:51:57+0330",
+    date = "2023-02-21T12:03:38+0330",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 17.0.4 (Oracle Corporation)"
 )
 public class OrderMapperImpl implements OrderMapper {
@@ -85,32 +86,47 @@ public class OrderMapperImpl implements OrderMapper {
     }
 
     @Override
-    public AcceptedOrderDto convertAcceptedOrder(CustomerOrder order) {
-        if ( order == null ) {
+    public AcceptedOrderDto convertAcceptedOrder(CustomerOrder customerOrder) {
+        if ( customerOrder == null ) {
             return null;
         }
 
         AcceptedOrderDto acceptedOrderDto = new AcceptedOrderDto();
 
-        acceptedOrderDto.setCustomerEmail( customerOrderCustomerEmail( order ) );
-        acceptedOrderDto.setSubServiceName( customerOrderSubServiceSubName( order ) );
-        Double price = orderAcceptedExpertOfferPrice( order );
+        acceptedOrderDto.setCustomerEmail( customerOrderCustomerEmail( customerOrder ) );
+        acceptedOrderDto.setSubServiceName( customerOrderSubServiceSubName( customerOrder ) );
+        acceptedOrderDto.setExpertEmail( customerOrderAcceptedExpertOfferExpertEmail( customerOrder ) );
+        Double price = customerOrderAcceptedExpertOfferPrice( customerOrder );
         if ( price != null ) {
             acceptedOrderDto.setOfferPrice( String.valueOf( price ) );
         }
-        acceptedOrderDto.setOfferId( orderAcceptedExpertOfferId( order ) );
-        if ( order.getStartDate() != null ) {
-            acceptedOrderDto.setStartDate( new SimpleDateFormat( "yyyy-MM-dd HH:mm" ).format( order.getStartDate() ) );
+        acceptedOrderDto.setOfferId( customerOrderAcceptedExpertOfferId( customerOrder ) );
+        if ( customerOrder.getStartDate() != null ) {
+            acceptedOrderDto.setStartDate( new SimpleDateFormat( "yyyy-MM-dd HH:mm" ).format( customerOrder.getStartDate() ) );
         }
-        if ( order.getFinishDate() != null ) {
-            acceptedOrderDto.setFinishDate( new SimpleDateFormat( "yyyy-MM-dd HH:mm" ).format( order.getFinishDate() ) );
+        if ( customerOrder.getFinishDate() != null ) {
+            acceptedOrderDto.setFinishDate( new SimpleDateFormat( "yyyy-MM-dd HH:mm" ).format( customerOrder.getFinishDate() ) );
         }
-        acceptedOrderDto.setId( order.getId() );
-        acceptedOrderDto.setDescription( order.getDescription() );
-        acceptedOrderDto.setStatus( order.getStatus() );
-        acceptedOrderDto.setAddress( addressToAddressDto( order.getAddress() ) );
+        acceptedOrderDto.setId( customerOrder.getId() );
+        acceptedOrderDto.setDescription( customerOrder.getDescription() );
+        acceptedOrderDto.setStatus( customerOrder.getStatus() );
+        acceptedOrderDto.setAddress( addressToAddressDto( customerOrder.getAddress() ) );
 
         return acceptedOrderDto;
+    }
+
+    @Override
+    public Iterable<AcceptedOrderDto> convertCustomerOrderIterator(Iterable<CustomerOrder> all) {
+        if ( all == null ) {
+            return null;
+        }
+
+        ArrayList<AcceptedOrderDto> iterable = new ArrayList<AcceptedOrderDto>();
+        for ( CustomerOrder customerOrder : all ) {
+            iterable.add( convertAcceptedOrder( customerOrder ) );
+        }
+
+        return iterable;
     }
 
     protected Customer customerOrderDtoToCustomer(CustomerOrderDto customerOrderDto) {
@@ -195,7 +211,26 @@ public class OrderMapperImpl implements OrderMapper {
         return addressDto;
     }
 
-    private Double orderAcceptedExpertOfferPrice(CustomerOrder customerOrder) {
+    private String customerOrderAcceptedExpertOfferExpertEmail(CustomerOrder customerOrder) {
+        if ( customerOrder == null ) {
+            return null;
+        }
+        ExpertOffer acceptedExpertOffer = customerOrder.getAcceptedExpertOffer();
+        if ( acceptedExpertOffer == null ) {
+            return null;
+        }
+        Expert expert = acceptedExpertOffer.getExpert();
+        if ( expert == null ) {
+            return null;
+        }
+        String email = expert.getEmail();
+        if ( email == null ) {
+            return null;
+        }
+        return email;
+    }
+
+    private Double customerOrderAcceptedExpertOfferPrice(CustomerOrder customerOrder) {
         if ( customerOrder == null ) {
             return null;
         }
@@ -207,7 +242,7 @@ public class OrderMapperImpl implements OrderMapper {
         return price;
     }
 
-    private Integer orderAcceptedExpertOfferId(CustomerOrder customerOrder) {
+    private Integer customerOrderAcceptedExpertOfferId(CustomerOrder customerOrder) {
         if ( customerOrder == null ) {
             return null;
         }

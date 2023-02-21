@@ -29,13 +29,13 @@ public class QUser extends EntityPathBase<User> {
     //inherited
     public final StringPath email = _super.email;
 
+    //inherited
+    public final BooleanPath enabled = _super.enabled;
+
     public final StringPath firstName = createString("firstName");
 
     //inherited
     public final NumberPath<Integer> id = _super.id;
-
-    //inherited
-    public final BooleanPath isEnabled = _super.isEnabled;
 
     public final StringPath lastName = createString("lastName");
 

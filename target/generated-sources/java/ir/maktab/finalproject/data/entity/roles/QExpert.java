@@ -33,13 +33,13 @@ public class QExpert extends EntityPathBase<Expert> {
     public final StringPath email;
 
     //inherited
+    public final BooleanPath enabled;
+
+    //inherited
     public final StringPath firstName;
 
     //inherited
     public final NumberPath<Integer> id;
-
-    //inherited
-    public final BooleanPath isEnabled;
 
     //inherited
     public final StringPath lastName;
@@ -60,6 +60,8 @@ public class QExpert extends EntityPathBase<Expert> {
     public final EnumPath<ir.maktab.finalproject.data.enums.ExpertStatus> status = createEnum("status", ir.maktab.finalproject.data.enums.ExpertStatus.class);
 
     public final ListPath<ir.maktab.finalproject.data.entity.services.SubService, ir.maktab.finalproject.data.entity.services.QSubService> subServiceList = this.<ir.maktab.finalproject.data.entity.services.SubService, ir.maktab.finalproject.data.entity.services.QSubService>createList("subServiceList", ir.maktab.finalproject.data.entity.services.SubService.class, ir.maktab.finalproject.data.entity.services.QSubService.class, PathInits.DIRECT2);
+
+    public final StringPath verificationCode = createString("verificationCode");
 
     public QExpert(String variable) {
         this(Expert.class, forVariable(variable), INITS);
@@ -82,9 +84,9 @@ public class QExpert extends EntityPathBase<Expert> {
         this._super = new QUser(type, metadata, inits);
         this.credit = _super.credit;
         this.email = _super.email;
+        this.enabled = _super.enabled;
         this.firstName = _super.firstName;
         this.id = _super.id;
-        this.isEnabled = _super.isEnabled;
         this.lastName = _super.lastName;
         this.password = _super.password;
         this.registerDate = _super.registerDate;
