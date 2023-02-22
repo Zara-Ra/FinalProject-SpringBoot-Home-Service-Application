@@ -17,7 +17,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-02-21T23:28:06+0330",
+    date = "2023-02-22T10:53:26+0330",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 17.0.4 (Oracle Corporation)"
 )
 public class OrderMapperImpl implements OrderMapper {
@@ -127,6 +127,20 @@ public class OrderMapperImpl implements OrderMapper {
         }
 
         return iterable;
+    }
+
+    @Override
+    public List<AcceptedOrderDto> convertAcceptedOrderList(List<CustomerOrder> allOrders) {
+        if ( allOrders == null ) {
+            return null;
+        }
+
+        List<AcceptedOrderDto> list = new ArrayList<AcceptedOrderDto>( allOrders.size() );
+        for ( CustomerOrder customerOrder : allOrders ) {
+            list.add( convertAcceptedOrder( customerOrder ) );
+        }
+
+        return list;
     }
 
     protected Customer customerOrderDtoToCustomer(CustomerOrderDto customerOrderDto) {

@@ -39,7 +39,6 @@ public class AcceptedOrderDto {
     @NotNull
     private AddressDto address;
 
-
     private String startDate;
 
     private String finishDate;

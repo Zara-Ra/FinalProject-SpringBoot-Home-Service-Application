@@ -18,6 +18,8 @@ public class ExpertOfferDto {
     @NotNull
     private Integer orderId;
 
+    private String orderStatus;
+
     @Email
     private String expertEmail;
 

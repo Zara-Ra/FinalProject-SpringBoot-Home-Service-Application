@@ -64,14 +64,4 @@ public class ExpertOfferController {
         return "Expert Done";
     }
 
-    @GetMapping("/experts-orders")
-    @PreAuthorize("hasRole('EXPERT')")
-    public List<ExpertOfferDto> findAcceptedOrders(Principal principal) {
-        log.info("*** Find Order FOr Expert: {} ***", principal.getName());
-        List<ExpertOfferDto> expertOfferDtos = OfferMapper.INSTANCE
-                .convertOfferList(expertOfferService.findAcceptedOffersFor(principal.getName()));
-        log.info("*** Orders For Expert: {}, {} ***", principal.getName(), expertOfferDtos);
-        return expertOfferDtos;
-    }
-
 }

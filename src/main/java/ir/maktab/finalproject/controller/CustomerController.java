@@ -1,9 +1,11 @@
 package ir.maktab.finalproject.controller;
 
+import ir.maktab.finalproject.data.dto.AcceptedOrderDto;
 import ir.maktab.finalproject.data.dto.AccountDto;
 import ir.maktab.finalproject.data.dto.CreditDto;
 import ir.maktab.finalproject.data.dto.CustomerDto;
 import ir.maktab.finalproject.data.entity.roles.Customer;
+import ir.maktab.finalproject.data.mapper.OrderMapper;
 import ir.maktab.finalproject.data.mapper.UserMapper;
 import ir.maktab.finalproject.service.impl.CustomerService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -62,4 +65,22 @@ public class CustomerController {
         return customerDtos;
     }
 
+    @GetMapping("/credit")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public double showCredit(Principal principal){
+        log.info("*** Show Credit For {} ***",principal.getName());
+        double credit = customerService.getCredit(principal.getName());
+        log.info("*** Credit For {}: {} ***",principal.getName(),credit);
+        return credit;
+    }
+
+    @GetMapping("/all-orders")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public List<AcceptedOrderDto> showAllOrders(Principal principal){
+        log.info("*** Show Orders For {} ***",principal.getName());
+        List<AcceptedOrderDto> orderDtoList = OrderMapper.INSTANCE.convertAcceptedOrderList(
+                customerService.getAllOrders(principal.getName()));
+        log.info("*** Orders For {}: {} ***",principal.getName(),orderDtoList);
+        return orderDtoList;
+    }
 }

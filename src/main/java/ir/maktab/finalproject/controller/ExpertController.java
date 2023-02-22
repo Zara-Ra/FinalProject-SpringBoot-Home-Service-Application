@@ -1,11 +1,10 @@
 package ir.maktab.finalproject.controller;
 
-import ir.maktab.finalproject.data.dto.AccountDto;
-import ir.maktab.finalproject.data.dto.ExpertDto;
-import ir.maktab.finalproject.data.dto.PhotoInfoDto;
-import ir.maktab.finalproject.data.dto.ReviewDto;
+import ir.maktab.finalproject.data.dto.*;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
+import ir.maktab.finalproject.data.mapper.OfferMapper;
+import ir.maktab.finalproject.data.mapper.OrderMapper;
 import ir.maktab.finalproject.data.mapper.ReviewMapper;
 import ir.maktab.finalproject.data.mapper.UserMapper;
 import ir.maktab.finalproject.service.impl.ExpertService;
@@ -139,4 +138,24 @@ public class ExpertController {
         log.info("*** : Search Results: {} ***", expertDtos);
         return expertDtos;
     }
+
+    @GetMapping("/credit")
+    @PreAuthorize("hasRole('EXPERT')")
+    public double showCredit(Principal principal){
+        log.info("*** Show Credit For {} ***",principal.getName());
+        double credit = expertService.getCredit(principal.getName());
+        log.info("*** Credit For {}: {} ***",principal.getName(),credit);
+        return credit;
+    }
+
+    @GetMapping("/all-orders")
+    @PreAuthorize("hasRole('EXPERT')")
+    public List<AcceptedOrderDto> showAllOrders(Principal principal) {
+        log.info("*** Find Order For Expert: {} ***", principal.getName());
+        List<AcceptedOrderDto> orderDtoList = OrderMapper.INSTANCE.convertAcceptedOrderList(
+                expertService.getAllOrders(principal.getName()));
+        log.info("*** Orders For Expert: {}, {} ***", principal.getName(), orderDtoList);
+        return orderDtoList;
+    }
+
 }

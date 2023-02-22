@@ -3,6 +3,8 @@ package ir.maktab.finalproject.service.impl;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import ir.maktab.finalproject.data.dto.AccountDto;
 import ir.maktab.finalproject.data.entity.Credit;
+import ir.maktab.finalproject.data.entity.CustomerOrder;
+import ir.maktab.finalproject.data.entity.ExpertOffer;
 import ir.maktab.finalproject.data.entity.Review;
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.Expert;
@@ -35,6 +37,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -240,5 +243,17 @@ public class ExpertService extends MainService implements IRolesService<Expert> 
         }
         BooleanExpression expression = builder.build(Expert.class, "expert");
         return expertRepository.findAll(expression);
+    }
+
+    public double getCredit(String email) {
+        Expert expert = expertRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(messageSource.getMessage("errors.message.expert_not_exists")));
+        return expert.getCredit().getAmount();
+    }
+
+    public List<CustomerOrder> getAllOrders(String expertEmail) {
+        Expert expert = expertRepository.findByEmail(expertEmail)
+            .orElseThrow(() -> new UserNotFoundException(messageSource.getMessage("errors.message.expert_not_exists")));
+        return expert.getAcceptedOfferList().stream().map(ExpertOffer::getCustomerOrder).collect(Collectors.toList());
     }
 }

@@ -3,31 +3,32 @@ package ir.maktab.finalproject.service.impl;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import ir.maktab.finalproject.data.dto.AccountDto;
 import ir.maktab.finalproject.data.entity.Credit;
+import ir.maktab.finalproject.data.entity.CustomerOrder;
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.enums.Role;
 import ir.maktab.finalproject.repository.CustomerRepository;
 import ir.maktab.finalproject.service.IRolesService;
 import ir.maktab.finalproject.service.MainService;
-import ir.maktab.finalproject.service.exception.*;
+import ir.maktab.finalproject.service.exception.CreditException;
+import ir.maktab.finalproject.service.exception.PasswordException;
+import ir.maktab.finalproject.service.exception.UniqueViolationException;
+import ir.maktab.finalproject.service.exception.UserNotFoundException;
 import ir.maktab.finalproject.service.predicates.user.UserPredicateBuilder;
 import ir.maktab.finalproject.util.exception.ValidationException;
 import ir.maktab.finalproject.util.validation.Validation;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
+//@Transactional
 public class CustomerService extends MainService implements IRolesService<Customer> {
     private final CustomerRepository customerRepository;
 
@@ -39,7 +40,7 @@ public class CustomerService extends MainService implements IRolesService<Custom
     }
 
 
-    public Customer register(Customer customer,String siteURL) {
+    public Customer register(Customer customer, String siteURL) {
         validateNewCustomer(customer);
         customer.setCredit(Credit.builder().amount(0).build());
         customer.setRole(Role.ROLE_CUSTOMER);
@@ -110,6 +111,21 @@ public class CustomerService extends MainService implements IRolesService<Custom
         }
         BooleanExpression expression = builder.build(Customer.class, "customer");
         return customerRepository.findAll(expression);
+    }
+
+    public double getCredit(String customerEmail) {
+        Customer customer = customerRepository.findByEmail(customerEmail)
+                .orElseThrow(() -> new UserNotFoundException(messageSource.getMessage("errors.message.customer_not_exists")));
+        return customer.getCredit().getAmount();
+    }
+
+    @Transactional
+    public List<CustomerOrder> getAllOrders(String customerEmail) {
+        Customer customer = customerRepository.findByEmail(customerEmail)
+                .orElseThrow(() -> new UserNotFoundException(messageSource.getMessage("errors.message.customer_not_exists")));
+        List<CustomerOrder> customerOrderList = customer.getCustomerOrderList();
+        //System.out.println(customerOrderList.size());
+        return customerOrderList;
     }
 }
 

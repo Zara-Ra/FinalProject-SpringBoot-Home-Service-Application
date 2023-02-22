@@ -5,6 +5,7 @@ import ir.maktab.finalproject.data.entity.CustomerOrder;
 import ir.maktab.finalproject.data.entity.ExpertOffer;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.entity.services.SubService;
+import ir.maktab.finalproject.data.enums.OrderStatus;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -14,7 +15,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-02-21T23:28:07+0330",
+    date = "2023-02-22T10:53:26+0330",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 17.0.4 (Oracle Corporation)"
 )
 public class OfferMapperImpl implements OfferMapper {
@@ -60,6 +61,10 @@ public class OfferMapperImpl implements OfferMapper {
         expertOfferDto.setOrderId( offerCustomerOrderId( offer ) );
         if ( offer.getPreferredDate() != null ) {
             expertOfferDto.setPreferredDate( new SimpleDateFormat( "yyyy-MM-dd HH:mm" ).format( offer.getPreferredDate() ) );
+        }
+        OrderStatus status = offerCustomerOrderStatus( offer );
+        if ( status != null ) {
+            expertOfferDto.setOrderStatus( status.name() );
         }
         expertOfferDto.setId( offer.getId() );
         expertOfferDto.setPrice( offer.getPrice() );
@@ -163,5 +168,20 @@ public class OfferMapperImpl implements OfferMapper {
             return null;
         }
         return id;
+    }
+
+    private OrderStatus offerCustomerOrderStatus(ExpertOffer expertOffer) {
+        if ( expertOffer == null ) {
+            return null;
+        }
+        CustomerOrder customerOrder = expertOffer.getCustomerOrder();
+        if ( customerOrder == null ) {
+            return null;
+        }
+        OrderStatus status = customerOrder.getStatus();
+        if ( status == null ) {
+            return null;
+        }
+        return status;
     }
 }

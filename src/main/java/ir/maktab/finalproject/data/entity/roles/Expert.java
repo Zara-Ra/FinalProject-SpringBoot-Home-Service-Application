@@ -37,6 +37,8 @@ public class Expert extends User {
     private double averageScore;
 
     @OneToMany
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<ExpertOffer> acceptedOfferList = new ArrayList<>();
 
 

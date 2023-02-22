@@ -23,6 +23,7 @@ public interface OfferMapper {
     @Mapping(target = "subServiceName", source = "subService.subName")
     @Mapping(target = "orderId", source = "customerOrder.id")
     @Mapping(target = "preferredDate", source = "preferredDate", dateFormat = "yyyy-MM-dd HH:mm")
+    @Mapping(target = "orderStatus", source = "customerOrder.status")
     ExpertOfferDto convertOffer(ExpertOffer offer);
 
     List<ExpertOfferDto> convertOfferList(List<ExpertOffer> offers);
