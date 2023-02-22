@@ -5,7 +5,6 @@ import ir.maktab.finalproject.data.entity.ExpertOffer;
 import ir.maktab.finalproject.data.mapper.OfferMapper;
 import ir.maktab.finalproject.service.impl.ExpertOfferService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,7 +12,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 
 @RestController
 @Slf4j

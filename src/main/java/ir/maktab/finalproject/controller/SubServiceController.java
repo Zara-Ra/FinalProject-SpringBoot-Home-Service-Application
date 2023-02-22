@@ -1,7 +1,7 @@
 package ir.maktab.finalproject.controller;
 
 import ir.maktab.finalproject.data.dto.SubServiceDto;
-import ir.maktab.finalproject.data.entity.services.SubService;
+import ir.maktab.finalproject.data.entity.SubService;
 import ir.maktab.finalproject.data.mapper.ServiceMapper;
 import ir.maktab.finalproject.service.exception.SubServiceException;
 import ir.maktab.finalproject.service.impl.SubServiceService;

@@ -2,7 +2,6 @@ package ir.maktab.finalproject.data.entity.roles;
 
 import ir.maktab.finalproject.data.entity.CustomerOrder;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.*;

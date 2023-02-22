@@ -1,7 +1,7 @@
 package ir.maktab.finalproject.service;
 
-import ir.maktab.finalproject.data.entity.services.BaseService;
-import ir.maktab.finalproject.data.entity.services.SubService;
+import ir.maktab.finalproject.data.entity.BaseService;
+import ir.maktab.finalproject.data.entity.SubService;
 import ir.maktab.finalproject.service.exception.SubServiceException;
 import ir.maktab.finalproject.service.exception.UniqueViolationException;
 import ir.maktab.finalproject.service.impl.SubServiceService;

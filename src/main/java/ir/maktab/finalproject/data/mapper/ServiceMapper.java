@@ -2,8 +2,8 @@ package ir.maktab.finalproject.data.mapper;
 
 import ir.maktab.finalproject.data.dto.BaseServiceDto;
 import ir.maktab.finalproject.data.dto.SubServiceDto;
-import ir.maktab.finalproject.data.entity.services.BaseService;
-import ir.maktab.finalproject.data.entity.services.SubService;
+import ir.maktab.finalproject.data.entity.BaseService;
+import ir.maktab.finalproject.data.entity.SubService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

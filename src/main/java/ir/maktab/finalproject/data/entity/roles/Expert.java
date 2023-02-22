@@ -2,7 +2,7 @@ package ir.maktab.finalproject.data.entity.roles;
 
 import ir.maktab.finalproject.data.entity.ExpertOffer;
 import ir.maktab.finalproject.data.entity.Review;
-import ir.maktab.finalproject.data.entity.services.SubService;
+import ir.maktab.finalproject.data.entity.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
 import jakarta.persistence.*;
 import lombok.*;

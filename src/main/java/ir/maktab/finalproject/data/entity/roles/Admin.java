@@ -4,9 +4,6 @@ import jakarta.persistence.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-
-import java.util.Collection;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

@@ -39,10 +39,12 @@ public abstract class Account implements UserDetails {
         this.email = email;
         this.password = password;
     }
+
     @Override
     public String getUsername() {
         return getEmail();
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(getRole().name()));

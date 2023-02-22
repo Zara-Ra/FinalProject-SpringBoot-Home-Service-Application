@@ -3,21 +3,17 @@ package ir.maktab.finalproject.service.impl;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import ir.maktab.finalproject.data.dto.AccountDto;
-import ir.maktab.finalproject.data.entity.Credit;
-import ir.maktab.finalproject.data.entity.CustomerOrder;
-import ir.maktab.finalproject.data.entity.ExpertOffer;
-import ir.maktab.finalproject.data.entity.Review;
+import ir.maktab.finalproject.data.entity.*;
 import ir.maktab.finalproject.data.entity.roles.Expert;
-import ir.maktab.finalproject.data.enums.Role;
-import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
+import ir.maktab.finalproject.data.enums.Role;
 import ir.maktab.finalproject.repository.ExpertRepository;
 import ir.maktab.finalproject.service.IRolesService;
 import ir.maktab.finalproject.service.MainService;
 import ir.maktab.finalproject.service.exception.*;
-import ir.maktab.finalproject.util.search.predicates.user.UserPredicateBuilder;
 import ir.maktab.finalproject.util.exception.PhotoValidationException;
 import ir.maktab.finalproject.util.exception.ValidationException;
+import ir.maktab.finalproject.util.search.predicates.user.UserPredicateBuilder;
 import ir.maktab.finalproject.util.validation.Validation;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -63,7 +59,7 @@ public class ExpertService extends MainService implements IRolesService<Expert> 
     }
 
     @Override
-    public Expert register(Expert expert,String siteURL) {
+    public Expert register(Expert expert, String siteURL) {
         validateNewExpert(expert);
         expert.setStatus(ExpertStatus.NEW);
         expert.setCredit(Credit.builder().amount(0).build());
@@ -80,10 +76,11 @@ public class ExpertService extends MainService implements IRolesService<Expert> 
             return saveExpert;
         } catch (DataIntegrityViolationException e) {
             throw new UniqueViolationException(messageSource.getMessage("errors.message.duplicate_user"));
-        }  catch (MessagingException | UnsupportedEncodingException e) {
+        } catch (MessagingException | UnsupportedEncodingException e) {
             throw new EmailVerificationException(messageSource.getMessage("errors.message.email_verification_error"));
         }
     }
+
     private void sendVerificationEmail(Expert expert, String siteURL)
             throws MessagingException, UnsupportedEncodingException {
         String toAddress = expert.getEmail();
@@ -136,7 +133,7 @@ public class ExpertService extends MainService implements IRolesService<Expert> 
         Expert findExpert = expertRepository.findByEmail(accountDto.getEmail())
                 .orElseThrow(() -> new UserNotFoundException(messageSource.getMessage("errors.message.expert_not_exists")));
 
-        if(!passwordEncoder.matches(accountDto.getOldPassword(), findExpert.getPassword()))
+        if (!passwordEncoder.matches(accountDto.getOldPassword(), findExpert.getPassword()))
             throw new PasswordException(messageSource.getMessage("errors.message.incorrect_old_password"));
 
         Validation.validatePassword(accountDto.getNewPassword());
@@ -155,7 +152,7 @@ public class ExpertService extends MainService implements IRolesService<Expert> 
     public Expert approveExpert(Integer expertId) {
         Expert expert = expertRepository.findById(expertId)
                 .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.expert_not_exists")));
-        if(!expert.getStatus().equals(ExpertStatus.WAITING_FOR_APPROVAL))
+        if (!expert.getStatus().equals(ExpertStatus.WAITING_FOR_APPROVAL))
             throw new NotAllowedException(messageSource.getMessage("errors.message.expert_email_not_verified"));
         expert.setStatus(ExpertStatus.APPROVED);
         return expertRepository.save(expert);
@@ -244,7 +241,7 @@ public class ExpertService extends MainService implements IRolesService<Expert> 
             while (matcher.find()) {
                 builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
             }
-            expression = builder.build("expert");
+            expression = builder.build(Role.ROLE_EXPERT);
         }
         return expertRepository.findAll(expression);
     }
@@ -257,7 +254,7 @@ public class ExpertService extends MainService implements IRolesService<Expert> 
 
     public List<CustomerOrder> getAllOrders(String expertEmail) {
         Expert expert = expertRepository.findByEmail(expertEmail)
-            .orElseThrow(() -> new UserNotFoundException(messageSource.getMessage("errors.message.expert_not_exists")));
+                .orElseThrow(() -> new UserNotFoundException(messageSource.getMessage("errors.message.expert_not_exists")));
         return expert.getAcceptedOfferList().stream().map(ExpertOffer::getCustomerOrder).collect(Collectors.toList());
     }
 }

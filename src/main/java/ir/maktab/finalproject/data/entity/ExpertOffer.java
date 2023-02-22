@@ -1,7 +1,6 @@
 package ir.maktab.finalproject.data.entity;
 
 import ir.maktab.finalproject.data.entity.roles.Expert;
-import ir.maktab.finalproject.data.entity.services.SubService;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

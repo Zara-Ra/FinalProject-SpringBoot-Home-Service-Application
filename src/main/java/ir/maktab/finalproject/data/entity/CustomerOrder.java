@@ -1,7 +1,6 @@
 package ir.maktab.finalproject.data.entity;
 
 import ir.maktab.finalproject.data.entity.roles.Customer;
-import ir.maktab.finalproject.data.entity.services.SubService;
 import ir.maktab.finalproject.data.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -45,7 +44,7 @@ public class CustomerOrder {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude //mappedby added...
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "customerOrder", cascade = CascadeType.MERGE)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "customerOrder", cascade = CascadeType.MERGE)
     private List<ExpertOffer> expertOfferList;
 
     @EqualsAndHashCode.Exclude

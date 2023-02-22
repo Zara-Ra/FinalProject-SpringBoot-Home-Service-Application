@@ -28,8 +28,8 @@ public class OrderPredicateBuilder {
             return predicate.getPredicate();
         }).filter(Objects::nonNull).toList();
 
-        if(predicates.size()==0)
-            return  Expressions.asBoolean(false).isTrue();
+        if (predicates.size() == 0)
+            return Expressions.asBoolean(false).isTrue();
 
         BooleanExpression result = Expressions.asBoolean(true).isTrue();
         for (BooleanExpression predicate : predicates) {

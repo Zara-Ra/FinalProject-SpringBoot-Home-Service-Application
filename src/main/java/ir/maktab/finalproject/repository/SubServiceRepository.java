@@ -1,6 +1,6 @@
 package ir.maktab.finalproject.repository;
 
-import ir.maktab.finalproject.data.entity.services.SubService;
+import ir.maktab.finalproject.data.entity.SubService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

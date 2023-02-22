@@ -1,6 +1,6 @@
 package ir.maktab.finalproject.service.impl;
 
-import ir.maktab.finalproject.data.entity.services.BaseService;
+import ir.maktab.finalproject.data.entity.BaseService;
 import ir.maktab.finalproject.repository.BaseServiceRepository;
 import ir.maktab.finalproject.service.IService;
 import ir.maktab.finalproject.service.MainService;

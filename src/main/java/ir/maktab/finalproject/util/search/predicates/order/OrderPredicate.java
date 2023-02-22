@@ -64,6 +64,7 @@ public class OrderPredicate {
         StringPath path = QCustomerOrder.customerOrder.subService.baseService.baseName;
         return path.eq(criteria.getValue().toString());
     }
+
     private BooleanExpression subServiceBooleanExpression() {
         StringPath path = QCustomerOrder.customerOrder.subService.subName;
         return path.eq(criteria.getValue().toString());

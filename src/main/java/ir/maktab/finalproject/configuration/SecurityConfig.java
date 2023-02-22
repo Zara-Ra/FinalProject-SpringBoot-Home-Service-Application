@@ -39,8 +39,8 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers( "/customer/register").permitAll()
-                .requestMatchers( "/expert/register").permitAll()
+                .requestMatchers("/customer/register").permitAll()
+                .requestMatchers("/expert/register").permitAll()
                 .requestMatchers("/base/find").permitAll()
                 .requestMatchers("/base/find-all").permitAll()
                 .requestMatchers("/sub/find-all").permitAll()

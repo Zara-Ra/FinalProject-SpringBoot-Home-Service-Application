@@ -1,4 +1,4 @@
-package ir.maktab.finalproject.data.entity.services;
+package ir.maktab.finalproject.data.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

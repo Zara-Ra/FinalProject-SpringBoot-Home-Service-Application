@@ -2,10 +2,8 @@ package ir.maktab.finalproject.util.search.predicates.user;
 
 import com.querydsl.core.types.dsl.*;
 import ir.maktab.finalproject.data.entity.QCredit;
-import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.QCustomer;
 import ir.maktab.finalproject.data.entity.roles.QExpert;
-import ir.maktab.finalproject.data.entity.roles.User;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
 import ir.maktab.finalproject.data.enums.Role;
 import ir.maktab.finalproject.util.exception.ValidationException;
@@ -22,10 +20,9 @@ public class UserPredicate {
         this.criteria = criteria;
     }
 
-    public BooleanExpression getPredicate(String className) {
-        //PathBuilder<User> entityPath = new PathBuilder<>(classType, className);
-        if (className.equals("customer")) {
-            BooleanExpression booleanExpression = userExpressions(className);
+    public BooleanExpression getPredicate(Role role) {
+        if (role.equals(Role.ROLE_CUSTOMER)) {
+            BooleanExpression booleanExpression = userExpressions(Role.ROLE_CUSTOMER);
             if (booleanExpression != null)
                 return booleanExpression;
             if (criteria.getKey().equals("registerDate")) {
@@ -36,9 +33,8 @@ public class UserPredicate {
                 NumberExpression<Integer> path = QCustomer.customer.customerOrderList.size();
                 return integerBooleanExpression(path);
             }
-        }
-        else if (className.equals("expert")) {
-            BooleanExpression booleanExpression = userExpressions(className);
+        } else if (role.equals(Role.ROLE_EXPERT)) {
+            BooleanExpression booleanExpression = userExpressions(Role.ROLE_EXPERT);
             if (booleanExpression != null)
                 return booleanExpression;
             if (criteria.getKey().equals("registerDate")) {
@@ -62,14 +58,14 @@ public class UserPredicate {
         return null;
     }
 
-    private BooleanExpression userExpressions(String classname) {
+    private BooleanExpression userExpressions(Role role) {
         if (criteria.getKey().equals("credit")) {
             return creditBooleanExpression();
         }
         if (criteria.getKey().equals("role")) {
-            if (classname.equals("customer"))
+            if (role.equals(Role.ROLE_CUSTOMER))
                 return customerRoleExpression();
-            else if (classname.equals("expert"))
+            else if (role.equals(Role.ROLE_EXPERT))
                 return expertRoleExpression();
         }
         return null;

@@ -2,6 +2,7 @@ package ir.maktab.finalproject.util.search.predicates.user;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import ir.maktab.finalproject.data.enums.Role;
 import ir.maktab.finalproject.util.search.SearchCriteria;
 
 import java.util.ArrayList;
@@ -19,17 +20,17 @@ public class UserPredicateBuilder {
         params.add(new SearchCriteria(key, operation, value));
     }
 
-    public BooleanExpression build(String className) {
+    public BooleanExpression build(Role role) {
         if (params.size() == 0)
             return null;
 
         List<BooleanExpression> predicates = params.stream().map(param -> {
             UserPredicate predicate = new UserPredicate(param);
-            return predicate.getPredicate(className);
+            return predicate.getPredicate(role);
         }).filter(Objects::nonNull).toList();
 
-        if(predicates.size()==0)
-            return  Expressions.asBoolean(false).isTrue();
+        if (predicates.size() == 0)
+            return Expressions.asBoolean(false).isTrue();
 
         BooleanExpression result = Expressions.asBoolean(true).isTrue();
         for (BooleanExpression predicate : predicates) {

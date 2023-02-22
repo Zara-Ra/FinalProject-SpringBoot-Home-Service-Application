@@ -1,6 +1,8 @@
 package ir.maktab.finalproject.controller;
 
-import ir.maktab.finalproject.data.dto.*;
+import ir.maktab.finalproject.data.dto.AccountDto;
+import ir.maktab.finalproject.data.dto.CreditDto;
+import ir.maktab.finalproject.data.dto.CustomerDto;
 import ir.maktab.finalproject.data.dto.response.CustomerResponseDto;
 import ir.maktab.finalproject.data.dto.response.OrderResponseDto;
 import ir.maktab.finalproject.data.entity.roles.Customer;
@@ -29,7 +31,7 @@ public class CustomerController {
     public String register(@Valid @RequestBody CustomerDto customerDto) {
         log.info("*** Add New Customer: {} ***", customerDto);
         Customer customer = customerService.register(UserMapper.INSTANCE.convertCustomer(customerDto)
-                ,"");
+                , "");
         log.info("*** New Customer Added : {} ***", customer);
         return "Customer Registered Successfully";
     }
@@ -65,20 +67,20 @@ public class CustomerController {
 
     @GetMapping("/credit")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public double showCredit(Principal principal){
-        log.info("*** Show Credit For {} ***",principal.getName());
+    public double showCredit(Principal principal) {
+        log.info("*** Show Credit For {} ***", principal.getName());
         double credit = customerService.getCredit(principal.getName());
-        log.info("*** Credit For {}: {} ***",principal.getName(),credit);
+        log.info("*** Credit For {}: {} ***", principal.getName(), credit);
         return credit;
     }
 
     @GetMapping("/all-orders")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public List<OrderResponseDto> showAllOrders(Principal principal){
-        log.info("*** Show Orders For {} ***",principal.getName());
+    public List<OrderResponseDto> showAllOrders(Principal principal) {
+        log.info("*** Show Orders For {} ***", principal.getName());
         List<OrderResponseDto> orderDtoList = OrderMapper.INSTANCE.convertAcceptedOrderList(
                 customerService.getAllOrders(principal.getName()));
-        log.info("*** Orders For {}: {} ***",principal.getName(),orderDtoList);
+        log.info("*** Orders For {}: {} ***", principal.getName(), orderDtoList);
         return orderDtoList;
     }
 }
