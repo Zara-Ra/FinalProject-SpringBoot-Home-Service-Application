@@ -1,6 +1,7 @@
 package ir.maktab.finalproject.service.impl;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import ir.maktab.finalproject.data.dto.CreditPaymentDto;
 import ir.maktab.finalproject.data.entity.CustomerOrder;
 import ir.maktab.finalproject.data.entity.ExpertOffer;
@@ -15,8 +16,8 @@ import ir.maktab.finalproject.service.MainService;
 import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.exception.OrderRequirementException;
 import ir.maktab.finalproject.service.exception.UserNotFoundException;
-import ir.maktab.finalproject.service.predicates.order.OrderPredicateBuilder;
 import ir.maktab.finalproject.util.exception.ValidationException;
+import ir.maktab.finalproject.util.search.predicates.order.OrderPredicateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -127,7 +128,7 @@ public class CustomerOrderService extends MainService {
         CustomerOrder customerOrder = customerOrderRepository.findById(review.getCustomerOrder().getId())
                 .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.order_not_exists")));
 
-        if(!review.getCustomerOrder().getCustomer().getEmail().equals(customerOrder.getCustomer().getEmail()))
+        if (!review.getCustomerOrder().getCustomer().getEmail().equals(customerOrder.getCustomer().getEmail()))
             throw new OrderRequirementException(messageSource.getMessage("errors.message.order_customer_mismatch"));
 
         if (!customerOrder.getStatus().equals(OrderStatus.PAYED))
@@ -147,14 +148,16 @@ public class CustomerOrderService extends MainService {
     public Iterable<CustomerOrder> findAll(String search) {
         if (search.isEmpty())
             throw new ValidationException(messageSource.getMessage("errors.message.invalid_null_search"));
-
-        OrderPredicateBuilder builder = new OrderPredicateBuilder();
-        Pattern pattern = Pattern.compile("(\\w+?)([:<>])([\\w-_@.]+?),");
-        Matcher matcher = pattern.matcher(search + ",");
-        while (matcher.find()) {
-            builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
+        BooleanExpression expression = Expressions.asBoolean(true).isTrue();
+        if (!search.equals("all")) {
+            OrderPredicateBuilder builder = new OrderPredicateBuilder();
+            Pattern pattern = Pattern.compile("(\\w+?)([:<>])([\\w-_@.]+?),");
+            Matcher matcher = pattern.matcher(search + ",");
+            while (matcher.find()) {
+                builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
+            }
+            expression = builder.build();
         }
-        BooleanExpression expression = builder.build();
         return customerOrderRepository.findAll(expression);
     }
 

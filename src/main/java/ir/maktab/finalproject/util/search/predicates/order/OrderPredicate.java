@@ -1,4 +1,4 @@
-package ir.maktab.finalproject.service.predicates.order;
+package ir.maktab.finalproject.util.search.predicates.order;
 
 import com.querydsl.core.types.dsl.*;
 import ir.maktab.finalproject.data.entity.QCustomerOrder;
@@ -22,10 +22,10 @@ public class OrderPredicate {
             StringPath path = QCustomerOrder.customerOrder.customer.email;
             return path.eq(criteria.getValue().toString());
         }
-        if (criteria.getKey().equals("baseServiceName")) {
+        if (criteria.getKey().equals("baseService")) {
             return baseServiceBooleanExpression();
         }
-        if (criteria.getKey().equals("subServiceName")) {
+        if (criteria.getKey().equals("subService")) {
             return subServiceBooleanExpression();
         }
         if (criteria.getKey().equals("expertEmail")) {
@@ -90,9 +90,8 @@ public class OrderPredicate {
     }
 
     private BooleanExpression dateBooleanExpression(DateTimePath<Date> path) {
-        String operation = criteria.getOperation();
         try {
-            return switch (operation) {
+            return switch (criteria.getOperation()) {
                 case ":" -> path.eq(
                         new SimpleDateFormat("yyyy-MM-dd").parse(criteria.getValue().toString()));
                 case "<" -> path.before(

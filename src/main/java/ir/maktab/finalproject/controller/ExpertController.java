@@ -85,11 +85,11 @@ public class ExpertController {
 
     @GetMapping("/approve-expert")
     @PreAuthorize("hasRole('ADMIN')")
-    public String approveStatus(@RequestParam @Min(1) Integer expertId) {
+    public String approveExpert(@RequestParam @Min(1) Integer expertId) {
         log.info("*** Approve New Expert: {} ***", expertId);
-        expertService.setExpertStatus(expertId, ExpertStatus.APPROVED);
+        expertService.approveExpert(expertId);
         log.info("*** Expert Status Changed To APPROVED ***");
-        return "Expert Status Updated";
+        return "Expert Status Changed To Approved";
     }
 
     @GetMapping("/assign-sub-service")

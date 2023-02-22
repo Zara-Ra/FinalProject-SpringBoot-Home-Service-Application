@@ -1,4 +1,4 @@
-package ir.maktab.finalproject.service.predicates.user;
+package ir.maktab.finalproject.util.search.predicates.user;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -19,13 +19,13 @@ public class UserPredicateBuilder {
         params.add(new SearchCriteria(key, operation, value));
     }
 
-    public BooleanExpression build(Class aClass, String className) {
+    public BooleanExpression build(String className) {
         if (params.size() == 0)
             return null;
 
         List<BooleanExpression> predicates = params.stream().map(param -> {
             UserPredicate predicate = new UserPredicate(param);
-            return predicate.getPredicate(aClass, className);
+            return predicate.getPredicate(className);
         }).filter(Objects::nonNull).toList();
 
         if(predicates.size()==0)

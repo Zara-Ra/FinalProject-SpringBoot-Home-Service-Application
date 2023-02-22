@@ -1,4 +1,4 @@
-package ir.maktab.finalproject.service.predicates.user;
+package ir.maktab.finalproject.util.search.predicates.user;
 
 import com.querydsl.core.types.dsl.*;
 import ir.maktab.finalproject.data.entity.QCredit;
@@ -22,29 +22,31 @@ public class UserPredicate {
         this.criteria = criteria;
     }
 
-    public BooleanExpression getPredicate(Class classType, String className) {
-        PathBuilder<User> entityPath = new PathBuilder<>(classType, className);
+    public BooleanExpression getPredicate(String className) {
+        //PathBuilder<User> entityPath = new PathBuilder<>(classType, className);
         if (className.equals("customer")) {
-                BooleanExpression booleanExpression = userExpressions(entityPath);
-                if(booleanExpression != null)
-                    return booleanExpression;
-                if(criteria.getKey().equals("numberOfOrders")){
-                    NumberExpression<Integer> path = QCustomer.customer.customerOrderList.size();
-                    int value = Integer.parseInt(criteria.getValue().toString());
-                    return switch (criteria.getOperation()) {
-                        case ":" -> path.eq(value);
-                        case ">" -> path.gt(value);
-                        case "<" -> path.lt(value);
-                        default -> null;
-                    };
-                }
-
-        } else if (className.equals("expert")) {
-            BooleanExpression booleanExpression = userExpressions(entityPath);
+            BooleanExpression booleanExpression = userExpressions(className);
             if (booleanExpression != null)
                 return booleanExpression;
+            if (criteria.getKey().equals("registerDate")) {
+                DatePath<Date> path = QCustomer.customer.registerDate;
+                return dateBooleanExpression(path);
+            }
+            if (criteria.getKey().equals("numberOfOrders")) {
+                NumberExpression<Integer> path = QCustomer.customer.customerOrderList.size();
+                return integerBooleanExpression(path);
+            }
+        }
+        else if (className.equals("expert")) {
+            BooleanExpression booleanExpression = userExpressions(className);
+            if (booleanExpression != null)
+                return booleanExpression;
+            if (criteria.getKey().equals("registerDate")) {
+                DatePath<Date> path = QExpert.expert.registerDate;
+                return dateBooleanExpression(path);
+            }
             if (criteria.getKey().equals("averageScore")) {
-                return scoreBooleanExpression(entityPath);
+                return scoreBooleanExpression();
             }
             if (criteria.getKey().equals("subService")) {
                 return subServiceBooleanExpression();
@@ -52,10 +54,23 @@ public class UserPredicate {
             if (criteria.getKey().equals("status")) {
                 return statusBooleanExpression();
             }
-            if(criteria.getKey().equals("numberOfOrders")){
+            if (criteria.getKey().equals("numberOfOrders")) {
                 NumberExpression<Integer> path = QExpert.expert.acceptedOfferList.size();
                 return integerBooleanExpression(path);
             }
+        }
+        return null;
+    }
+
+    private BooleanExpression userExpressions(String classname) {
+        if (criteria.getKey().equals("credit")) {
+            return creditBooleanExpression();
+        }
+        if (criteria.getKey().equals("role")) {
+            if (classname.equals("customer"))
+                return customerRoleExpression();
+            else if (classname.equals("expert"))
+                return expertRoleExpression();
         }
         return null;
     }
@@ -68,25 +83,6 @@ public class UserPredicate {
             case "<" -> path.lt(value);
             default -> null;
         };
-    }
-
-    private BooleanExpression userExpressions(PathBuilder<User> entityPath) {
-        if (criteria.getKey().equals("registerDate")) {
-            return dateBooleanExpression(entityPath);
-        }
-        if (criteria.getKey().equals("id")) {
-            return scoreBooleanExpression(entityPath);
-        }
-        if (criteria.getKey().equals("credit")) {
-            return creditBooleanExpression();
-        }
-        if (criteria.getKey().equals("role")) {
-            if (entityPath.getType().equals(Customer.class))
-                return customerRoleExpression();
-            else if (entityPath.getType().equals(Customer.class))
-                return expertRoleExpression();
-        }
-        return null;
     }
 
     private BooleanExpression statusBooleanExpression() {
@@ -112,6 +108,23 @@ public class UserPredicate {
     private BooleanExpression creditBooleanExpression() {
         QCredit qCredit = QCredit.credit;
         NumberPath<Double> path = qCredit.amount;
+        return doubleBooleanExpression(path);
+    }
+
+    private BooleanExpression scoreBooleanExpression() {
+        if (!isInteger(criteria.getValue().toString())) {
+            NumberPath<Double> path = QExpert.expert.averageScore;
+            return switch (criteria.getValue().toString()) {
+                case "max" -> path.goe(4.5);
+                case "min" -> path.loe(0.5);
+                default -> null;
+            };
+        }
+        NumberPath<Double> path = QExpert.expert.averageScore;
+        return doubleBooleanExpression(path);
+    }
+
+    private BooleanExpression doubleBooleanExpression(NumberPath<Double> path) {
         double value = Double.parseDouble(criteria.getValue().toString());
         return switch (criteria.getOperation()) {
             case ":" -> path.eq(value);
@@ -121,27 +134,7 @@ public class UserPredicate {
         };
     }
 
-    private BooleanExpression scoreBooleanExpression(PathBuilder<User> entityPath) {
-        if (!isInteger(criteria.getValue().toString())) {
-            NumberPath<Double> path = QExpert.expert.averageScore;
-            return switch (criteria.getValue().toString()) {
-                case "max" -> path.goe(4.5);
-                case "min" -> path.loe(0.5);
-                default -> null;
-            };
-        }
-        NumberPath<Integer> path = entityPath.getNumber(criteria.getKey(), Integer.class);
-        int value = Integer.parseInt(criteria.getValue().toString());
-        return switch (criteria.getOperation()) {
-            case ":" -> path.eq(value);
-            case ">" -> path.gt(value);
-            case "<" -> path.lt(value);
-            default -> null;
-        };
-    }
-
-    private BooleanExpression dateBooleanExpression(PathBuilder<User> entityPath) {
-        DatePath<Date> path = entityPath.getDate(criteria.getKey(), Date.class);
+    private BooleanExpression dateBooleanExpression(DatePath<Date> path) {
         String operation = criteria.getOperation();
         try {
             return switch (operation) {

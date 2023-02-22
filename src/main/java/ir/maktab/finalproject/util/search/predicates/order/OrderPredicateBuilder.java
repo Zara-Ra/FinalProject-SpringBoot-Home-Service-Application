@@ -1,8 +1,7 @@
-package ir.maktab.finalproject.service.predicates.order;
+package ir.maktab.finalproject.util.search.predicates.order;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
-import ir.maktab.finalproject.service.predicates.user.UserPredicate;
 import ir.maktab.finalproject.util.search.SearchCriteria;
 
 import java.util.ArrayList;

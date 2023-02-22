@@ -1,12 +1,12 @@
 package ir.maktab.finalproject.service.impl;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import ir.maktab.finalproject.data.dto.AccountDto;
 import ir.maktab.finalproject.data.entity.Credit;
 import ir.maktab.finalproject.data.entity.CustomerOrder;
 import ir.maktab.finalproject.data.entity.ExpertOffer;
 import ir.maktab.finalproject.data.entity.Review;
-import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.enums.Role;
 import ir.maktab.finalproject.data.entity.services.SubService;
@@ -15,7 +15,7 @@ import ir.maktab.finalproject.repository.ExpertRepository;
 import ir.maktab.finalproject.service.IRolesService;
 import ir.maktab.finalproject.service.MainService;
 import ir.maktab.finalproject.service.exception.*;
-import ir.maktab.finalproject.service.predicates.user.UserPredicateBuilder;
+import ir.maktab.finalproject.util.search.predicates.user.UserPredicateBuilder;
 import ir.maktab.finalproject.util.exception.PhotoValidationException;
 import ir.maktab.finalproject.util.exception.ValidationException;
 import ir.maktab.finalproject.util.validation.Validation;
@@ -152,10 +152,12 @@ public class ExpertService extends MainService implements IRolesService<Expert> 
         return expertRepository.findAllByStatus(status);
     }
 
-    public Expert setExpertStatus(Integer expertId, ExpertStatus status) {
+    public Expert approveExpert(Integer expertId) {
         Expert expert = expertRepository.findById(expertId)
                 .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.expert_not_exists")));
-        expert.setStatus(status);
+        if(!expert.getStatus().equals(ExpertStatus.WAITING_FOR_APPROVAL))
+            throw new NotAllowedException(messageSource.getMessage("errors.message.expert_email_not_verified"));
+        expert.setStatus(ExpertStatus.APPROVED);
         return expertRepository.save(expert);
     }
 
@@ -234,15 +236,16 @@ public class ExpertService extends MainService implements IRolesService<Expert> 
     public Iterable<Expert> findAll(String search) {
         if (search.isEmpty())
             throw new ValidationException(messageSource.getMessage("errors.message.invalid_null_search"));
-
-        UserPredicateBuilder builder = new UserPredicateBuilder();
-        Pattern pattern = Pattern.compile("(\\w+?)([:<>])([\\w-_@.]+?),");
-        Matcher matcher = pattern.matcher(search + ",");
-        while (matcher.find()) {
-            builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
+        BooleanExpression expression = Expressions.asBoolean(true).isTrue();
+        if (!search.equals("all")) {
+            UserPredicateBuilder builder = new UserPredicateBuilder();
+            Pattern pattern = Pattern.compile("(\\w+?)([:<>])([\\w-_@.]+?),");
+            Matcher matcher = pattern.matcher(search + ",");
+            while (matcher.find()) {
+                builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
+            }
+            expression = builder.build("expert");
         }
-        BooleanExpression expression = builder.build(Expert.class, "expert");
-
         return expertRepository.findAll(expression);
     }
 
