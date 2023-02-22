@@ -1,9 +1,8 @@
 package ir.maktab.finalproject.data.mapper;
 
-import ir.maktab.finalproject.data.dto.AcceptedOrderDto;
+import ir.maktab.finalproject.data.dto.response.OrderResponseDto;
 import ir.maktab.finalproject.data.dto.CustomerOrderDto;
 import ir.maktab.finalproject.data.entity.CustomerOrder;
-import ir.maktab.finalproject.data.entity.roles.Customer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -34,9 +33,9 @@ public interface OrderMapper {
     @Mapping(source = "acceptedExpertOffer.id", target = "offerId")
     @Mapping(target = "startDate", source = "startDate", dateFormat = "yyyy-MM-dd HH:mm")
     @Mapping(target = "finishDate", source = "finishDate", dateFormat = "yyyy-MM-dd HH:mm")
-    AcceptedOrderDto convertAcceptedOrder(CustomerOrder customerOrder);
+    OrderResponseDto convertAcceptedOrder(CustomerOrder customerOrder);
 
-    Iterable<AcceptedOrderDto> convertCustomerOrderIterator(Iterable<CustomerOrder> all);
+    Iterable<OrderResponseDto> convertCustomerOrderIterator(Iterable<CustomerOrder> all);
 
-    List<AcceptedOrderDto> convertAcceptedOrderList(List<CustomerOrder> allOrders);
+    List<OrderResponseDto> convertAcceptedOrderList(List<CustomerOrder> allOrders);
 }

@@ -1,14 +1,14 @@
 package ir.maktab.finalproject.controller;
 
 import ir.maktab.finalproject.data.dto.*;
+import ir.maktab.finalproject.data.dto.response.ExpertResponseDto;
+import ir.maktab.finalproject.data.dto.response.OrderResponseDto;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.enums.ExpertStatus;
-import ir.maktab.finalproject.data.mapper.OfferMapper;
 import ir.maktab.finalproject.data.mapper.OrderMapper;
 import ir.maktab.finalproject.data.mapper.ReviewMapper;
 import ir.maktab.finalproject.data.mapper.UserMapper;
 import ir.maktab.finalproject.service.impl.ExpertService;
-import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -66,21 +66,21 @@ public class ExpertController {
 
     @GetMapping("/new-experts")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<ExpertDto> findNewExperts() {
+    public List<ExpertResponseDto> findNewExperts() {
         log.info("*** Find New Experts ***");
-        List<ExpertDto> expertDtos = UserMapper.INSTANCE
+        List<ExpertResponseDto> expertResponseDtos = UserMapper.INSTANCE
                 .convertExpertList(expertService.findAllExpertByStatus(ExpertStatus.NEW));
-        log.info("*** Found Experts With NEW Status: {} ***", expertDtos);
-        return expertDtos;
+        log.info("*** Found Experts With NEW Status: {} ***", expertResponseDtos);
+        return expertResponseDtos;
     }
     @GetMapping("/unapproved-experts")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<ExpertDto> findUnApprovedExperts() {
+    public List<ExpertResponseDto> findUnApprovedExperts() {
         log.info("*** Find Unapproved Experts ***");
-        List<ExpertDto> expertDtos = UserMapper.INSTANCE
+        List<ExpertResponseDto> expertResponseDtos = UserMapper.INSTANCE
                 .convertExpertList(expertService.findAllExpertByStatus(ExpertStatus.WAITING_FOR_APPROVAL));
-        log.info("*** Found Experts With WAITING_FOR_APPROVAL Status: {} ***", expertDtos);
-        return expertDtos;
+        log.info("*** Found Experts With WAITING_FOR_APPROVAL Status: {} ***", expertResponseDtos);
+        return expertResponseDtos;
     }
 
     @GetMapping("/approve-expert")
@@ -132,9 +132,9 @@ public class ExpertController {
 
     @GetMapping("/filter")
     @PreAuthorize("hasRole('ADMIN')")
-    public Iterable<ExpertDto> search(@RequestParam String search) {
+    public Iterable<ExpertResponseDto> search(@RequestParam String search) {
         log.info("*** Search for: {} ***", search);
-        Iterable<ExpertDto> expertDtos = UserMapper.INSTANCE.convertExpertIterator(expertService.findAll(search));
+        Iterable<ExpertResponseDto> expertDtos = UserMapper.INSTANCE.convertExpertIterator(expertService.findAll(search));
         log.info("*** : Search Results: {} ***", expertDtos);
         return expertDtos;
     }
@@ -150,9 +150,9 @@ public class ExpertController {
 
     @GetMapping("/all-orders")
     @PreAuthorize("hasRole('EXPERT')")
-    public List<AcceptedOrderDto> showAllOrders(Principal principal) {
+    public List<OrderResponseDto> showAllOrders(Principal principal) {
         log.info("*** Find Order For Expert: {} ***", principal.getName());
-        List<AcceptedOrderDto> orderDtoList = OrderMapper.INSTANCE.convertAcceptedOrderList(
+        List<OrderResponseDto> orderDtoList = OrderMapper.INSTANCE.convertAcceptedOrderList(
                 expertService.getAllOrders(principal.getName()));
         log.info("*** Orders For Expert: {}, {} ***", principal.getName(), orderDtoList);
         return orderDtoList;

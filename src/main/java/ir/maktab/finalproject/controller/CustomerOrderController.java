@@ -2,13 +2,13 @@ package ir.maktab.finalproject.controller;
 
 import ir.maktab.finalproject.controller.enums.SortType;
 import ir.maktab.finalproject.data.dto.*;
+import ir.maktab.finalproject.data.dto.response.OrderResponseDto;
 import ir.maktab.finalproject.data.entity.CustomerOrder;
 import ir.maktab.finalproject.data.entity.ExpertOffer;
 import ir.maktab.finalproject.data.enums.PaymentType;
 import ir.maktab.finalproject.data.mapper.OfferMapper;
 import ir.maktab.finalproject.data.mapper.OrderMapper;
 import ir.maktab.finalproject.data.mapper.ReviewMapper;
-import ir.maktab.finalproject.data.mapper.UserMapper;
 import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.impl.CustomerOrderService;
 import ir.maktab.finalproject.util.exception.ValidationException;
@@ -99,52 +99,52 @@ public class CustomerOrderController extends MainController {
 
     @GetMapping("/find-accepted-order") //TODO REMOVE
     @PreAuthorize("hasRole('CUSTOMER')")
-    public AcceptedOrderDto findAcceptedOrder(@RequestParam @Min(1) Integer orderId) {
+    public OrderResponseDto findAcceptedOrder(@RequestParam @Min(1) Integer orderId) {
         log.info("*** Find Accepted Order: {} ***", orderId);
-        AcceptedOrderDto acceptedOrderDto = OrderMapper.INSTANCE.convertAcceptedOrder(customerOrderService.findById(orderId).orElseThrow(
+        OrderResponseDto orderResponseDto = OrderMapper.INSTANCE.convertAcceptedOrder(customerOrderService.findById(orderId).orElseThrow(
                 () -> new NotExistsException(messageSource.getMessage("errors.message.order_not_exists"))
         ));
-        log.info("*** Accepted Order: {} ***", acceptedOrderDto);
-        return acceptedOrderDto;
+        log.info("*** Accepted Order: {} ***", orderResponseDto);
+        return orderResponseDto;
     }
 
 
     @CrossOrigin
     @PostMapping("/pay-online")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public String payOnline(@Valid @ModelAttribute PaymentDto paymentDto, HttpServletRequest request) {
-        log.info("*** Pay Online For: {} ***", paymentDto);
-        PaymentUserDto paymentUserDto = new PaymentUserDto();
-        paymentUserDto.setCustomerEmail(request.getUserPrincipal().getName());
-        paymentUserDto.setOrderId(paymentDto.getOrderId());
-        paymentUserDto.setPaymentType(PaymentType.ONLINE);
+    public String payOnline(@Valid @ModelAttribute OnlinePaymentDto onlinePaymentDto, HttpServletRequest request) {
+        log.info("*** Pay Online For: {} ***", onlinePaymentDto);
+        CreditPaymentDto creditPaymentDto = new CreditPaymentDto();
+        creditPaymentDto.setCustomerEmail(request.getUserPrincipal().getName());
+        creditPaymentDto.setOrderId(onlinePaymentDto.getOrderId());
+        creditPaymentDto.setPaymentType(PaymentType.ONLINE);
 
         try {
-            Date expirationDate = new SimpleDateFormat("yyyy-MM").parse(paymentDto.getExpirationDate());
+            Date expirationDate = new SimpleDateFormat("yyyy-MM").parse(onlinePaymentDto.getExpirationDate());
             if (expirationDate.before(new Date())) {
-                log.error("*** Card Expired {}: ***", paymentDto.getExpirationDate());
+                log.error("*** Card Expired {}: ***", onlinePaymentDto.getExpirationDate());
                 throw new ValidationException(messageSource.getMessage("errors.message.invalid_card_date"));
             }
         } catch (ParseException e) {
-            log.error("*** Invalid Date Format: {} ***", paymentDto.getExpirationDate());
+            log.error("*** Invalid Date Format: {} ***", onlinePaymentDto.getExpirationDate());
             throw new ValidationException(messageSource.getMessage("errors.message.invalid_date"));
         }
-        if (!paymentDto.getCaptcha().equals(request.getSession().getAttribute("captcha")))
+        if (!onlinePaymentDto.getCaptcha().equals(request.getSession().getAttribute("captcha")))
             throw new ValidationException(messageSource.getMessage("errors.message.invalid_captcha"));
         //call bank
-        customerOrderService.pay(paymentUserDto);
-        log.info("*** Paid Online for: {} ***", paymentDto.getOrderId());
+        customerOrderService.pay(creditPaymentDto);
+        log.info("*** Paid Online for: {} ***", onlinePaymentDto.getOrderId());
         return "Order Payed Online";
     }
 
     @PostMapping("/pay-credit")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public String payFromCredit(@RequestBody PaymentUserDto paymentUserDto,Principal principal) {
-        log.info("*** Pay Online For: {} ***", paymentUserDto.getOrderId());
-        paymentUserDto.setCustomerEmail(principal.getName());
-        paymentUserDto.setPaymentType(PaymentType.CREDIT);
-        customerOrderService.pay(paymentUserDto);
-        log.info("*** Paid From Credit for: {} ***", paymentUserDto.getOrderId());
+    public String payFromCredit(@RequestBody CreditPaymentDto creditPaymentDto, Principal principal) {
+        log.info("*** Pay Online For: {} ***", creditPaymentDto.getOrderId());
+        creditPaymentDto.setCustomerEmail(principal.getName());
+        creditPaymentDto.setPaymentType(PaymentType.CREDIT);
+        customerOrderService.pay(creditPaymentDto);
+        log.info("*** Paid From Credit for: {} ***", creditPaymentDto.getOrderId());
         return "Order Payed By Credit";
     }
 
@@ -160,9 +160,9 @@ public class CustomerOrderController extends MainController {
 
     @GetMapping("/filter")
     @PreAuthorize("hasRole('ADMIN')")
-    public Iterable<AcceptedOrderDto> search(@RequestParam String search) {
+    public Iterable<OrderResponseDto> search(@RequestParam String search) {
         log.info("*** Search for: {} ***", search);
-        Iterable<AcceptedOrderDto> customerOrderDtos = OrderMapper.INSTANCE.convertCustomerOrderIterator(customerOrderService.findAll(search));
+        Iterable<OrderResponseDto> customerOrderDtos = OrderMapper.INSTANCE.convertCustomerOrderIterator(customerOrderService.findAll(search));
         log.info("*** : Search Results: {} ***", customerOrderDtos);
         return customerOrderDtos;
     }

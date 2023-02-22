@@ -1,7 +1,7 @@
 package ir.maktab.finalproject.service.impl;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
-import ir.maktab.finalproject.data.dto.PaymentUserDto;
+import ir.maktab.finalproject.data.dto.CreditPaymentDto;
 import ir.maktab.finalproject.data.entity.CustomerOrder;
 import ir.maktab.finalproject.data.entity.ExpertOffer;
 import ir.maktab.finalproject.data.entity.Review;
@@ -16,7 +16,6 @@ import ir.maktab.finalproject.service.exception.NotExistsException;
 import ir.maktab.finalproject.service.exception.OrderRequirementException;
 import ir.maktab.finalproject.service.exception.UserNotFoundException;
 import ir.maktab.finalproject.service.predicates.order.OrderPredicateBuilder;
-import ir.maktab.finalproject.service.predicates.user.UserPredicateBuilder;
 import ir.maktab.finalproject.util.exception.ValidationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -102,7 +101,7 @@ public class CustomerOrderService extends MainService {
     }
 
     @Transactional
-    public void pay(PaymentUserDto paymentDto) {
+    public void pay(CreditPaymentDto paymentDto) {
         CustomerOrder customerOrder = customerOrderRepository.findById(paymentDto.getOrderId())
                 .orElseThrow(() -> new NotExistsException(messageSource.getMessage("errors.message.order_not_exists")));
 

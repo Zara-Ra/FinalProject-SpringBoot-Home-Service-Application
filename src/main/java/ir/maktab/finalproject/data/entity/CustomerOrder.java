@@ -44,8 +44,8 @@ public class CustomerOrder {
     private OrderStatus status;
 
     @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @OneToMany(fetch = FetchType.EAGER)
+    @ToString.Exclude //mappedby added...
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "customerOrder", cascade = CascadeType.MERGE)
     private List<ExpertOffer> expertOfferList;
 
     @EqualsAndHashCode.Exclude

@@ -27,7 +27,8 @@ public class ExpertOffer {
     SubService subService;
 
     @EqualsAndHashCode.Exclude
-    @OneToOne
+    //@OneToOne
+    @ManyToOne
     CustomerOrder customerOrder;
 
     @Temporal(value = TemporalType.DATE)

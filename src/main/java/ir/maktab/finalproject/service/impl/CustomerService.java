@@ -4,6 +4,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import ir.maktab.finalproject.data.dto.AccountDto;
 import ir.maktab.finalproject.data.entity.Credit;
 import ir.maktab.finalproject.data.entity.CustomerOrder;
+import ir.maktab.finalproject.data.entity.ExpertOffer;
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.enums.Role;
 import ir.maktab.finalproject.repository.CustomerRepository;
@@ -19,13 +20,14 @@ import ir.maktab.finalproject.util.validation.Validation;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 //@Transactional
@@ -123,9 +125,6 @@ public class CustomerService extends MainService implements IRolesService<Custom
     public List<CustomerOrder> getAllOrders(String customerEmail) {
         Customer customer = customerRepository.findByEmail(customerEmail)
                 .orElseThrow(() -> new UserNotFoundException(messageSource.getMessage("errors.message.customer_not_exists")));
-        List<CustomerOrder> customerOrderList = customer.getCustomerOrderList();
-        //System.out.println(customerOrderList.size());
-        return customerOrderList;
+        return new ArrayList<>(customer.getCustomerOrderList());
     }
 }
-

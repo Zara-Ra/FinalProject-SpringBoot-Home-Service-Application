@@ -1,14 +1,12 @@
 package ir.maktab.finalproject.controller;
 
-import ir.maktab.finalproject.data.dto.AcceptedOrderDto;
-import ir.maktab.finalproject.data.dto.AccountDto;
-import ir.maktab.finalproject.data.dto.CreditDto;
-import ir.maktab.finalproject.data.dto.CustomerDto;
+import ir.maktab.finalproject.data.dto.*;
+import ir.maktab.finalproject.data.dto.response.CustomerResponseDto;
+import ir.maktab.finalproject.data.dto.response.OrderResponseDto;
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.mapper.OrderMapper;
 import ir.maktab.finalproject.data.mapper.UserMapper;
 import ir.maktab.finalproject.service.impl.CustomerService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,9 +56,9 @@ public class CustomerController {
 
     @GetMapping("/filter")
     @PreAuthorize("hasRole('ADMIN')")
-    public Iterable<CustomerDto> search(@RequestParam String search) {
+    public Iterable<CustomerResponseDto> search(@RequestParam String search) {
         log.info("*** Search for: {} ***", search);
-        Iterable<CustomerDto> customerDtos = UserMapper.INSTANCE.convertCustomerIterator(customerService.findAll(search));
+        Iterable<CustomerResponseDto> customerDtos = UserMapper.INSTANCE.convertCustomerResponseIterator(customerService.findAll(search));
         log.info("*** : Search Results: {} ***", customerDtos);
         return customerDtos;
     }
@@ -76,9 +74,9 @@ public class CustomerController {
 
     @GetMapping("/all-orders")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public List<AcceptedOrderDto> showAllOrders(Principal principal){
+    public List<OrderResponseDto> showAllOrders(Principal principal){
         log.info("*** Show Orders For {} ***",principal.getName());
-        List<AcceptedOrderDto> orderDtoList = OrderMapper.INSTANCE.convertAcceptedOrderList(
+        List<OrderResponseDto> orderDtoList = OrderMapper.INSTANCE.convertAcceptedOrderList(
                 customerService.getAllOrders(principal.getName()));
         log.info("*** Orders For {}: {} ***",principal.getName(),orderDtoList);
         return orderDtoList;

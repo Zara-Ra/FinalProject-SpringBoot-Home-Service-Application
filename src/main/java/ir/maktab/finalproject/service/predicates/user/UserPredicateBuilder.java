@@ -28,6 +28,9 @@ public class UserPredicateBuilder {
             return predicate.getPredicate(aClass, className);
         }).filter(Objects::nonNull).toList();
 
+        if(predicates.size()==0)
+            return  Expressions.asBoolean(false).isTrue();
+
         BooleanExpression result = Expressions.asBoolean(true).isTrue();
         for (BooleanExpression predicate : predicates) {
             result = result.and(predicate);
