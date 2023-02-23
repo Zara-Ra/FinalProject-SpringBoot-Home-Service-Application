@@ -29,7 +29,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-//@Transactional
 public class CustomerService extends MainService implements IRolesService<Customer> {
     private final CustomerRepository customerRepository;
 
@@ -42,7 +41,6 @@ public class CustomerService extends MainService implements IRolesService<Custom
 
 
     public Customer register(Customer customer, String siteURL) {
-        validateNewCustomer(customer);
         customer.setCredit(Credit.builder().amount(0).build());
         customer.setRole(Role.ROLE_CUSTOMER);
         customer.setPassword(passwordEncoder.encode(customer.getPassword()));
@@ -65,20 +63,8 @@ public class CustomerService extends MainService implements IRolesService<Custom
         if (!passwordEncoder.matches(accountDto.getOldPassword(), findCustomer.getPassword()))
             throw new PasswordException(messageSource.getMessage("errors.message.incorrect_old_password"));
 
-        Validation.validatePassword(accountDto.getNewPassword());
         findCustomer.setPassword(passwordEncoder.encode(accountDto.getNewPassword()));
         return customerRepository.save(findCustomer);
-    }
-
-    private void validateNewCustomer(Customer customer) {
-        Validation.validateName(customer.getFirstName());
-        Validation.validateName(customer.getLastName());
-        validateAccount(customer.getEmail(), customer.getPassword());
-    }
-
-    private void validateAccount(String email, String password) {
-        Validation.validateEmail(email);
-        Validation.validatePassword(password);
     }
 
     public Optional<Customer> findByEmail(String email) {

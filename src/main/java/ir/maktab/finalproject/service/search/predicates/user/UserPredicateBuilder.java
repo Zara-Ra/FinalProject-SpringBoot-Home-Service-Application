@@ -27,13 +27,12 @@ public class UserPredicateBuilder {
         List<BooleanExpression> predicates = params.stream().map(param -> {
             UserPredicate predicate = new UserPredicate(param);
             return predicate.getPredicate(role);
-        }).filter(Objects::nonNull).toList();
-
-        if (predicates.size() == 0)
-            return Expressions.asBoolean(false).isTrue();
+        }).toList();
 
         BooleanExpression result = Expressions.asBoolean(true).isTrue();
         for (BooleanExpression predicate : predicates) {
+            if(predicate == null)
+                return Expressions.asBoolean(false).isTrue();
             result = result.and(predicate);
         }
         return result;

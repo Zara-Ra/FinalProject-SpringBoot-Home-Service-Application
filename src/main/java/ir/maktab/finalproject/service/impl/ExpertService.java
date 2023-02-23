@@ -60,7 +60,7 @@ public class ExpertService extends MainService implements IRolesService<Expert> 
 
     @Override
     public Expert register(Expert expert, String siteURL) {
-        validateNewExpert(expert);
+        Validation.validatePhoto(expert.getPhoto());
         expert.setStatus(ExpertStatus.NEW);
         expert.setCredit(Credit.builder().amount(0).build());
         expert.setAverageScore(0);
@@ -136,7 +136,6 @@ public class ExpertService extends MainService implements IRolesService<Expert> 
         if (!passwordEncoder.matches(accountDto.getOldPassword(), findExpert.getPassword()))
             throw new PasswordException(messageSource.getMessage("errors.message.incorrect_old_password"));
 
-        Validation.validatePassword(accountDto.getNewPassword());
         findExpert.setPassword(passwordEncoder.encode(accountDto.getNewPassword()));
         return expertRepository.save(findExpert);
     }
@@ -195,18 +194,6 @@ public class ExpertService extends MainService implements IRolesService<Expert> 
         } catch (IOException e) {
             throw new PhotoValidationException(messageSource.getMessage("errors.message.photo_save_error"));
         }
-    }
-
-    private void validateNewExpert(Expert expert) {
-        Validation.validateName(expert.getFirstName());
-        Validation.validateName(expert.getLastName());
-        validateAccount(expert.getEmail(), expert.getPassword());
-        Validation.validatePhoto(expert.getPhoto());
-    }
-
-    private void validateAccount(String email, String password) {
-        Validation.validateEmail(email);
-        Validation.validatePassword(password);
     }
 
     public void updateExpert(Expert expert) {
