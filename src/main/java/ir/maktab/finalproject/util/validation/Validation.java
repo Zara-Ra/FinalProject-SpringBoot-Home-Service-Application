@@ -53,7 +53,7 @@ public class Validation {
         try {
             match = Magic.getMagicMatch(photo);
         } catch (MagicParseException | MagicMatchNotFoundException | MagicException e) {
-            throw new PhotoValidationException("Photo Not Found");
+            throw new PhotoValidationException("Invalid Photo");
         }
         String mimeType = match.getMimeType();
         if (!mimeType.equals("image/jpeg"))

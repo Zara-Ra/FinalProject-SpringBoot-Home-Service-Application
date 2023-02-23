@@ -13,7 +13,7 @@ import ir.maktab.finalproject.service.MainService;
 import ir.maktab.finalproject.service.exception.*;
 import ir.maktab.finalproject.util.exception.PhotoValidationException;
 import ir.maktab.finalproject.util.exception.ValidationException;
-import ir.maktab.finalproject.util.search.predicates.user.UserPredicateBuilder;
+import ir.maktab.finalproject.service.search.predicates.user.UserPredicateBuilder;
 import ir.maktab.finalproject.util.validation.Validation;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

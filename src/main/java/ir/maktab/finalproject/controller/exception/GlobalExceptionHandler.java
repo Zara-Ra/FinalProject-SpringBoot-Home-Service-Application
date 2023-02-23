@@ -4,6 +4,7 @@ import ir.maktab.finalproject.service.exception.*;
 import ir.maktab.finalproject.util.exception.ValidationException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -25,6 +26,11 @@ public class GlobalExceptionHandler {
         }
         return badRequestHandler(e);
 
+    }
+
+    @ExceptionHandler(FileSizeLimitExceededException.class)
+    public ResponseEntity<?> badRequestExceptionHandler(FileSizeLimitExceededException e) {
+        return badRequestHandler(e);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
