@@ -6,7 +6,6 @@ import ir.maktab.finalproject.service.search.SearchCriteria;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class OrderPredicateBuilder {
     private List<SearchCriteria> params;
@@ -30,7 +29,7 @@ public class OrderPredicateBuilder {
 
         BooleanExpression result = Expressions.asBoolean(true).isTrue();
         for (BooleanExpression predicate : predicates) {
-            if(predicate == null)
+            if (predicate == null)
                 return Expressions.asBoolean(false).isTrue();
             result = result.and(predicate);
         }

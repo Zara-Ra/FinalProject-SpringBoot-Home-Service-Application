@@ -17,7 +17,7 @@ public class Validation {
         if (s == null || s.equals("") || !s.matches(r))
             throw new ValidationException(m);
     };
-
+    // Phase 2 Photo Validation with the path of a file
     /*public void validatePhoto(String photoPath) throws IOException {
         File file = new File(photoPath);
         int length = (int) file.length() / ONE_KILOBYTE;
