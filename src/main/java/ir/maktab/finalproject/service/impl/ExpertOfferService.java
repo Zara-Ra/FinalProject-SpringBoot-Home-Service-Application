@@ -4,6 +4,7 @@ import ir.maktab.finalproject.data.entity.CustomerOrder;
 import ir.maktab.finalproject.data.entity.ExpertOffer;
 import ir.maktab.finalproject.data.entity.SubService;
 import ir.maktab.finalproject.data.entity.roles.Expert;
+import ir.maktab.finalproject.data.enums.ExpertStatus;
 import ir.maktab.finalproject.data.enums.OrderStatus;
 import ir.maktab.finalproject.repository.ExpertOfferRepository;
 import ir.maktab.finalproject.service.MainService;
@@ -145,8 +146,10 @@ public class ExpertOfferService extends MainService {
 
         double averageScore = expertOffer.getExpert().getAverageScore() - Math.abs(hours);
         expertOffer.getExpert().setAverageScore(averageScore);
-        if (averageScore < 0)
+        if (averageScore < 0) {
+            expertOffer.getExpert().setStatus(ExpertStatus.WAITING_FOR_APPROVAL);
             expertOffer.getExpert().setEnabled(false);
+        }
 
         expertService.updateExpert(expertOffer.getExpert());
     }

@@ -154,6 +154,7 @@ public class ExpertService extends MainService implements IRolesService<Expert> 
         if (!expert.getStatus().equals(ExpertStatus.WAITING_FOR_APPROVAL))
             throw new NotAllowedException(messageSource.getMessage("errors.message.expert_email_not_verified"));
         expert.setStatus(ExpertStatus.APPROVED);
+        expert.setEnabled(true);
         return expertRepository.save(expert);
     }
 
