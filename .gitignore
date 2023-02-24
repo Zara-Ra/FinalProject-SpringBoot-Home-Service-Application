@@ -7,8 +7,8 @@ mvnw.cmd
 mvnw
 *.zip
 *.rar
-!target/classes/
-!target/maven-status/
+target/classes/
+target/maven-status/
 
 
 ### STS ###
