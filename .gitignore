@@ -7,6 +7,9 @@ mvnw.cmd
 mvnw
 *.zip
 *.rar
+!target/classes/
+!target/maven-status/
+
 
 ### STS ###
 .apt_generated
@@ -22,3 +25,6 @@ mvnw
 *.iws
 *.iml
 *.ipr
+
+#### Server email password
+application.properties
