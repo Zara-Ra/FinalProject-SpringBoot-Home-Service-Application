@@ -78,10 +78,11 @@ public class CustomerService extends MainService implements IRolesService<Custom
         customerRepository.save(customer);
     }
 
-    public void increaseCredit(String customerEmail, double amount) {
+    public void increaseCredit(String customerEmail, double increaseAmount) {
         Customer customer = findByEmail(customerEmail)
                 .orElseThrow(() -> new UserNotFoundException(messageSource.getMessage("errors.message.customer_not_exists")));
-        customer.getCredit().setAmount(amount);
+        double creditAmount = customer.getCredit().getAmount();
+        customer.getCredit().setAmount(creditAmount+increaseAmount);
         customerRepository.save(customer);
     }
 

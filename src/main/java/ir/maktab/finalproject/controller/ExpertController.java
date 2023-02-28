@@ -116,10 +116,11 @@ public class ExpertController {
     }
 
     @PostMapping("/save-photo")
-    @PreAuthorize("hasAnyRole('ADMIN','EXPERT')")
+    @PreAuthorize("hasAnyRole('ADMIN','EXPERT','CUSTOMER')")
     public String savePhoto(@Valid @RequestBody PhotoInfoDto photoInfoDto, Principal principal) {
         log.info("*** Save Expert Photo: {} ***", photoInfoDto);
-        photoInfoDto.setOwnerEmail(principal.getName());
+        if(photoInfoDto.getOwnerEmail().isEmpty())
+            photoInfoDto.setOwnerEmail(principal.getName());
         expertService.getExpertPhoto(photoInfoDto.getOwnerEmail(), photoInfoDto.getSavePath());
         log.info("*** Expert Photo Saved: {} ***", photoInfoDto);
         return "Photo Saved";
