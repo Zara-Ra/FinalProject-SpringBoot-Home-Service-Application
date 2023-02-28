@@ -1,12 +1,11 @@
 package ir.maktab.finalproject.service.impl;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.EnumPath;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringPath;
 import ir.maktab.finalproject.data.dto.CreditPaymentDto;
-import ir.maktab.finalproject.data.entity.CustomerOrder;
-import ir.maktab.finalproject.data.entity.ExpertOffer;
-import ir.maktab.finalproject.data.entity.Review;
-import ir.maktab.finalproject.data.entity.SubService;
+import ir.maktab.finalproject.data.entity.*;
 import ir.maktab.finalproject.data.entity.roles.Customer;
 import ir.maktab.finalproject.data.entity.roles.Expert;
 import ir.maktab.finalproject.data.enums.OrderStatus;
@@ -21,10 +20,7 @@ import ir.maktab.finalproject.util.exception.ValidationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -137,7 +133,10 @@ public class CustomerOrderService extends MainService {
         Expert expert = customerOrder.getAcceptedExpertOffer().getExpert();
         review.setCustomerOrder(customerOrder);
         expert.getReviewList().add(review);
-        double averageScore = expert.getReviewList().stream().mapToInt(Review::getScore).average().getAsDouble();
+        double averageScore = 0;
+        OptionalDouble optionalAverage = expert.getReviewList().stream().mapToInt(Review::getScore).average();
+        if (optionalAverage.isPresent())
+            averageScore = optionalAverage.getAsDouble();
         expert.setAverageScore(averageScore);
         customerOrder.setStatus(OrderStatus.SCORED);
         customerOrderRepository.save(customerOrder);
@@ -159,6 +158,40 @@ public class CustomerOrderService extends MainService {
             expression = builder.build();
         }
         return customerOrderRepository.findAll(expression);
+    }
+
+    @Transactional
+    public Iterable<CustomerOrder> findByCustomerEmailAndStatus(String customerEmail, String orderStatus) {
+
+        StringPath emailPath = QCustomerOrder.customerOrder.customer.email;
+        BooleanExpression email = emailPath.eq(customerEmail);
+
+        BooleanExpression status;
+        if (orderStatus.equalsIgnoreCase("all")) {
+            status = Expressions.asBoolean(true).isTrue();
+        } else {
+            EnumPath<OrderStatus> enumPath = QCustomerOrder.customerOrder.status;
+            status = enumPath.eq(OrderStatus.valueOf(orderStatus));
+        }
+        BooleanExpression result = email.and(status);
+        return customerOrderRepository.findAll(result);
+    }
+
+    @Transactional
+    public Iterable<CustomerOrder> findByExpertEmailAndStatus(String expertEmail, String orderStatus) {
+
+        StringPath emailPath = QCustomerOrder.customerOrder.acceptedExpertOffer.expert.email;
+        BooleanExpression email = emailPath.eq(expertEmail);
+
+        BooleanExpression status;
+        if (orderStatus.equalsIgnoreCase("all")) {
+            status = Expressions.asBoolean(true).isTrue();
+        } else {
+            EnumPath<OrderStatus> enumPath = QCustomerOrder.customerOrder.status;
+            status = enumPath.eq(OrderStatus.valueOf(orderStatus));
+        }
+        BooleanExpression result = email.and(status);
+        return customerOrderRepository.findAll(result);
     }
 
 }

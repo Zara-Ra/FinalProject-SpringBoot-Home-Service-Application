@@ -24,7 +24,7 @@ public class AdminService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @PostConstruct
+    //@PostConstruct
     public Admin assignAdmin() {
         Admin admin = new Admin();
         admin.setEmail(email);

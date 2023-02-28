@@ -37,5 +37,5 @@ public interface OrderMapper {
 
     Iterable<OrderResponseDto> convertCustomerOrderIterator(Iterable<CustomerOrder> all);
 
-    List<OrderResponseDto> convertAcceptedOrderList(List<CustomerOrder> allOrders);
+    List<OrderResponseDto> convertCustomerOrderList(List<CustomerOrder> allOrders);
 }

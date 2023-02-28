@@ -140,7 +140,8 @@ public class ExpertController {
     @PreAuthorize("hasRole('ADMIN')")
     public Iterable<ExpertResponseDto> search(@RequestParam String search) {
         log.info("*** Search for: {} ***", search);
-        Iterable<ExpertResponseDto> expertDtos = UserMapper.INSTANCE.convertExpertIterator(expertService.findAll(search));
+        Iterable<ExpertResponseDto> expertDtos = UserMapper.INSTANCE.convertExpertIterator(
+                expertService.findAll(search));
         log.info("*** : Search Results: {} ***", expertDtos);
         return expertDtos;
     }
@@ -152,16 +153,6 @@ public class ExpertController {
         double credit = expertService.getCredit(principal.getName());
         log.info("*** Credit For {}: {} ***", principal.getName(), credit);
         return credit;
-    }
-
-    @GetMapping("/all-orders")
-    @PreAuthorize("hasRole('EXPERT')")
-    public List<OrderResponseDto> showAllOrders(Principal principal) {
-        log.info("*** Find Order For Expert: {} ***", principal.getName());
-        List<OrderResponseDto> orderDtoList = OrderMapper.INSTANCE.convertAcceptedOrderList(
-                expertService.getAllOrders(principal.getName()));
-        log.info("*** Orders For Expert: {}, {} ***", principal.getName(), orderDtoList);
-        return orderDtoList;
     }
 
 }

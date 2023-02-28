@@ -17,7 +17,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-02-27T21:53:49+0330",
+    date = "2023-02-28T10:19:59+0330",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 17.0.4 (Oracle Corporation)"
 )
 public class OrderMapperImpl implements OrderMapper {
@@ -130,7 +130,7 @@ public class OrderMapperImpl implements OrderMapper {
     }
 
     @Override
-    public List<OrderResponseDto> convertAcceptedOrderList(List<CustomerOrder> allOrders) {
+    public List<OrderResponseDto> convertCustomerOrderList(List<CustomerOrder> allOrders) {
         if ( allOrders == null ) {
             return null;
         }

@@ -5,6 +5,7 @@ import ir.maktab.finalproject.data.dto.*;
 import ir.maktab.finalproject.data.dto.response.OrderResponseDto;
 import ir.maktab.finalproject.data.entity.CustomerOrder;
 import ir.maktab.finalproject.data.entity.ExpertOffer;
+import ir.maktab.finalproject.data.enums.OrderStatus;
 import ir.maktab.finalproject.data.enums.PaymentType;
 import ir.maktab.finalproject.data.mapper.OfferMapper;
 import ir.maktab.finalproject.data.mapper.OrderMapper;
@@ -164,6 +165,26 @@ public class CustomerOrderController extends MainController {
         log.info("*** Search for: {} ***", search);
         Iterable<OrderResponseDto> customerOrderDtos = OrderMapper.INSTANCE.convertCustomerOrderIterator(customerOrderService.findAll(search));
         log.info("*** : Search Results: {} ***", customerOrderDtos);
+        return customerOrderDtos;
+    }
+
+    @GetMapping("/customer-orders-with-status")
+    @PreAuthorize("hasAnyRole('CUSTOMER')")
+    public Iterable<OrderResponseDto> findOrdersForCustomerByStatus(@RequestParam String status, Principal principal){
+        log.info("*** Find Orders for {},Status: {} ***", principal.getName(), status);
+        Iterable<OrderResponseDto> customerOrderDtos = OrderMapper.INSTANCE.convertCustomerOrderIterator(
+                customerOrderService.findByCustomerEmailAndStatus(principal.getName(), status));
+        log.info("*** Found Orders for {}: {} ***", principal.getName(),customerOrderDtos);
+        return customerOrderDtos;
+    }
+
+    @GetMapping("/expert-orders-with-status")
+    @PreAuthorize("hasAnyRole('EXPERT')")
+    public Iterable<OrderResponseDto> findOrdersForExpertByStatus(@RequestParam String status, Principal principal){
+        log.info("*** Find Orders for {},Status: {} ***", principal.getName(), status);
+        Iterable<OrderResponseDto> customerOrderDtos = OrderMapper.INSTANCE.convertCustomerOrderIterator(
+                customerOrderService.findByExpertEmailAndStatus(principal.getName(), status));
+        log.info("*** Found Orders for {}: {} ***", principal.getName(),customerOrderDtos);
         return customerOrderDtos;
     }
 }

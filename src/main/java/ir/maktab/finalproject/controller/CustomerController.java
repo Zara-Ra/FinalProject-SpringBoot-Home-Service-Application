@@ -6,6 +6,7 @@ import ir.maktab.finalproject.data.dto.CustomerDto;
 import ir.maktab.finalproject.data.dto.response.CustomerResponseDto;
 import ir.maktab.finalproject.data.dto.response.OrderResponseDto;
 import ir.maktab.finalproject.data.entity.roles.Customer;
+import ir.maktab.finalproject.data.enums.OrderStatus;
 import ir.maktab.finalproject.data.mapper.OrderMapper;
 import ir.maktab.finalproject.data.mapper.UserMapper;
 import ir.maktab.finalproject.service.impl.CustomerService;
@@ -60,7 +61,8 @@ public class CustomerController {
     @PreAuthorize("hasRole('ADMIN')")
     public Iterable<CustomerResponseDto> search(@RequestParam String search) {
         log.info("*** Search for: {} ***", search);
-        Iterable<CustomerResponseDto> customerDtos = UserMapper.INSTANCE.convertCustomerResponseIterator(customerService.findAll(search));
+        Iterable<CustomerResponseDto> customerDtos = UserMapper.INSTANCE.convertCustomerResponseIterator(
+                customerService.findAll(search));
         log.info("*** : Search Results: {} ***", customerDtos);
         return customerDtos;
     }
@@ -72,15 +74,5 @@ public class CustomerController {
         double credit = customerService.getCredit(principal.getName());
         log.info("*** Credit For {}: {} ***", principal.getName(), credit);
         return credit;
-    }
-
-    @GetMapping("/all-orders")
-    @PreAuthorize("hasRole('CUSTOMER')")
-    public List<OrderResponseDto> showAllOrders(Principal principal) {
-        log.info("*** Show Orders For {} ***", principal.getName());
-        List<OrderResponseDto> orderDtoList = OrderMapper.INSTANCE.convertAcceptedOrderList(
-                customerService.getAllOrders(principal.getName()));
-        log.info("*** Orders For {}: {} ***", principal.getName(), orderDtoList);
-        return orderDtoList;
     }
 }

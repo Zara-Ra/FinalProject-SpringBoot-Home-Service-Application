@@ -14,6 +14,7 @@ import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;
 import org.springframework.data.querydsl.binding.SingleValueBinding;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,10 +23,9 @@ import java.util.Optional;
 public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Integer>,
         QuerydslPredicateExecutor<CustomerOrder>, QuerydslBinderCustomizer<QCustomerOrder> {
     //@Query("FROM CustomerOrder o WHERE o.subService = ?1 AND o.status = ?2 OR o.status = ?3")
+
     @Query("FROM CustomerOrder o WHERE o.subService = ?1 AND o.status IN (?2,?3)")
     List<CustomerOrder> findAllBySubServiceAndTwoStatus(SubService subService, OrderStatus status1, OrderStatus status2);
-
-    Optional<CustomerOrder> findByAcceptedExpertOffer(ExpertOffer acceptedOffer);
 
     @Override
     default void customize(
