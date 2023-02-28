@@ -54,10 +54,12 @@ public class SubServiceServiceTest {
     @Order(2)
     @Test
     void invalidAddSubServiceViolateUniqueTest() {
-        SubService duplicateSubService = SubService.builder().subName("SubService4").build();
+        SubService duplicateSubService = SubService.builder()
+                .subName("SubService4")
+                .baseService(baseService).build();
         UniqueViolationException exception = assertThrows(UniqueViolationException.class
                 , () -> subServiceService.add(duplicateSubService));
-        assertEquals("Base/Sub-Service Already Exists", exception.getMessage());
+        assertEquals("Sub Service Already Exists", exception.getMessage());
     }
 
     @Order(4)
@@ -109,7 +111,7 @@ public class SubServiceServiceTest {
     void invalidDeleteSubServiceTest() {
         SubService unavailableSubService = SubService.builder().subName("Unavailable").build();
         SubServiceException exception = assertThrows(SubServiceException.class, () -> subServiceService.editSubService(unavailableSubService));
-        assertEquals("Sub Service Not Found", exception.getMessage());
+        assertEquals("Sub Service Not Exists", exception.getMessage());
     }
 
 }

@@ -156,7 +156,7 @@ public class ExpertServiceTest {
     @Order(8)
     @Test
     void setExpertStatusTest() {
-        Expert changedExpert = expertService.setExpertStatus(expert.getId(), ExpertStatus.APPROVED);
+        Expert changedExpert = expertService.approveExpert(expert.getId());
         assertEquals(ExpertStatus.APPROVED, changedExpert.getStatus());
     }
 

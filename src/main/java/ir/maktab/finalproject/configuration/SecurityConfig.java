@@ -69,9 +69,9 @@ public class SecurityConfig {
                 .requestMatchers("/sub/find").permitAll()
                 .requestMatchers("/expert/verify").permitAll()
 
-                .anyRequest().authenticated();
-        //.and()
-        //.httpBasic();
+                .anyRequest().authenticated()
+        .and()
+        .httpBasic();
         return http.build();
     }
 
