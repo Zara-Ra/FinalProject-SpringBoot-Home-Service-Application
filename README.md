@@ -3,11 +3,17 @@
 ⭕In this project I have implemented a home service application:
 
    Experts sign up and add their services.
+   
    The expert's email is validated by delivering a one-time clickable link in an email.
+  
    The administrator grants access after approving the expert. 
+   
    Customers register and place orders.( cleaning, gardening, moving, piping, electrical service, etc)
+  
    The experts file an offer after observing relevant orders.
+   
    The customer selects an offer and waits for the expert's arrival.
+  
    The customer pays for the service and provides feedback.
 
 ⭕This application is a spring boot RESTFull API.
