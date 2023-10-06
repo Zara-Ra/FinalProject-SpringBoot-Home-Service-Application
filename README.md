@@ -1,32 +1,57 @@
 # FinalProject-SpringBoot-Home-Service-Application
+## Home Service Application
+## Overview
+The Home Service Application is a powerful Spring Boot RESTful API designed to streamline the operations of a home service platform. It leverages a stack of cutting-edge technologies, including Spring Data, Spring MVC, and Spring Security with JWT authentication. 
+This README provides an insightful overview of the project's extensive features and functionalities.
 
-⭕ This application is a spring boot RESTFull API.
-Spring Data, Spring MVC and Spring Security( jwt) is used as well.
+## Features and Highlights
 
-⭕ I have used JUnit to write a variety of tests using a TDD approach.
+### Test-Driven Development (TDD)
+The application's robustness is ensured through a Test-Driven Development (TDD) approach. Various unit tests have been created using JUnit, guaranteeing the reliability of the codebase.
 
-⭕ My database is PostgreSQL, and I used Postman to test the APIs.
+### Database and API Testing
+The project employs PostgreSQL as the database backend. API endpoints have been thoroughly tested using Postman to ensure seamless data interaction and reliability.
 
-⭕ I sort and filter data from the database using QuerydslPredicateExecutor.
+### Data Sorting and Filtering
+Data management is made easy with the use of QuerydslPredicateExecutor. Administrators can effortlessly sort and filter data based on a range of criteria, including customer and expert names, expert scores, professions, order statuses, and more.
 
-⭕ Using bootstrap, I created an HTML/CSS webpage for payments that uses ajax to transmit user info to the backend.
+### Payment Processing with Bootstrap and AJAX
+The application features a user-friendly HTML/CSS payment webpage, created using Bootstrap. This page utilizes AJAX to transmit user information seamlessly to the backend, ensuring a smooth and secure payment experience.
 
-To make sure the user is human and not a robot, I've created a servlet for captcha creation.
+### Captcha Verification
+To maintain the security of the platform, a server-side captcha verification mechanism has been implemented. Users are required to enter a randomly generated captcha to complete payment transactions. A timeout of 10 minutes has been set for payment pages.
 
-⭕ The flow of the home service application is as folow:
+### File Upload Validation
+Experts are prompted to upload a profile photo during registration. Photo files are meticulously validated to ensure they meet size and format requirements (less than 300 KB in JPEG format), a task efficiently handled using jmimemagic.
 
-   ▪️Experts sign up and add their services.
-   
-   ▪️The expert's email is validated by delivering a one-time clickable link in an email.
-  
-   ▪️The administrator grants access after approving the expert. 
-   
-   ▪️Customers register and place orders( cleaning, gardening, moving, piping, electrical service, etc).
-  
-   ▪️The experts file an offer after observing relevant orders.
-   
-   ▪️The customer selects an offer and waits for the expert's arrival.
-  
-   ▪️The customer pays for the service and provides feedback.
+### DTO and Mapping
+Data Transfer Objects (DTOs) are employed to facilitate efficient data transfer between layers. Mapstruct serves as a powerful mapper for seamless conversion between DTOs and entities.
+
+### Multilingual Support
+The application offers multilingual support through a MessageSourceConfiguration class. Messages displayed in the application can be easily configured in separate properties files for different languages.
+
+### Logging
+Logging in the controller layer is managed using Slf4j, ensuring comprehensive visibility into application behavior.
+
+### User Registration and Password Management
+Users, both experts and customers, can register new accounts and change their passwords at any time, enhancing account security and management.
+
+## Application Flow
+The Home Service Application follows a logical flow to ensure a seamless user experience:
+
+**1.Expert Registration and Service Addition:** Experts register and list their services.
+
+**2.Email Validation:** Expert email addresses are validated through a one-time clickable link sent via email, facilitated by JavaMailSender.
+
+**3.Administrator Approval:** Access is granted to experts upon administrator approval.
+
+**4.Customer Registration and Ordering:** Customers register and place orders for various services, including cleaning, gardening, moving, plumbing, electrical work, and more.
+
+**5.Offer Submission:** Experts provide offers based on relevant orders.
+
+**6.Service Acceptance:** Customers select an offer and await the expert's arrival.
+
+**7.Payment and Feedback:** Customers make payments for services and provide feedback, closing the service cycle.
+
 
 
