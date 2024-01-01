@@ -51,7 +51,8 @@ public class ExpertService extends MainService implements IRolesService<Expert> 
     private String senderEmail;
 
 
-    public ExpertService(ExpertRepository expertRepository, SubServiceService subServiceService, BCryptPasswordEncoder passwordEncoder, JavaMailSender mailSender) {
+    public ExpertService(ExpertRepository expertRepository, SubServiceService subServiceService,
+                         BCryptPasswordEncoder passwordEncoder, JavaMailSender mailSender) {
         this.expertRepository = expertRepository;
         this.subServiceService = subServiceService;
         this.passwordEncoder = passwordEncoder;
